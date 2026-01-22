@@ -1,0 +1,1544 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+
+/* ---------- PAGE BACKGROUND ---------- */
+.auth-wrapper {
+    position: relative;
+    margin-top: 1%;
+    background: url("/onboard-bg.png") top center / cover no-repeat;
+
+    background-size:
+        95% 40%,
+        100% 100%;
+    background-position: top, bottom;
+    background-repeat: no-repeat;
+
+    border-radius: 20px;
+    overflow: hidden;
+
+    font-family: Inter, sans-serif;
+}
+
+/* ---------- HERO (GREEN AREA) ---------- */
+.auth-hero {
+    position: absolute;
+    top: 30px; /* ⬆ Welcome moved UP */
+    width: 100%;
+    text-align: center;
+}
+
+.auth-hero-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.auth-hero-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 4px;
+}
+
+.auth-hero-desc {
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
+    margin-top: 6px;
+}
+
+/* ---------- CARD ---------- */
+.auth-card {
+    margin: 0 auto;
+    width: 400px; /* ⬅ BOX WIDTH REDUCED */
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    z-index: 1;
+}
+/* Add this to auth.css */
+.input-label {
+    text-align: left;
+    display: block; /* Makes the label take up the full width */
+    width: 100%; /* Ensures it stretches to the left edge */
+    margin-bottom: 8px; /* Adds a little space between label and input */
+    font-weight: 400; /* Optional: makes it look bold like the design */
+    color: #374151; /* Optional: dark grey color */
+}
+/* ---------- CARD TITLE ---------- */
+.sign-in-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 16px;
+}
+
+/* ---------- SOCIAL LOGIN ---------- */
+.social-login {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.social-btn {
+    width: 64px;
+    height: 64px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition:
+        box-shadow 0.2s,
+        transform 0.1s;
+}
+
+.social-btn:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.social-btn img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* ---------- OR ---------- */
+.or-text {
+    font-size: 13px;
+    color: #9ca3af;
+    margin: 18px 0;
+}
+
+/* ---------- INPUT ---------- */
+.auth-input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #6fcf97;
+    box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.25);
+}
+
+/* ---------- REMEMBER / FORGOT ---------- */
+.remember-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.remember-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.forgot-link {
+    font-size: 13px;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+.reset-link {
+    color: #6fcf97;
+    cursor: pointer;
+}
+
+/* ---------- TOGGLE SWITCH ---------- */
+.react-switch-checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+.react-switch-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 42px;
+    height: 22px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.react-switch-label .react-switch-button {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    transition: 0.2s;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.react-switch-checkbox:checked + .react-switch-label {
+    background: #6fcf97;
+}
+
+.react-switch-checkbox:checked + .react-switch-label .react-switch-button {
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+}
+
+/* ---------- BUTTON ---------- */
+.auth-button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #6fcf97;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 100px;
+}
+
+.auth-button:hover:not(:disabled) {
+    background: #5abf86;
+}
+
+.auth-button:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* ---------- LINKS ---------- */
+.auth-text {
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.auth-link {
+    color: #6fcf97;
+    font-weight: 400;
+    cursor: pointer;
+}
+/* Stack forgot + remember neatly for small width */
+.remember-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+/* Keep toggle + text in one line */
+.remember-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* Reduce gap between hero text and sign-in box */
+.auth-card {
+    margin-top: 160px;
+}
+/* ---------- FINAL REMEMBER / FORGOT LAYOUT (MATCH IMAGE) ---------- */
+.remember-row {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    align-items: flex-start; /* left aligned */
+    gap: 14px;
+}
+
+/* Forgot password stays on top */
+.forgot-link {
+    order: 1;
+}
+
+/* Remember me goes below */
+.remember-toggle-row {
+    order: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* Right-align forgot password only */
+.forgot-link {
+    align-self: flex-end; /* pushes it to the right */
+    text-align: right;
+}
+/* ---------- TOP LEFT LOGO ---------- */
+.auth-logo {
+    position: absolute;
+    top: 10px;
+    left: 300px;
+}
+
+.auth-logo img {
+    height: 84px; /* adjust if needed */
+    width: auto;
+}
+/* ---------- HERO LOGO (MATCH REFERENCE IMAGE) ---------- */
+/* FORCE hero logo size & position */
+.auth-hero .hero-logo {
+    height: 90px !important;
+    width: auto !important;
+    margin-bottom: 4px !important;
+}
+.auth-hero {
+    top: 30px !important;
+}
+.hero-logo {
+    height: 72px; /* BIG */
+    width: auto;
+    margin-bottom: 6px; /* VERY close to Welcome */
+}
+/* ---------- TOP RIGHT LINKS ---------- */
+.auth-top-right {
+    position: absolute;
+    top: 22px; /* aligns with logo vertically */
+    right: 250px; /* opposite of logo */
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.top-link {
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* ---------- TOP RIGHT ACTION BUTTONS ---------- */
+.auth-top-right {
+    position: absolute;
+    top: 22px;
+    right: 200px;
+    display: flex;
+    gap: 14px;
+}
+
+.top-action {
+    padding: 8px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px; /* pill shape like social buttons */
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    background: #ffffff;
+    text-decoration: none;
+    transition:
+        box-shadow 0.2s,
+        transform 0.1s;
+}
+.top-action:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+/* === SIGNUP REMEMBER TOGGLE (FORCED FIX) === */
+.toggle-input {
+    display: none;
+}
+
+.remember-row {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.remember-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.toggle-switch {
+    width: 42px;
+    height: 22px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.2s;
+}
+
+.toggle-switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.toggle-input:checked + .toggle-switch {
+    background: #6fcf97;
+}
+
+.toggle-input:checked + .toggle-switch::after {
+    transform: translateX(20px);
+}
+
+.toggle-text {
+    font-size: 13px;
+    color: #374151;
+}
+
+/* ---------- ONBOARDING CARD ---------- */
+.onboarding-card {
+    width: 420px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+    margin-top: 140px;
+}
+/* ===== ONBOARDING ONLY (STEP 1) ===== */
+
+.onboarding-hero {
+    top: 40px;
+}
+
+.auth-hero-helper {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.onboarding-steps {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+.onboarding-steps .active-step {
+    color: #374151;
+    font-weight: 600;
+}
+
+.step-arrow {
+    margin: 0 4px;
+}
+
+/* White card for onboarding */
+.onboarding-card {
+    margin: 0 auto;
+    width: 420px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+    text-align: center;
+    margin-top: 180px;
+}
+/* ===== STEP 1 FORM ===== */
+
+.form-section {
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.form-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #374151;
+}
+
+.checkbox-row {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pill {
+    padding: 6px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    background: #fff;
+}
+
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    font-size: 13px;
+}
+/* ===== DOMAIN PILL INTERACTIONS ===== */
+
+.pill {
+    padding: 6px 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    background: #ffffff;
+    transition:
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+/* Hover glow */
+.pill:hover {
+    box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.25);
+    border-color: #6fcf97;
+}
+
+/* Selected (clicked) state */
+.pill.active {
+    background: #e8f7ef;
+    border-color: #6fcf97;
+    box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.35);
+    font-weight: 500;
+}
+/* ===== ONBOARDING FOOTER BUTTONS ===== */
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 80px;
+}
+
+/* Back button */
+.back-btn {
+    padding: 10px 22px;
+    border-radius: 14px;
+    border: 1px solid #d1fae5;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Skip button (center, subtle) */
+.skip-btn {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Save & Next button */
+.next-btn {
+    padding: 10px 26px;
+    border-radius: 14px;
+    border: none;
+    background: #d1fae5;
+    color: #065f46;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+/* ===== STEP INDICATOR (SAME AS STEP 1) ===== */
+
+.onboarding-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* circle base */
+.step-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid #9ca3af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* completed */
+.step.completed {
+    color: #374151;
+}
+
+.step-circle.completed {
+    background: #6b7280;
+    color: #ffffff;
+    border-color: #6b7280;
+}
+
+/* active */
+.step.active {
+    color: #111827;
+    font-weight: 600;
+}
+
+.step.active .step-circle {
+    border-color: #111827;
+}
+
+/* upcoming */
+.step.upcoming {
+    color: #cbd5e1;
+}
+
+.step.upcoming .step-circle {
+    border-color: #cbd5e1;
+}
+
+.step-arrow {
+    color: #9ca3af;
+}
+.radio-row {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #374151;
+}
+
+.auth-input.full {
+    margin-top: 10px;
+}
+.helper-text {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-left: 22px;
+    margin-top: 2px;
+}
+/* ===== ORG SIGNUP – MATCH PROVIDED PHOTO ===== */
+
+/* Center the white card content */
+.org-signup-card {
+    width: 40px;
+    margin-top: 70px;
+    text-align: center;
+}
+
+/* Social icons row – MUST be horizontal */
+.social-row {
+    display: flex;
+    flex-direction: row; /* force horizontal */
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 18px 0;
+}
+
+/* Social button box */
+.social-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+}
+
+/* Icon size – same as previous pages */
+.social-btn img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+/* Inputs alignment like photo */
+.org-signup-card .form-group {
+    text-align: left;
+}
+.org-signup-card .form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+}
+.auth-input::placeholder {
+    font-weight: 200;
+}
+/* Reduce width ONLY for Org Signup page */
+.org-signup-card {
+    max-width: 400px; /* adjust if needed */
+    width: 100%;
+}
+/* ===== ORG ONBOARDING – PHOTO 2 ===== */
+
+.org-onboarding-card {
+    margin: 120px auto 60px;
+    max-width: 420px;
+}
+
+/* Steps */
+/* ===== ONBOARDING HEADER (PHOTO 2) ===== */
+
+/* Scope header styles ONLY to onboarding */
+.onboarding-hero .auth-hero-title {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.onboarding-hero .auth-hero-subtitle {
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.onboarding-hero .auth-hero-helper {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+/* Steps row */
+.onboarding-steps {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.onboarding-steps .step.active {
+    color: #374151;
+    font-weight: 500;
+}
+
+.onboarding-steps .arrow {
+    opacity: 0.4;
+}
+
+/* Chips (same look as Photo 2) */
+.org-onboarding-card .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.org-onboarding-card .chip {
+    padding: 4px 10px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 11px;
+    color: #6b7280;
+    background: #ffffff;
+}
+
+/* Two column layout */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Bottom buttons */
+.onboarding-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+}
+
+.secondary-btn {
+    padding: 10px 18px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Space between green header and white card (Photo 2) */
+.org-onboarding-card {
+    margin-top: 180px; /* Photo 2 spacing */
+}
+/* ===== ORG ONBOARDING CARD — MATCH PHOTO 2 EXACT ===== */
+
+/* Card padding (tighter) */
+.org-onboarding-card {
+    padding: 28px;
+}
+
+/* Labels – lighter like Photo 2 */
+.org-onboarding-card label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+/* Inputs – shorter height */
+.org-onboarding-card .auth-input {
+    height: 38px;
+    font-size: 13px;
+}
+
+/* Chips – smaller & subtle */
+.org-onboarding-card .chip {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 12px;
+    color: #6b7280;
+}
+
+/* Reduce space between sections */
+.org-onboarding-card .form-group {
+    margin-bottom: 15px;
+}
+
+/* Bottom buttons – lighter like Photo 2 */
+.org-onboarding-card .auth-button {
+    height: 42px;
+    font-size: 14px;
+}
+
+.org-onboarding-card .secondary-btn {
+    height: 42px;
+    font-size: 14px;
+}
+/* ===== FIX ALIGNMENT TO MATCH PHOTO 2 ===== */
+
+/* Left-align labels */
+.org-onboarding-card label {
+    display: block;
+    text-align: left;
+}
+
+/* Left-align section headings (Organization type, domain, etc.) */
+.org-onboarding-card .form-group {
+    text-align: left;
+}
+
+/* Keep chips left-aligned */
+.org-onboarding-card .chip-group {
+    justify-content: flex-start;
+}
+
+/* Buttons position exactly like Photo 2 */
+.onboarding-actions {
+    display: flex;
+    justify-content: space-between;
+}
+/* Increase gap between label text and input (onboarding only) */
+.org-onboarding-card label {
+    margin-bottom: 6px;
+}
+/* Fix Save & Next shape – subtle like reference */
+.org-onboarding-card .onboarding-actions .auth-button {
+    width: auto !important;
+    height: 40px;
+    padding: 8px 24px;
+    border-radius: 12px; /* 🔴 NOT pill */
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+/* Back button stays subtle too */
+.org-onboarding-card .onboarding-actions .secondary-btn {
+    height: 40px;
+    padding: 8px 20px;
+    border-radius: 12px;
+}
+/* Keep Back and Save & Next on the same level */
+.org-onboarding-card .onboarding-actions {
+    display: flex;
+    align-items: center; /* 🔑 this fixes the level issue */
+}
+/* Hover glow */
+.org-onboarding-card .chip:hover {
+    border-color: #6fcf97;
+    box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.25);
+    cursor: pointer;
+}
+
+/* Selected (clicked) chip */
+.org-onboarding-card .chip.active {
+    background: #e8f7ef;
+    border-color: #6fcf97;
+    color: #065f46;
+    box-shadow: 0 0 0 3px rgba(111, 207, 151, 0.35);
+}
+/* Increase space between last input and action buttons (onboarding only) */
+.org-onboarding-card .onboarding-actions {
+    margin-top: 50px;
+}
+/* Fix description textarea size (Org Onboarding page 2) */
+.org-onboarding-card textarea.auth-input {
+    resize: none; /* prevent resizing */
+    height: 96px; /* roughly double input height */
+    width: 100%; /* same width as other inputs */
+}
+/* Align Back & Save & Next buttons to same height */
+.org-onboarding-card .onboarding-actions {
+    display: flex;
+    align-items: center; /* 🔑 fixes vertical alignment */
+    justify-content: space-between;
+}
+/* Completed steps (Org Details, Preferences) */
+.step-circle.done {
+    background-color: #7a8f86; /* muted green-grey */
+    border-color: #7a8f86;
+    color: #ffffff; /* white tick */
+}
+
+/* Active step number (3) */
+.step-circle {
+    background-color: transparent;
+    border-color: #7a8f86;
+    color: #7a8f86;
+}
+
+/* Step text color */
+.onboarding-steps .step {
+    color: #7a8f86;
+}
+/* Normalize spacing between all questions – Onboarding Page 2 */
+
+/* Every question block */
+.org-onboarding-card .form-group {
+    margin-bottom: 24px; /* consistent gap between sections */
+}
+
+/* Label to inputs/radios/chips */
+.org-onboarding-card .form-group > label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Radio options spacing */
+.org-onboarding-card .radio-row {
+    margin-bottom: 8px;
+}
+
+/* Chip spacing */
+.org-onboarding-card .chip-group {
+    gap: 8px;
+}
+
+/* Input below chips (Other specify) */
+.org-onboarding-card .chip-group + .auth-input {
+    margin-top: 12px;
+}
+
+/* Space before buttons */
+.org-onboarding-card .onboarding-actions {
+    margin-top: 32px;
+}
+
+
+/* GLOBAL RESET */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: #ffffff; /* Main white background for content area if needed, but strict layout uses lighter greys */
+    font-family: "Inter", sans-serif;
+    color: #1f2937;
+}
+
+/* --- LEFT SIDEBAR --- */
+.sidebar-left {
+    width: 250px;
+    background: #ffffff;
+    border-right: 1px solid #f3f4f6;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-left: 8px;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 18px;
+    color: #374151;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-item .icon {
+    font-size: 16px;
+}
+
+.nav-item:hover {
+    background: #f9fafb;
+    color: #111827;
+}
+
+.nav-item.active {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 16px;
+}
+
+/* --- MAIN CONTENT CENTER --- */
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+/* Header */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-bar input {
+    padding: 8px 12px 8px 36px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+    width: 240px;
+    background: #ffffff;
+    color: #374151;
+}
+
+.search-bar input::placeholder {
+    color: #9ca3af;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.btn-primary-pill {
+    background: #ecfdf5;
+    color: #1f2724;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primary-pill:hover {
+    background: #ecfdf5;
+}
+
+/* Welcome Section */
+.welcome-section {
+    margin-bottom: 32px;
+}
+
+.welcome-section h1 {
+    font-size: 24px;
+    font-weight: 10;
+    color: #111827;
+    margin: 0 0 8px 0;
+}
+
+.welcome-section p {
+    color: #6b7280;
+    font-style: italic;
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Section Containers */
+.section-container {
+    margin-bottom: 36px;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: 50;
+    color: #374151;
+    margin: 0 0 16px 0;
+}
+
+/* Recommended Actions Stack */
+.action-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    transition: box-shadow 0.2s;
+}
+
+.action-card:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.action-text h4 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.action-text p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.btn-action-green {
+    background: #ecfdf5;
+    color: #031d15;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-action-grey {
+    background: #ecfdf5;
+    color: #031d15;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Opportunities Grid */
+.opportunities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.opportunity-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.opp-header h4 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.sub-text {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.desc-text {
+    font-size: 13px;
+    margin: 12px 0;
+    color: #4b5563;
+    line-height: 1.5;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.tag {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    padding-top: 12px;
+    border-top: 1px solid #f9fafb;
+}
+
+.card-footer .date {
+    color: #9ca3af;
+}
+
+.card-footer .link {
+    color: #6b7280;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.empty-state {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* --- RIGHT SIDEBAR --- */
+.sidebar-right {
+    width: 320px;
+    background: #ecfdf5; /* The specific light green background */
+    padding: 32px 24px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.right-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 16px 0;
+}
+
+/* Credibility Ladder (Timeline) */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+}
+
+/* The vertical line */
+.timeline-container::before {
+    content: "";
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    bottom: 30px;
+    width: 2px;
+    background: #d1d5db;
+    border-left: 2px dotted #9ca3af;
+    background: transparent;
+    z-index: 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid #ecfdf5; /* Makes it look like it floats over line */
+}
+
+.timeline-item.active .timeline-icon {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.timeline-item.active .timeline-icon.starter {
+    border: 1px solid #10b981;
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.level-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.timeline-item.active .level-name {
+    color: #111827;
+    font-weight: 600;
+}
+
+.level-sub {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+/* Weekly Momentum */
+.sub-desc {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: -10px 0 16px 0;
+}
+
+.momentum-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.momentum-box {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.momentum-box.filled {
+    background: #d1fae5;
+}
+
+.small-text {
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.momentum-legend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    color: #9ca3af;
+}
+
+.legend-dots {
+    display: flex;
+    gap: 4px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+}
+.l1 {
+    background: #e5e7eb;
+}
+.l2 {
+    background: #d1fae5;
+}
+.l3 {
+    background: #6ee7b7;
+}
+.l4 {
+    background: #10b981;
+}
+
+/* Right Bottom Toggles */
+.right-group-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.white-pill-row {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.row-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+}
+
+.pill-icon {
+    color: #10b981;
+    background: #ecfdf5;
+    padding: 4px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+.toggle-switch {
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.toggle-switch.on {
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.badge-weak {
+    background: #f3f4f6;
+    color: #6b7280;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.small-link {
+    font-size: 11px;
+    color: #6b7280;
+    text-decoration: none;
+    margin-top: 4px;
+}
+.small-link:hover {
+    text-decoration: underline;
+}
+/* Add to auth.css */
+
+/* 1. Ensure labels are bold and left-aligned */
+.input-label {
+    text-align: left;
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    font-weight: 400; /* Matches the "Name*" boldness */
+    font-size: 14px;
+    color: #374151;
+}
+
+/* 2. Style the verification text */
+.verification-text {
+    font-size: 13px;
+    color: #9ca3af; /* Light grey color */
+    text-align: left; /* Aligns to the left */
+    margin-top: 48px; /* Space away from 'Remember me' */
+    margin-bottom: 16px; /* Space above the 'Sign Up' button */
+    line-height: 1.4;
+}
+
+/* 3. Ensure the button doesn't have too much extra top margin */
+/* This overrides the generic .auth-button margin if needed */
+.auth-card .auth-button {
+    margin-top: 0;
+}
+/* Increase space above the buttons in Organization Onboarding */
+.org-onboarding-card .onboarding-actions {
+    margin-top: 40px !important; /* ⬅️ Adjust this value (e.g., 80px, 120px) as needed */
+}
