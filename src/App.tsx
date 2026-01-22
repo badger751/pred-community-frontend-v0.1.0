@@ -52,7 +52,7 @@ function App() {
   return (
     <AppBootstrap>
       <BrowserRouter>
-        <AuthListener />
+        <AuthListener/>
         <Routes>
           {/* ================= PUBLIC ROUTES ================= */}
           <Route path="/" element={<Login />} />
@@ -86,27 +86,27 @@ function App() {
             }
           />
           <Route
-            path="/TalentOnboarding"
+            path="/talent-onboarding"
             element={
-              <ProtectedRoute>
+              
                 <TalentOnboarding />
-              </ProtectedRoute>
+              
             }
           />
           <Route
             path="/talent-onboarding-2"
             element={
-              <ProtectedRoute >
+            
                 <TalentOnboardingStep2 />
-              </ProtectedRoute>
+              
             }
           />
           <Route
             path="/talent-onboarding-3"
             element={
-              <ProtectedRoute >
+              
                 <TalentOnboardingStep3 />
-              </ProtectedRoute>
+              
             }
           />
           <Route

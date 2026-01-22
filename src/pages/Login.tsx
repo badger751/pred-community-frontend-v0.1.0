@@ -43,7 +43,7 @@ function Login() {
       */
       await useAuthStore.getState().bootstrapAuth();
 
-      navigate("/talent-onboarding-2", { replace: true });
+      navigate("/TalentOnboarding", { replace: true });
     } catch (err: any) {
       console.error("Login failed:", err);
       setErrorMessage(

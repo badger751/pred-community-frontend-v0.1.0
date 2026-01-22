@@ -6,7 +6,7 @@ import { useOnboardingStore } from "../stores/onboardingStore"; // ← new impor
 
 function TalentOnboarding() {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore(); // get user & logout
+  const { logout } = useAuthStore(); // get user & logout
   const { setStep1 } = useOnboardingStore(); // get setter for step 1
 
   const [focusRightNow, setFocusRightNow] = useState<string[]>([]);

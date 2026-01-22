@@ -1,96 +1,104 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 
 export default function AuthRedirector() {
   const navigate = useNavigate();
   const location = useLocation();
+  const resolvingRef = useRef(false);
 
   useEffect(() => {
     const resolveAuthFlow = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+      if (resolvingRef.current) return;
+      resolvingRef.current = true;
 
-      if (!session?.user) {
-        return;
-      }
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-      const userId = session.user.id;
-      const currentPath = location.pathname.toLowerCase();
+        if (!session?.user) return;
 
-      /* --------------------------------------------------
-         1. Fetch role from profiles (authoritative)
-      -------------------------------------------------- */
+        const userId = session.user.id;
+        const currentPath = location.pathname.toLowerCase();
 
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userId)
-        .single();
+        /* --------------------------------------------------
+           1. Resolve role (authoritative)
+        -------------------------------------------------- */
 
-      if (profileError || !profile?.role) {
-        console.error("Unable to resolve user role");
-        return;
-      }
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", userId)
+          .single();
 
-      const role = profile.role.toLowerCase() as "talent" | "organization";
+        if (error || !profile?.role) return;
 
-      const onboardingRoot =
-        role === "organization"
-          ? "/organization-onboarding"
-          : "/talent-onboarding";
+        const role = profile.role.toLowerCase() as "talent" | "organization";
 
-      const dashboardRoute =
-        role === "organization"
-          ? "/organization-dashboard"
-          : "/talent-dashboard-v2";
+        /* --------------------------------------------------
+           2. Canonical routes (MATCH App.tsx)
+        -------------------------------------------------- */
 
-      const isOnboardingRoute = currentPath.startsWith(onboardingRoot);
-      const isPublicRoute =
-        currentPath === "/" ||
-        currentPath === "/login" ||
-        currentPath.startsWith("/signup") ||
-        currentPath.startsWith("/signin") ||
-        currentPath.startsWith("/forgot-password") ||
-        currentPath.startsWith("/reset-password");
+        const onboardingRoot =
+          role === "organization"
+            ? "/organization-onboarding"
+            : "/talent-onboarding";
 
-      /* --------------------------------------------------
-         2. If user is inside onboarding → NEVER interfere
-      -------------------------------------------------- */
+        const dashboardRoute =
+          role === "organization"
+            ? "/organization-dashboard"
+            : "/talent-dashboard-v2";
 
-      if (isOnboardingRoute) {
-        return;
-      }
+        const talentOnboardingRoutes = [
+          "/talent-onboarding",
+          "/talent-onboarding-2",
+          "/talent-onboarding-3",
+        ];
 
-      /* --------------------------------------------------
-         3. Fetch onboarding status (row may NOT exist yet)
-      -------------------------------------------------- */
+        const orgOnboardingRoutes = [
+          "/organization-onboarding",
+          "/organization-onboarding-2",
+          "/organization-onboarding-3",
+        ];
 
-      const onboardingTable =
-        role === "organization"
-          ? "organization_profiles"
-          : "talent_profiles";
+        const isOnboardingRoute =
+          role === "organization"
+            ? orgOnboardingRoutes.includes(currentPath)
+            : talentOnboardingRoutes.includes(currentPath);
 
-      const { data: onboardingRow } = await supabase
-        .from(onboardingTable)
-        .select("onboarding_completed")
-        .eq("id", userId)
-        .maybeSingle();
+        /* --------------------------------------------------
+           3. Onboarding completion state
+        -------------------------------------------------- */
 
-      const onboardingCompleted = onboardingRow?.onboarding_completed === true;
+        const onboardingTable =
+          role === "organization"
+            ? "organization_profiles"
+            : "talent_profiles";
 
-      /* --------------------------------------------------
-         4. Routing decisions
-      -------------------------------------------------- */
+        const { data: onboardingRow } = await supabase
+          .from(onboardingTable)
+          .select("onboarding_completed")
+          .eq("id", userId)
+          .maybeSingle();
 
-      if (!onboardingCompleted && !isPublicRoute) {
-        navigate(onboardingRoot, { replace: true });
-        return;
-      }
+        const onboardingCompleted =
+          onboardingRow?.onboarding_completed === true;
 
-      if (onboardingCompleted && (isPublicRoute || isOnboardingRoute)) {
-        navigate(dashboardRoute, { replace: true });
+        /* --------------------------------------------------
+           4. Routing rules (NO STEP RESET)
+        -------------------------------------------------- */
+
+        if (!onboardingCompleted && !isOnboardingRoute) {
+          navigate(onboardingRoot, { replace: true });
+          return;
+        }
+
+        if (onboardingCompleted && isOnboardingRoute) {
+          navigate(dashboardRoute, { replace: true });
+        }
+      } finally {
+        resolvingRef.current = false;
       }
     };
 
