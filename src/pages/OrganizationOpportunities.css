@@ -1,0 +1,352 @@
+/* FILE: src/pages/OrganizationOpportunities.css */
+
+/* --- Main Layout --- */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F9FAFB;
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar-left {
+    width: 240px;
+    background: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+/* ... (Sidebar styles assumed global or existing) ... */
+
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll bar from main container */
+    min-width: 1000px; /* Ensure table doesn't crush on small screens */
+}
+
+/* --- Header & Search --- */
+.opportunities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-bar-container {
+    position: relative;
+}
+
+.search-bar-input {
+    padding: 10px 16px 10px 40px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    width: 240px;
+    outline: none;
+    background: white;
+}
+
+.search-icon-placeholder {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    pointer-events: none;
+    display: flex;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #6B7280;
+    display: flex;
+}
+
+.btn-create-opportunity {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+/* --- Filters --- */
+.filters-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+    background-color: #F9FAFB;
+    padding: 12px 0;
+}
+
+.filters-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.filter-dropdown {
+    padding: 8px 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #374151;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-by-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sort-by-label {
+    font-size: 14px;
+    color: #6B7280;
+}
+
+/* =========================================
+   STRICT GRID SYSTEM FOR ALIGNMENT
+   ========================================= */
+
+/* This defines the columns for BOTH the header and the card */
+.column-headers, .opportunity-card {
+    display: grid;
+    /* Grid Template Explanation:
+       Overview: 3 parts
+       Status: 1.8 parts
+       Commitments: 2 parts
+       Compensation: 2 parts
+       Pipeline: 2.2 parts (Wider to fit 3 numbers)
+       Actions: 1 part
+    */
+    grid-template-columns: 3fr 1.8fr 2fr 2fr 2.2fr 1fr;
+    gap: 16px; /* Spacing between columns */
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- Column Headers Specifics --- */
+.column-headers {
+    padding: 12px 24px;
+    background-color: #F9FAFB;
+    border-bottom: 1px solid #E5E7EB;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.col-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.col-header.actions {
+    text-align: right;
+}
+
+/* --- Opportunity Card Specifics --- */
+.opportunity-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-top: none;
+    padding: 24px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 48px;
+}
+
+/* --- Section Styling --- */
+
+/* 1. Overview */
+.opp-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.opp-details {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 8px;
+}
+.opp-posted {
+    font-size: 12px;
+    color: #9CA3AF;
+}
+
+/* 2. Status */
+.card-section.status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.badge-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.badge.live { background-color: #ECFDF5; color: #065F46; }
+.badge.action-required { background-color: #FEF3C7; color: #92400E; }
+
+.status-text {
+    font-size: 14px;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #F59E0B;
+    border-radius: 50%;
+}
+
+/* 3. Commitments & 4. Compensation */
+.card-section.commitments, 
+.card-section.compensation {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+}
+.info-icon-placeholder {
+    color: #9CA3AF;
+    display: flex;
+    width: 16px;
+    justify-content: center;
+}
+
+/* 5. Pipeline - CRITICAL FIX */
+.card-section.pipeline {
+    display: flex;
+    flex-direction: row; /* Force horizontal layout */
+    gap: 24px; /* Space between the numbers */
+}
+
+.pipeline-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat-count {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6B7280;
+}
+
+/* 6. Actions */
+.card-section.actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+}
+
+.btn-view-candidates {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    color: #374151;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* --- Empty State --- */
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0;
+    text-align: center;
+}
+
+.empty-state-text {
+    font-size: 18px;
+    color: #9CA3AF;
+    margin-bottom: 24px;
+    font-style: italic;
+}
+
+.btn-post-first {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.chevron-icon {
+    color: #9CA3AF;
+    display: flex;
+}

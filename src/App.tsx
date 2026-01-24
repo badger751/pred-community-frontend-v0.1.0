@@ -1,7 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {  type ReactNode } from "react";
-
-import { useAuthStore } from "./stores/authStore";
 
 // --- Pages ---
 import Login from "./pages/Login";
@@ -22,165 +19,197 @@ import OrgOnboarding3 from "./pages/OrgOnboarding3";
 import OrgSignIn from "./pages/OrgSignIn";
 import TalentDashboardV2 from "./pages/TalentDashboardV2";
 import OrganizationDashboard from "./pages/OrganizationDashboard";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword"; // <-- import the new page
-
+import OrgProfilePage from "./pages/OrgProfilePage";
+import OrganizationProfile from './pages/OrganizationProfile';
+import OrganizationOpportunities from './pages/OrganizationOpportunities';
+import OrgPostOpportunity from './pages/OrgPostOpportunity';
+import OrgWorkScope from './pages/OrgWorkScope';
+import OrgReviewOpportunity from './pages/OrgReviewOpportunity';
 // --- Components ---
-import ProtectedRoute from "./components/ProtectedRoute";
-import AuthListener from "./components/AuthListener";
-
-/* ---------------------------------------------
-   App Bootstrap Layer (Session Rehydration)
----------------------------------------------- */
-function AppBootstrap({ children }: { children: ReactNode }) {
-  const isHydrated = useAuthStore((s) => s.isHydrated);
-
-  //useEffect(() => {
-   // bootstrapAuth();
-  //}, []);
-
-  if (!isHydrated) {
-    return null; // or global spinner
-  }
-
-  return children;
-}
-
-
+import ProtectedRoute from "./components/ProtectedRoute"; 
 
 function App() {
   return (
-    <AppBootstrap>
-      <BrowserRouter>
-        <AuthListener/>
-        <Routes>
-          {/* ================= PUBLIC ROUTES ================= */}
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+    <BrowserRouter>
+      <Routes>
+        {/* ================= PUBLIC ROUTES ================= */}
+        {/* These must be open so users can log in or sign up */}
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/organization-signup" element={<OrgSignup />} />
+        <Route path="/organization-signin" element={<OrgSignIn />} />
+        
+        {/* If 'Home' is a public landing page, keep it here. 
+            If it's a private user home, move it to Protected below. */}
+        <Route path="/home" element={<Home />} />
 
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/organization-signup" element={<OrgSignup />} />
-          <Route path="/organization-signin" element={<OrgSignIn />} />
-          <Route path="/home" element={<Home />} />
 
-          {/* ================= PROTECTED ROUTES ================= */}
+        {/* ================= PROTECTED ROUTES ================= */}
+        {/* Users cannot see these unless isLoggedIn = true */}
+        
+        {/* Role Selection */}
+        <Route 
+          path="/select-role" 
+          element={
+            <ProtectedRoute>
+              <SelectRole />
+            </ProtectedRoute>
+          } 
+        />
 
-          <Route
-            path="/select-role"
-            element={
-              <ProtectedRoute>
-                <SelectRole />
-              </ProtectedRoute>
-            }
-          />
+        {/* Talent Routes */}
+        <Route 
+          path="/talent" 
+          element={
+            <ProtectedRoute>
+              <TalentDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/TalentOnboarding" 
+          element={
+            <ProtectedRoute>
+              <TalentOnboarding />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/talent-onboarding-2" 
+          element={
+            <ProtectedRoute>
+              <TalentOnboardingStep2 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/talent-onboarding-3" 
+          element={
+            <ProtectedRoute>
+              <TalentOnboardingStep3 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/talent-dashboard-v2" 
+          element={
+            <ProtectedRoute>
+              <TalentDashboardV2 />
+            </ProtectedRoute>
+          } 
+        />
 
-          {/* -------- Talent -------- */}
-          <Route
-            path="/talent"
-            element={
-              <ProtectedRoute >
-                <TalentDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/talent-onboarding"
-            element={
-              
-                <TalentOnboarding />
-              
-            }
-          />
-          <Route
-            path="/talent-onboarding-2"
-            element={
-            
-                <TalentOnboardingStep2 />
-              
-            }
-          />
-          <Route
-            path="/talent-onboarding-3"
-            element={
-              
-                <TalentOnboardingStep3 />
-              
-            }
-          />
-          <Route
-            path="/talent-dashboard-v2"
-            element={
-              <ProtectedRoute >
-                <TalentDashboardV2 />
-              </ProtectedRoute>
-            }
-          />
+        {/* Organization Routes */}
+        <Route 
+          path="/organization" 
+          element={
+            <ProtectedRoute>
+              <OrgDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/organization-onboarding" 
+          element={
+            <ProtectedRoute>
+              <OrgOnboarding1 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/organization-onboarding-2" 
+          element={
+            <ProtectedRoute>
+              <OrgOnboarding2 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/organization-onboarding-3" 
+          element={
+            <ProtectedRoute>
+              <OrgOnboarding3 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/org" 
+          element={
+            <ProtectedRoute>
+              <OrganizationDashboard />
+            </ProtectedRoute>
+          } 
+        />
 
-          {/* -------- Organization -------- */}
-          <Route
-            path="/organization"
-            element={
-              <ProtectedRoute >
-                <OrgDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/organization-onboarding"
-            element={
-              <ProtectedRoute >
-                <OrgOnboarding1 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/organization-onboarding-2"
-            element={
-              <ProtectedRoute >
-                <OrgOnboarding2 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/organization-onboarding-3"
-            element={
-              <ProtectedRoute >
-                <OrgOnboarding3 />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/org"
-            element={
-              <ProtectedRoute >
-                <OrganizationDashboard />
-              </ProtectedRoute>
-            }
-          />
+        {/* General User Routes */}
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/settings" 
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          } 
+        />
+        <Route
+  path="/org/profile"
+  element={
+    <ProtectedRoute>
+      <OrgProfilePage />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/organization/profile"
+  element={
+    <ProtectedRoute>
+      <OrganizationProfile />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/organization/opportunities"
+  element={
+    <ProtectedRoute>
+      <OrganizationOpportunities />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/organization/post-opportunity"
+  element={
+    <ProtectedRoute>
+      <OrgPostOpportunity />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/organization/work-scope"
+  element={
+    <ProtectedRoute>
+      <OrgWorkScope />
+    </ProtectedRoute>
+  }
+/>
+        <Route
+  path="/organization/review-opportunity"
+  element={
+    <ProtectedRoute>
+      <OrgReviewOpportunity />
+    </ProtectedRoute>
+  }
+/>
 
-          {/* -------- Shared -------- */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-      
-    </AppBootstrap>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

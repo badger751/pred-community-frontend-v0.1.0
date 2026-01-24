@@ -3,75 +3,11 @@ import { useState } from "react";
 import "../auth.css";
 
 function Signup() {
-  const navigate = useNavigate();
-
   const [name, setName] = useState("");
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  async function handleSignup() {
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-    setErrorMessage(null);
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            full_name: name,
-            role: "talent",
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      console.log("Signup response — full data:", data);
-console.log("Status code:", response.status);
-console.log("Response ok?", response.ok);
-
-      if (!response.ok) {
-        // Handle duplicate email specifically
-        if (
-          data?.detail?.toLowerCase().includes("user already registered") ||
-          data?.message?.toLowerCase().includes("already registered") ||
-          data?.error?.message?.toLowerCase().includes("already registered")
-        ) {
-          const msg = "This email is already registered. Please sign in or use a different email.";
-          setErrorMessage(msg);
-          alert(msg); // Simple popup - replace with toast later if you want
-          return;
-        }
-
-        // Other signup errors
-        throw new Error(data?.detail ?? "Signup failed. Please try again.");
-      }
-
-      // Success
-      console.log("Signup successful:", data);
-      navigate("/login");
-
-    } catch (error) {
-      console.error("Signup error:", error);
-      const message = error instanceof Error ? error.message : "Unexpected error during signup";
-      setErrorMessage(message);
-      alert(message); // Optional: popup for visibility
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
 
   return (
     <div className="auth-wrapper">
@@ -97,8 +33,10 @@ console.log("Response ok?", response.ok);
       {/* HERO TEXT */}
       <div className="auth-hero">
         <h2 className="auth-hero-title">Welcome!</h2>
-        <p className="auth-hero-subtitle">Sign-up as a Talent</p>
-        <p className="auth-hero-desc">Build proof-of-work and get matched.</p>
+        <p className="auth-hero-subtitle">Sign‑up as a Talent</p>
+        <p className="auth-hero-desc">
+          Build proof‑of‑work and get matched.
+        </p>
       </div>
 
       {/* WHITE CARD */}
@@ -123,6 +61,8 @@ console.log("Response ok?", response.ok);
 
         <div className="or-text">or</div>
 
+        {/* INPUTS WITH LABELS */}
+        
         {/* Name */}
         <label className="input-label">Name</label>
         <input
@@ -161,19 +101,15 @@ console.log("Response ok?", response.ok);
               checked={remember}
               onChange={() => setRemember(!remember)}
             />
-            <label className="react-switch-label" htmlFor="remember-signup">
+            <label
+              className="react-switch-label"
+              htmlFor="remember-signup"
+            >
               <span className="react-switch-button" />
             </label>
             <span>Remember me</span>
           </div>
         </div>
-
-        {/* ERROR MESSAGE - now handles duplicate email clearly */}
-        {errorMessage && (
-          <p className="auth-error-text" style={{ color: "#e53e3e", fontWeight: "500" }}>
-            {errorMessage}
-          </p>
-        )}
 
         {/* VERIFICATION TEXT */}
         <p className="verification-text">
@@ -181,13 +117,7 @@ console.log("Response ok?", response.ok);
         </p>
 
         {/* SIGN UP BUTTON */}
-        <button
-          className="auth-button"
-          onClick={handleSignup}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Signing Up..." : "Sign Up"}
-        </button>
+        <button className="auth-button">Sign Up</button>
 
         {/* FOOTER LINK */}
         <p className="auth-text">

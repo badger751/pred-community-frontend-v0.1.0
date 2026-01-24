@@ -3,119 +3,40 @@ import "../auth.css";
 import { useState } from "react";
 
 function OrgSignup() {
-  const navigate = useNavigate();
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [remember, setRemember] = useState(false);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const handleOrgSignup = async () => {
-    if (isSubmitting) return;
-
-    setErrorMessage(null);
-
-    // Basic client-side validation
-    if (!name.trim()) {
-      setErrorMessage("Please enter your full name");
-      return;
-    }
-    if (!email.trim()) {
-      setErrorMessage("Please enter your work email");
-      return;
-    }
-    if (!password) {
-      setErrorMessage("Please create a password");
-      return;
-    }
-    if (password.length < 8) {
-      setErrorMessage("Password must be at least 8 characters long");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/orgsignup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email.trim(),
-            password,
-            full_name: name.trim(),
-            role: "organization", // or "org" – match what your backend expects
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Handle duplicate email or other backend errors
-        if (
-          data?.detail?.toLowerCase().includes("already registered") ||
-          data?.message?.toLowerCase().includes("already exists") ||
-          data?.error?.toLowerCase().includes("duplicate") ||
-          response.status === 409
-        ) {
-          setErrorMessage("This email is already registered. Please sign in or use a different email.");
-        } else {
-          setErrorMessage(data?.detail || data?.message || "Organization signup failed. Please try again.");
-        }
-        return;
-      }
-
-      // Success
-      console.log("Org signup successful:", data);
-      navigate("/organization-onboarding");
-
-    } catch (error) {
-      console.error("Org signup error:", error);
-      setErrorMessage("Something went wrong. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const navigate = useNavigate();
 
   return (
     <div className="auth-wrapper">
-      {/* TOP LEFT LOGO */}
+      {/* --- LOGO --- */}
+      {/* Added zIndex to ensure it's not covered by the background */}
       <div className="auth-logo" style={{ zIndex: 1000 }}>
         <img src="/Logo.svg" alt="Predulive" />
       </div>
 
-      {/* TOP RIGHT LINKS */}
+      {/* --- TOP RIGHT LINKS --- */}
+      {/* Added zIndex: 1000 so these Links are clickable */}
       <div className="auth-top-right" style={{ zIndex: 1000 }}>
         <Link to="/signup" className="top-action">
           Sign up as Talent
         </Link>
+
+        {/* You can point this to "/organization-signin" if you prefer */}
         <Link to="/login" className="top-action">
           Sign in
         </Link>
       </div>
 
-      {/* HERO SECTION */}
+      {/* --- HERO SECTION --- */}
       <div className="auth-hero">
         <h2 className="auth-hero-title">Welcome!</h2>
-        <p className="auth-hero-subtitle">Sign-up as Organization</p>
+        <p className="auth-hero-subtitle">Sign‑up as Organization</p>
         <p className="auth-hero-helper">
           Post opportunities and discover reliable talent.
         </p>
       </div>
 
-      {/* WHITE CARD */}
+      {/* --- WHITE CARD --- */}
       <div
         className="auth-card org-signup-card"
         style={{ marginTop: "150px", marginBottom: "60px" }}
@@ -137,15 +58,9 @@ function OrgSignup() {
 
         <p className="divider">or</p>
 
-        {/* FORM FIELDS */}
         <div className="form-group">
           <label>Name</label>
-          <input
-            className="auth-input"
-            placeholder="Your full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <input className="auth-input" placeholder="Your full name" />
         </div>
 
         <div className="form-group">
@@ -153,8 +68,6 @@ function OrgSignup() {
           <input
             className="auth-input"
             placeholder="name@company.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -164,8 +77,6 @@ function OrgSignup() {
             type="password"
             className="auth-input"
             placeholder="Use 8+ characters"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -175,8 +86,6 @@ function OrgSignup() {
             type="password"
             className="auth-input"
             placeholder="Re-enter password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
 
@@ -198,20 +107,13 @@ function OrgSignup() {
           <span>Remember me</span>
         </div>
 
-        {/* ERROR MESSAGE */}
-        {errorMessage && (
-          <p className="auth-error-text" style={{ color: "#e74c3c" }}>
-            {errorMessage}
-          </p>
-        )}
-
-        {/* VERIFICATION TEXT */}
+        {/* EMAIL INFO */}
         <p
           style={{
             fontSize: "13px",
             color: "#9ca3af",
             marginBottom: "0px",
-            marginTop: "20px",
+            marginTop: "50px" 
           }}
         >
           We’ll email a verification link to confirm your account.
@@ -222,10 +124,9 @@ function OrgSignup() {
           type="button"
           className="auth-button"
           style={{ marginBottom: "18px" }}
-          onClick={handleOrgSignup}
-          disabled={isSubmitting}
+          onClick={() => navigate("/organization-onboarding")}
         >
-          {isSubmitting ? "Signing up..." : "Sign up"}
+          Sign up
         </button>
 
         {/* FOOTER */}
@@ -236,8 +137,8 @@ function OrgSignup() {
             marginBottom: "20px",
           }}
         >
-          Already have an account?{" "}
-          <Link to="/organization-signin">Sign in</Link>
+          {/* Changed this to point to Organization Signin instead of generic Login */}
+          Already have an account? <Link to="/organization-signin">Sign in</Link>
         </p>
       </div>
     </div>

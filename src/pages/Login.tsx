@@ -1,121 +1,75 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "../auth.css";
-import { supabase } from "../lib/supabaseClient";
-import { useAuthStore } from "../stores/authStore";
+import "../auth.css"; 
+import { loginUser } from "../api/auth";
 
 function Login() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (loading) return;
-
-    if (!email || !password) {
-      setErrorMessage("Please enter email and password");
-      return;
-    }
-
     setLoading(true);
-    setErrorMessage(null);
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-
-      if (error) throw error;
-
-      /*
-        IMPORTANT:
-        - Do NOT set Zustand state manually
-        - Supabase now owns the session
-        - bootstrapAuth() will:
-            • read the session
-            • fetch role from profiles
-            • hydrate Zustand correctly
-      */
-      await useAuthStore.getState().bootstrapAuth();
-
-      navigate("/TalentOnboarding", { replace: true });
-    } catch (err: any) {
-      console.error("Login failed:", err);
-      setErrorMessage(
-        err?.message || "Login failed. Please check your credentials."
-      );
-    } finally {
-      setLoading(false);
+    // basic validation
+    if (!email || !password) {
+        alert("Please enter email and password");
+        setLoading(false);
+        return;
     }
-  };
 
-  const handleGoogleLogin = async () => {
     try {
-      setLoading(true);
-      setErrorMessage(null);
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: window.location.origin,
-          queryParams: {
-            access_type: "offline",
-            prompt: "consent",
-          },
-        },
-      });
-
-      if (error) throw error;
-
-      /*
-        No manual navigation here.
-        After redirect back:
-        - main.tsx listens to auth changes
-        - bootstrapAuth() runs automatically
-      */
-    } catch (err: any) {
-      console.error("Google login failed:", err);
-      setErrorMessage(
-        err?.message || "Failed to sign in with Google. Please try again."
-      );
+        const res = await loginUser(email, password);
+        
+        if (res.success) {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("role", res.role);
+          navigate("/TalentOnboarding");
+        } else {
+            alert("Login failed. Please check your credentials.");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("An error occurred during login.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
   return (
     <div className="auth-wrapper">
-      {/* TOP LEFT LOGO */}
+      {/* --- TOP LEFT LOGO --- */}
+      {/* Added zIndex here just in case */}
       <div className="auth-logo" style={{ zIndex: 1000 }}>
         <img src="/Logo.svg" alt="Predulive logo" />
       </div>
 
-      {/* TOP RIGHT LINKS */}
+      {/* --- TOP RIGHT LINKS (Now using <Link>) --- */}
+      {/* zIndex: 1000 ensures these links sit ABOVE the background image */}
       <div className="auth-top-right" style={{ zIndex: 1000 }}>
+        
+        {/* Changed from Button to Link */}
         <Link to="/organization-signup" className="top-action">
           Sign in as Organization
         </Link>
 
+        {/* Changed from Button to Link */}
+        {/* Note: Since you are already on the Login page, you might want this to point to "/signup" instead? 
+            But I have kept it as "/login" per your request. */}
         <Link to="/login" className="top-action">
           Sign in
         </Link>
       </div>
 
-      {/* HERO TEXT */}
+      {/* --- LEFT SIDE: HERO TEXT --- */}
       <div className="auth-hero">
         <h2 className="auth-hero-title">Welcome!</h2>
-        <p className="auth-hero-subtitle">Sign-In as a Talent</p>
-        <p className="auth-hero-desc">
-          Build proof-of-work and get matched.
-        </p>
+        <p className="auth-hero-subtitle">Sign‑In as a Talent</p>
+        <p className="auth-hero-desc">Build proof‑of‑work and get matched.</p>
       </div>
 
-      {/* WHITE CARD */}
+      {/* --- RIGHT SIDE: WHITE CARD --- */}
       <div className="auth-card">
         <h3 className="sign-in-title">Sign In With</h3>
 
@@ -126,17 +80,13 @@ function Login() {
           <div className="social-btn">
             <img src="/apple.png" alt="apple" />
           </div>
-          <div
-            className="social-btn"
-            onClick={handleGoogleLogin}
-            style={{ cursor: loading ? "not-allowed" : "pointer" }}
-          >
+          <div className="social-btn">
             <img src="/google.png" alt="google" />
           </div>
         </div>
 
         <div className="or-text">or</div>
-
+        
         <label className="input-label">Email</label>
         <input
           className="auth-input"
@@ -144,7 +94,7 @@ function Login() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
+        
         <label className="input-label">Password</label>
         <input
           className="auth-input"
@@ -156,10 +106,7 @@ function Login() {
 
         <div className="remember-row">
           <span className="forgot-link">
-            Forgot password?{" "}
-            <Link to="/forgot-password" className="reset-link">
-              Reset
-            </Link>
+            Forgot password? <span className="reset-link">Reset</span>
           </span>
 
           <div className="remember-toggle-row">
@@ -170,27 +117,14 @@ function Login() {
               checked={remember}
               onChange={() => setRemember(!remember)}
             />
-            <label
-              className="react-switch-label"
-              htmlFor="remember-switch"
-            >
+            <label className="react-switch-label" htmlFor="remember-switch">
               <span className="react-switch-button" />
             </label>
             <span>Remember me</span>
           </div>
         </div>
 
-        <div className="top-8" />
-
-        {errorMessage && (
-          <p
-            className="auth-error-text"
-            style={{ color: "#e74c3c", marginBottom: "16px" }}
-          >
-            {errorMessage}
-          </p>
-        )}
-
+        <div className="top-8"></div>
         <button
           className="auth-button"
           disabled={!email || !password || loading}
