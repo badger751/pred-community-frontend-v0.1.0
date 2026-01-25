@@ -1,0 +1,437 @@
+/* src/orgProfile.css */
+
+/* Ensure main content stretches properly */
+.dashboard-container .main-content {
+    padding-right: 32px;
+    max-width: 1200px;
+}
+
+/* Header section */
+.profile-header-section {
+    margin-bottom: 32px;
+}
+
+.header-bc {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 16px;
+}
+
+/* Banner Card */
+.profile-banner-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Orange top border strip */
+.profile-banner-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #E5E7EB;
+}
+
+.profile-banner-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35%; 
+    height: 4px;
+    background: #E5E7EB; /* Orange */
+    z-index: 1;
+}
+
+/* Avatar */
+.avatar-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 80px;
+    height: 80px;
+    background: #D1D5DB;
+    border-radius: 50%;
+    border: 4px solid #FFFFFF;
+    box-shadow: 0 0 0 2px #9CA3AF; /* Orange ring */
+}
+
+.edit-icon-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6B7280;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+
+.edit-icon-badge:hover {
+    background: #F3F4F6;
+    color: #374151;
+}
+
+/* Banner Info */
+.banner-info h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px 0;
+}
+
+.banner-desc {
+    color: #9CA3AF;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-desc-link {
+    color: #9CA3AF;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.add-desc-link:hover {
+    text-decoration: underline;
+}
+
+/* --- FORM SECTION --- */
+.profile-form-section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+/* Read-Only Inputs (Grey Background) */
+.form-input-disabled {
+    width: 100%;
+    padding: 10px 14px;
+    background: #F9FAFB; /* Light grey */
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    color: #6B7280;
+    font-size: 14px;
+    outline: none;
+    cursor: not-allowed;
+}
+
+/* Grids */
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.grid-3-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+}
+
+/* Interactive Checkboxes & Radios */
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.cb-item, .radio-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: #4B5563;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cb-item:hover, .radio-item:hover {
+    color: #111827;
+}
+
+/* Customizing the inputs accent color to GREEN */
+.cb-item input[type="checkbox"], 
+.radio-item input[type="radio"] {
+    accent-color: #10B981; /* Predulive Green */
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+
+.cb-desc {
+    display: block;
+    font-size: 12px;
+    color: #9CA3AF;
+    margin-top: 2px;
+    line-height: 1.4;
+}
+
+/* Pills (Read only) */
+.pills-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.domain-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid #E5E7EB;
+    font-size: 12px;
+    color: #4B5563;
+    background: #F9FAFB; /* Light grey bg */
+    cursor: pointer;      /* Changed from default to pointer */
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+/* Hover Effect */
+.domain-pill:hover {
+    background-color: #E5E7EB;
+    border-color: #10B981;
+    color: #111827;
+}
+
+/* Active / Selected State */
+.domain-pill.active {
+    background-color: #D1FAE5; /* Light Green */
+    border-color: #10B981;     /* Darker Green Border */
+    color: #065F46;            /* Dark Green Text */
+    font-weight: 500;
+}
+
+/* Footer Buttons - Spaced Apart */
+.form-actions {
+    display: flex;
+    justify-content: space-between; /* Pushes buttons to edges */
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #E5E7EB;
+}
+
+.btn-revert {
+    padding: 10px 24px;
+    border: 1px solid #E5E7EB;
+    background: #FFFFFF;
+    color: #374151;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-revert:hover {
+    background-color: #F3F4F6;
+    border-color: #D1D5DB;
+}
+
+.btn-save {
+    padding: 10px 24px;
+    background: #D1FAE5; /* Light Green */
+    color: #065F46;     /* Dark Green text */
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-save:hover {
+    background: #A7F3D0;
+}
+/* --- APPEND TO: src/orgProfile.css --- */
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dim */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal Card */
+.modal-card {
+    background: #FFFFFF;
+    width: 100%;
+    max-width: 550px;
+    padding: 32px;
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-close-icon {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-close-icon:hover svg {
+    stroke: #4B5563;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1F2937; /* Dark Grey */
+    margin: 0 0 8px 0;
+}
+
+.modal-subtitle {
+    font-size: 16px;
+    color: #6B7280; /* Grey text */
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* Upload Area */
+.upload-dashed-box {
+    border: 2px dashed #D1D5DB;
+    border-radius: 12px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FAFAFA;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.upload-dashed-box:hover {
+    background-color: #F3F4F6;
+    border-color: #9CA3AF;
+}
+
+.upload-icon-circle {
+    width: 48px;
+    height: 48px;
+    background-color: #ECFDF5; /* Very light green */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Divider "Or" */
+.modal-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px 0;
+    position: relative;
+}
+
+.modal-divider::before,
+.modal-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #E5E7EB;
+}
+
+.modal-divider span {
+    padding: 0 16px;
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+/* Input */
+.modal-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    color: #374151;
+}
+
+.modal-input:focus {
+    border-color: #10B981;
+}
+
+/* Footer Buttons */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+}
+
+.btn-modal-back {
+    padding: 10px 32px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    color: #4B5563;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-modal-back:hover {
+    background: #F9FAFB;
+}
+
+.btn-modal-save {
+    padding: 10px 32px;
+    background: #D1FAE5; /* Light Green */
+    color: #065F46;     /* Dark Green text */
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-modal-save:hover {
+    background: #A7F3D0;
+}
