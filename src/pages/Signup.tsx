@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../auth.css";
+import { supabase } from "../lib/supabaseClient";
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,6 +13,32 @@ function Signup() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleGoogleLogin = async () => {
+    try {
+      setIsSubmitting(true);
+      setErrorMessage(null);
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      });
+
+      if (error) throw error;
+      // Redirect handled by Supabase after OAuth
+    } catch (err: any) {
+      console.error("Google signup failed:", err);
+      setErrorMessage(err?.message || "Failed to continue with Google. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   async function handleSignup() {
     if (isSubmitting) return;
@@ -61,7 +88,7 @@ console.log("Response ok?", response.ok);
 
       // Success
       console.log("Signup successful:", data);
-      navigate("/login");
+      navigate("/confirm-email", { state: { email } });
 
     } catch (error) {
       console.error("Signup error:", error);
@@ -108,18 +135,14 @@ console.log("Response ok?", response.ok);
       >
         <h3 className="sign-in-title">Register with</h3>
 
-        {/* SOCIAL LOGIN */}
-        <div className="social-login">
-          <div className="social-btn">
-            <img src="/facebook.png" alt="facebook" />
-          </div>
-          <div className="social-btn">
-            <img src="/apple.png" alt="apple" />
-          </div>
-          <div className="social-btn">
-            <img src="/google.png" alt="google" />
-          </div>
-        </div>
+        <button
+          className="google-wide-btn"
+          onClick={handleGoogleLogin}
+          disabled={isSubmitting}
+        >
+          <img src="/google.png" alt="Google" />
+          {isSubmitting ? "Redirecting..." : "Continue with Google"}
+        </button>
 
         <div className="or-text">or</div>
 
@@ -196,6 +219,16 @@ console.log("Response ok?", response.ok);
             Sign In
           </Link>
         </p>
+      </div>
+
+      <div className="auth-bottom-actions">
+        <Link to="/organization-signup" className="top-action">
+          Sign in as Organization
+        </Link>
+
+        <Link to="/login" className="top-action">
+          Sign in
+        </Link>
       </div>
     </div>
   );

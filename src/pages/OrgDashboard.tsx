@@ -1,24 +1,30 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../stores/authStore";
 import "../dashboard.css";
 
 function OrgDashboard() {
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (role !== "organization") {
-      window.location.href = "/";
+      navigate("/login", { replace: true });
     }
-  }, []);
-
-  const logout = () => {
-    localStorage.clear();
-    window.location.href = "/";
-  };
+  }, [navigate]);
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>Organization Dashboard</h2>
-        <button className="logout-btn" onClick={logout}>
+        <button
+          className="logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
+        >
           Logout
         </button>
       </div>

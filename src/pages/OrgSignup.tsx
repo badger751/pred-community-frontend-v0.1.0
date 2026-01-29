@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../auth.css";
-import { useState } from "react";
 
 function OrgSignup() {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ function OrgSignup() {
 
       // Success
       console.log("Org signup successful:", data);
-      navigate("/organization-onboarding");
+      navigate("/organization-confirm-email", { state: { email } });
 
     } catch (error) {
       console.error("Org signup error:", error);
@@ -120,22 +120,7 @@ function OrgSignup() {
         className="auth-card org-signup-card"
         style={{ marginTop: "150px", marginBottom: "60px" }}
       >
-        <p className="card-title">Register with</p>
-
-        {/* SOCIAL LOGIN */}
-        <div className="social-row">
-          <div className="social-btn">
-            <img src="/facebook.png" alt="facebook" />
-          </div>
-          <div className="social-btn">
-            <img src="/apple.png" alt="apple" />
-          </div>
-          <div className="social-btn">
-            <img src="/google.png" alt="google" />
-          </div>
-        </div>
-
-        <p className="divider">or</p>
+        <p className="card-title">Create your organization account</p>
 
         {/* FORM FIELDS */}
         <div className="form-group">
@@ -239,6 +224,15 @@ function OrgSignup() {
           Already have an account?{" "}
           <Link to="/organization-signin">Sign in</Link>
         </p>
+      </div>
+
+      <div className="auth-bottom-actions">
+        <Link to="/signup" className="top-action">
+          Sign up as Talent
+        </Link>
+        <Link to="/login" className="top-action">
+          Sign in
+        </Link>
       </div>
     </div>
   );

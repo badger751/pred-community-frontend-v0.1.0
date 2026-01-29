@@ -45,10 +45,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         .from("profiles")
         .select("role")
         .eq("id", userId)
-        .single();
+        .maybeSingle();
 
-      if (error || !profile?.role) {
-        console.error("Failed to resolve role from profiles");
+      if (error) {
+        console.error("Failed to resolve role from profiles", error);
+        set({ isHydrated: true });
+        return;
+      }
+
+      if (!profile?.role) {
+        console.warn("No profile found for user; deferring redirects until profile exists");
         set({ isHydrated: true });
         return;
       }
@@ -74,6 +80,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       user: null,
       accessToken: null,
       isAuthenticated: false,
+      isHydrated: true,
     }),
 
   logout: async () => {

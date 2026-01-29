@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient"; // adjust path if needed
+import { useAuthStore } from "../stores/authStore";
 import "../dashboard.css";
 import toast from 'react-hot-toast';
 
@@ -19,6 +21,8 @@ interface Opportunity {
 }
 
 const TalentDashboardV2: React.FC = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
   const [fullName, setFullName] = useState<string>("Talent");
   const [loadingName, setLoadingName] = useState<boolean>(true);
 
@@ -207,13 +211,29 @@ const TalentDashboardV2: React.FC = () => {
             </button>
             
             <button className="btn-primary-pill" onClick={showVerificationToast}>View Portfolio</button>
+            <button
+              className="logout-btn"
+              onClick={async () => {
+                await logout();
+                navigate("/login", { replace: true });
+              }}
+              style={{ marginLeft: "8px" }}
+            >
+              Log Out
+            </button>
           </div>
         </header>
 
         <div className="scrollable-content">
           <section className="welcome-section">
-            <h1>
-              Welcome, {loadingName ? "Loading..." : fullName} <span className="wave">🎉</span>
+            <h1 className="welcome-heading">
+              {loadingName ? (
+                <span className="skeleton skeleton-name" aria-hidden />
+              ) : (
+                <>
+                  Welcome, {fullName} <span className="wave">🎉</span>
+                </>
+              )}
             </h1>
             <p>
               This space reflects your activity, progress, and credibility as

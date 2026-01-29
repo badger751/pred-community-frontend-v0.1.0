@@ -49,8 +49,20 @@ console.log('[main.tsx] Bootstrapping auth');
 
 const authStore = useAuthStore.getState();
 
-// Initial hydration on app load
-authStore.bootstrapAuth();
+/**
+ * IMPORTANT:
+ * On cold load, Supabase restores session async.
+ * We must wait for it before marking auth hydrated.
+ */
+(async () => {
+  const { data } = await supabase.auth.getSession();
+
+  if (data.session) {
+    await authStore.bootstrapAuth();
+  } else {
+    authStore.clearAuth(); // ensures hydrated = true
+  }
+})();
 
 /* --------------------------------------------------
    Listen for auth state changes
@@ -70,7 +82,6 @@ supabase.auth.onAuthStateChange((event) => {
       break;
 
     default:
-      // ignore PASSWORD_RECOVERY, USER_UPDATED, etc.
       break;
   }
 });

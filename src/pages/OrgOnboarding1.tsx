@@ -1,11 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../auth.css";
 import { useOrgOnboardingStore } from "../stores/orgOnboardingStore"; // ← assuming this path
+import { useAuthStore } from "../stores/authStore";
 
 function OrgOnboarding1() {
   const navigate = useNavigate();
   const { step1, setStep1 } = useOrgOnboardingStore();
+  const { logout } = useAuthStore();
 
   // Local state — pre-filled from store if coming back
   const [orgName, setOrgName] = useState(step1.organization_name || "");
@@ -89,14 +91,16 @@ function OrgOnboarding1() {
         <img src="/Logo.svg" alt="Predulive" />
       </div>
 
-      {/* TOP RIGHT LINKS */}
       <div className="auth-top-right">
-        <Link to="/signup" className="top-action">
-          Sign up as Talent
-        </Link>
-        <Link to="/login" className="top-action">
-          Sign in
-        </Link>
+        <button
+          className="top-action logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
+        >
+          Log Out
+        </button>
       </div>
 
       {/* HERO */}

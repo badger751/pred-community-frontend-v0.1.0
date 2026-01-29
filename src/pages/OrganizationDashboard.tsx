@@ -1,11 +1,70 @@
 // FILE: src/pages/OrganizationDashboard.tsx
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
+import { useAuthStore } from "../stores/authStore";
+import toast from "react-hot-toast";
 import "../dashboard.css";
 import VerificationModal from "../components/VerificationModal"; // Import the modal
 
 const OrganizationDashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
   const [showModal, setShowModal] = useState(true); // Control the modal state
+  const [orgName, setOrgName] = useState<string>("Organization");
+  const [loadingName, setLoadingName] = useState<boolean>(true);
+
+  const showVerificationToast = () => {
+    toast("Identity is under verification process. Platform will be unlocked when done.", {
+      icon: "🔒",
+      duration: 4500,
+      style: {
+        border: "1px solid #374151",
+        background: "#1f2937",
+        color: "#f3f4f6",
+        borderRadius: "8px",
+        padding: "14px 20px",
+      },
+    });
+  };
+
+  useEffect(() => {
+    const fetchOrgProfile = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.user?.id) {
+          setLoadingName(false);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("organization_profiles")
+          .select("organization_name")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("[OrganizationDashboard] Failed to load org profile", error);
+          setLoadingName(false);
+          return;
+        }
+
+        if (data?.organization_name) {
+          setOrgName(data.organization_name);
+        }
+      } catch (err) {
+        console.error("[OrganizationDashboard] Failed to load org name", err);
+      } finally {
+        setLoadingName(false);
+      }
+    };
+
+    fetchOrgProfile();
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -49,11 +108,11 @@ const OrganizationDashboard: React.FC = () => {
             >
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
               <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-            Outreach
+            </svg >
+            Outreach 
             <span className="nav-badge">1</span>
           </div>
-          <div className="nav-item">
+          <div className="nav-item"  onClick={showVerificationToast} >
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -70,7 +129,7 @@ const OrganizationDashboard: React.FC = () => {
             </svg>
             Talent Pool
           </div>
-          <div className="nav-item">
+          <div className="nav-item"  onClick={showVerificationToast}>
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -85,7 +144,7 @@ const OrganizationDashboard: React.FC = () => {
             </svg>
             Opportunities
           </div>
-          <div className="nav-item">
+          <div className="nav-item"  onClick={showVerificationToast}>
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -120,7 +179,7 @@ const OrganizationDashboard: React.FC = () => {
             </svg>
             Profile
           </div>
-          <div className="nav-item">
+          <div className="nav-item"  onClick={showVerificationToast}>
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -135,7 +194,7 @@ const OrganizationDashboard: React.FC = () => {
             </svg>
             Settings
           </div>
-          <div className="nav-item">
+          <div className="nav-item"  onClick={showVerificationToast}>
             <svg
               className="nav-icon"
               viewBox="0 0 24 24"
@@ -169,7 +228,7 @@ const OrganizationDashboard: React.FC = () => {
       {/* --- CENTER --- */}
       <main className="main-content">
         <header className="top-header">
-          <div className="page-title">Overview</div>
+          <div className="page-title"  onClick={showVerificationToast}>Overview</div>
           <div className="header-actions">
             <div className="search-bar">
               <svg
@@ -208,14 +267,29 @@ const OrganizationDashboard: React.FC = () => {
               </svg>
             </button>
 
-            <button className="btn-primary-pill">Post an Opportunity</button>
+            <button className="btn-primary-pill" onClick={showVerificationToast}>Post an Opportunity</button>
+            <button
+              className="logout-btn"
+              onClick={async () => {
+                await logout();
+                navigate("/login", { replace: true });
+              }}
+            >
+              Log Out
+            </button>
           </div>
         </header>
 
         <div className="scrollable-content">
           <section className="welcome-section">
-            <h1>
-              Welcome, Organization_name <span className="wave">🎉</span>
+            <h1 className="welcome-heading">
+              {loadingName ? (
+                <span className="skeleton skeleton-name" aria-hidden />
+              ) : (
+                <>
+                  Welcome, {orgName} <span className="wave">🎉</span>
+                </>
+              )}
             </h1>
             <p>
               This space reflects your activity, progress, and credibility as

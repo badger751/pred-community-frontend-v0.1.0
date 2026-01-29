@@ -30,9 +30,17 @@ export default function AuthRedirector() {
           .from("profiles")
           .select("role")
           .eq("id", userId)
-          .single();
+          .maybeSingle();
 
-        if (error || !profile?.role) return;
+        if (error) {
+          console.error("[AuthListener] Failed to resolve role from profiles", error);
+          return;
+        }
+
+        if (!profile?.role) {
+          console.warn("[AuthListener] No profile found for user; skipping redirect");
+          return;
+        }
 
         const role = profile.role.toLowerCase() as "talent" | "organization";
 
@@ -42,12 +50,12 @@ export default function AuthRedirector() {
 
         const onboardingRoot =
           role === "organization"
-            ? "/organization-onboarding"
+            ? "/org"
             : "/talent-onboarding";
 
         const dashboardRoute =
           role === "organization"
-            ? "/organization-dashboard"
+            ? "/org"
             : "/talent-dashboard-v2";
 
         const talentOnboardingRoutes = [

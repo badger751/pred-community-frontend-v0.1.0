@@ -80,7 +80,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
       // Smart redirect
       const actualRole = userRolesNormalized[0] || "talent";
       const isOrg = actualRole.includes("organization") || actualRole.includes("org") || actualRole.includes("organisation");
-      const redirectPath = isOrg ? "/organization-onboarding" : "/TalentOnboarding";
+      const redirectPath = isOrg ? "/organization-onboarding" : "/talent-onboarding";
 
       return <Navigate to={redirectPath} replace />;
     } else {

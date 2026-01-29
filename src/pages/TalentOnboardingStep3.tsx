@@ -9,7 +9,7 @@ function TalentOnboardingStep3() {
 
   // Get setters and current values from store
   const { step3, setStep3, completeOnboarding, resetOnboarding } = useOnboardingStore();
-  const { accessToken } = useAuthStore(); // optional: use from store if you prefer
+  const { accessToken, logout } = useAuthStore(); // optional: use from store if you prefer
 
   // Local state (pre-filled from store if coming back)
   const [workStyle, setWorkStyle] = useState(step3.work_style || "");
@@ -134,17 +134,13 @@ function TalentOnboardingStep3() {
 
       <div className="auth-top-right">
         <button
-          className="top-action"
-          onClick={() => navigate("/organization-signup")}
+          className="top-action logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
         >
-          Sign in as Organization
-        </button>
-
-        <button
-          className="top-action"
-          onClick={() => navigate("/login")}
-        >
-          Sign in
+          Log Out
         </button>
       </div>
 
@@ -267,6 +263,18 @@ function TalentOnboardingStep3() {
           </button>
         </div>
 
+      </div>
+
+      <div className="auth-bottom-actions">
+        <button
+          className="top-action logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
+        >
+          Log Out
+        </button>
       </div>
     </div>
   );

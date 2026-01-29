@@ -92,10 +92,6 @@ function TalentOnboarding() {
       </div>
 
       <div className="auth-top-right">
-        <button className="top-action" onClick={() => navigate("/organization-signup")}>
-          Sign in as Organization
-        </button>
-
         <button
           className="top-action logout-btn"
           onClick={async () => {
@@ -104,10 +100,6 @@ function TalentOnboarding() {
           }}
         >
           Log Out
-        </button>
-
-        <button className="top-action" onClick={() => navigate("/login")}>
-          Sign in
         </button>
       </div>
 

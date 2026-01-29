@@ -52,3 +52,2001 @@
 .read-the-docs {
     color: #888;
 }
+
+/* FILE: src/pages/OrgPostOpportunity.css */
+
+/* --- Main Layout (Reused) --- */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F9FAFB;
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar-left {
+    width: 240px;
+    background: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+/* ... (Sidebar styles assumed global or existing) ... */
+
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+}
+
+/* --- Page Header --- */
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+/* --- Progress Bar --- */
+.progress-bar-container {
+    margin-bottom: 32px;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ECFDF5;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+}
+
+.progress-step.active {
+    color: #065F46;
+    font-weight: 600;
+}
+
+.step-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    margin-right: 8px;
+    font-size: 12px;
+}
+
+.progress-step.active .step-number {
+    border-color: #065F46;
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.progress-arrow {
+    margin: 0 16px;
+    color: #9CA3AF;
+}
+
+/* --- Form Section --- */
+.form-section {
+    background-color: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 12px;
+}
+
+.form-label span {
+    color: #DC2626; /* Red asterisk */
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: #10B981;
+}
+
+.form-row {
+    display: flex;
+    gap: 24px;
+}
+
+.form-col {
+    flex: 1;
+}
+
+/* --- Opportunity Type Cards --- */
+.type-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.type-card {
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.type-card:hover {
+    border-color: #10B981;
+    background-color: #F0FDF4;
+}
+
+.type-card.selected {
+    border-color: #10B981;
+    background-color: #ECFDF5;
+}
+
+.type-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.type-card-desc {
+    font-size: 12px;
+    color: #6B7280;
+    line-height: 1.4;
+}
+
+/* --- Radio Groups --- */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.radio-input {
+    margin-right: 10px;
+    accent-color: #10B981;
+    width: 16px;
+    height: 16px;
+}
+
+/* --- Pills/Tags --- */
+.pills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pill {
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pill:hover {
+    background-color: #F3F4F6;
+}
+
+.pill.selected {
+    background-color: #D1FAE5;
+    border-color: #10B981;
+    color: #065F46;
+    font-weight: 500;
+}
+
+/* --- Date Input --- */
+.date-input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 10px 16px;
+    background-color: #fff;
+    width: fit-content;
+}
+
+.date-input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #374151;
+    margin-right: 8px;
+}
+
+.calendar-icon {
+    color: #9CA3AF;
+}
+
+/* --- Form Actions --- */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+}
+
+.action-right {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.btn-secondary {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6B7280;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    color: #374151;
+}
+
+.btn-primary {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #A7F3D0;
+}
+/* FILE: src/pages/OrgPostOpportunity.css */
+
+/* ... (Keep all previous styles) ... */
+
+/* --- UPDATED: Form Layout for Bottom Section --- */
+.difficulty-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+}
+
+.difficulty-pills {
+    flex-shrink: 0; /* Prevents pills from shrinking */
+}
+
+.details-input-container {
+    flex-grow: 1; /* Takes up remaining space */
+}
+
+.details-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px; /* Rounded corners like design */
+    font-size: 14px;
+    outline: none;
+    color: #374151;
+}
+
+/* --- UPDATED: Date Input Styling --- */
+.start-date-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.date-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+    max-width: 300px; /* Limits width like the design */
+}
+
+.date-input-field {
+    width: 100%;
+    padding: 10px 16px;
+    padding-right: 40px; /* Space for icon */
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+    background-color: #fff;
+}
+
+.date-icon-absolute {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    pointer-events: none;
+}
+
+/* --- UPDATED: Button Styling --- */
+
+/* The "Save Draft" button (Outlined Pill) */
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid #E5E7EB;
+    color: #374151;
+    padding: 10px 24px;
+    border-radius: 20px; /* Pill shape */
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    border-color: #D1D5DB;
+    background-color: #F9FAFB;
+}
+
+/* The "Save & Next" button (Using your #ECFDF5 color) */
+.btn-primary {
+    background-color: #ECFDF5; /* Your requested Extreme Light Green */
+    color: #065F46;            /* Dark Green Text */
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #D1FAE5; /* Slightly darker on hover */
+}
+/* FILE: src/pages/OrgPostOpportunity.css */
+
+/* ... (Keep all previous styles) ... */
+
+/* --- UPDATED: Date Input Wrapper to allow absolute positioning of popup --- */
+.date-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+    max-width: 300px;
+}
+
+/* ... (Keep .date-input-field and .date-icon-absolute) ... */
+
+/* --- NEW: Date Picker Popup Styles --- */
+.date-picker-popup {
+    position: absolute;
+    top: calc(100% + 8px); /* Position below the input with a small gap */
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 16px;
+    z-index: 10;
+    width: 320px; /* Fixed width for consistency */
+    box-sizing: border-box;
+}
+
+/* Calendar Header */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #6B7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+}
+
+.month-year-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.month-year-btn:hover {
+    background-color: #F3F4F6;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+}
+
+.week-day {
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B7280;
+    padding: 8px 0;
+}
+
+.date-cell {
+    font-size: 14px;
+    color: #374151;
+    padding: 8px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-cell:hover:not(.empty) {
+    background-color: #F3F4F6;
+}
+
+.date-cell.today {
+    font-weight: 600;
+    color: #10B981;
+}
+
+.date-cell.selected {
+    background-color: #10B981;
+    color: #fff;
+    font-weight: 600;
+}
+
+.date-cell.empty {
+    cursor: default;
+}
+
+/* Years Grid (for Year Selection View) */
+.years-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    text-align: center;
+    padding-top: 8px;
+}
+
+.year-cell {
+    font-size: 14px;
+    color: #374151;
+    padding: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.year-cell:hover {
+    background-color: #F3F4F6;
+}
+
+.year-cell.selected {
+    background-color: #10B981;
+    color: #fff;
+    font-weight: 600;
+}
+
+
+/* --- SCOPED CONTAINER --- */
+.org-review-container {
+  display: flex;
+  height: 100vh;
+  background-color: #F8F9FA; /* Light grey overall background */
+  font-family: 'Inter', sans-serif;
+  color: #333;
+  width: 100%;
+}
+
+/* --- Left Sidebar (Scoped) --- */
+.org-review-container .sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.org-review-container .logo-section {
+  margin-bottom: 40px;
+}
+
+.org-review-container .logo-img {
+  width: 120px;
+  height: auto;
+}
+
+.org-review-container .nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.org-review-container .nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.org-review-container .nav-item:hover {
+  background-color: #f0f0f0;
+}
+
+.org-review-container .nav-item.active {
+  background-color: #ECFDF5;
+  color: #064E3B;
+  font-weight: 600;
+}
+
+.org-review-container .badge {
+  margin-left: auto;
+  background-color: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+.org-review-container .sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- Main Content Area (Scoped) --- */
+.org-review-container .main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.org-review-container .top-header {
+  background-color: transparent; /* Blends with grey bg per photo 2 */
+  padding: 20px 40px 10px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.org-review-container .page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* --- WIZARD PROGRESS BAR (Photo 2 Style: White Floating Pill) --- */
+
+/* The outer container - Transparent background */
+.org-review-container .wizard-container {
+  background-color: #ffffff; 
+  padding: 20px 40px; 
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* The actual bar - White, Rounded, Shadowed */
+.org-review-container .wizard-bar {
+  background-color: #ECFDF5;
+  border-radius: 50px; /* Pill shape */
+  padding: 12px 30px; 
+  display: flex;
+  justify-content: space-between; /* Pushes outer arrows to the ends */
+  align-items: center;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Soft floating shadow */
+  border: 1px solid #f1f1f1;
+
+  /* Centers everything and pulls them close together */
+  display: flex;
+  justify-content: center; 
+  gap: 15px; /* Adjust this number to get them closer/further */
+  
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #f1f1f1;
+}
+
+/* Step Container */
+.org-review-container .step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: default;
+}
+
+/* Circle Icon Base */
+.org-review-container .step-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* --- COMPLETED STATE --- */
+.org-review-container .step.completed {
+  color: #064E3B; /* Dark Green Text */
+}
+
+.org-review-container .step.completed .step-icon {
+  background-color: #064E3B; /* Solid Dark Green Circle */
+  color: #ffffff; /* White Check */
+}
+
+/* --- ACTIVE STATE --- */
+.org-review-container .step.active {
+  color: #064E3B;
+  font-weight: 700;
+}
+
+.org-review-container .step.active .step-icon {
+  background-color: transparent;
+  color: #064E3B;
+  border: 1.5px solid #064E3B; /* Green Ring */
+}
+
+/* Thin Arrows between steps (->) */
+.org-review-container .step-arrow {
+  color: #D1D5DB; /* Light Gray arrow */
+  font-weight: 300;
+  font-size: 18px;
+  margin: 0 15px;
+}
+
+/* Outer Navigation Arrows (< >) */
+.org-review-container .nav-arrow {
+  cursor: pointer;
+  color: #9CA3AF; 
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.org-review-container .nav-arrow:hover {
+  color: #064E3B;
+}
+.org-review-container .step-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Completed Step */
+.org-review-container .step.completed {
+  color: #064E3B; 
+}
+.org-review-container .step.completed .step-icon {
+  background-color: #064E3B; 
+  color: #ffffff; 
+}
+
+/* Active Step */
+.org-review-container .step.active {
+  color: #064E3B;
+  font-weight: 600;
+}
+.org-review-container .step.active .step-icon {
+  background-color: transparent;
+  color: #064E3B;
+  border: 1.5px solid #064E3B;
+}
+
+/* Inactive/Next Step */
+.org-review-container .step.inactive {
+  color: #999;
+}
+.org-review-container .step.inactive .step-icon {
+  border: 1px solid #ccc;
+  color: #999;
+}
+
+/* Arrow between steps text (->) */
+.org-review-container .step-arrow {
+  color: #ccc;
+  font-size: 16px;
+}
+
+/* --- Review Card (Scoped) --- */
+.org-review-container .content-scroll {
+  padding: 0 40px 40px 40px;
+}
+
+.org-review-container .review-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.org-review-container .job-title {
+  font-size: 22px; /* Slightly larger per photo */
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 12px;
+}
+
+.org-review-container .job-meta {
+  color: #6B7280;
+  font-size: 13px;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #F3F4F6;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Using bullet points for meta separation */
+.org-review-container .job-meta span {
+  position: relative;
+}
+.org-review-container .job-meta span:not(:last-child)::after {
+  content: "•";
+  margin-left: 15px;
+  color: #D1D5DB;
+}
+
+.org-review-container .section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+.org-review-container .description-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4B5563;
+  margin-bottom: 20px;
+}
+
+.org-review-container .deliverables-list {
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4B5563;
+}
+.org-review-container .deliverables-list li {
+  margin-bottom: 8px;
+}
+
+.org-review-container .contact-grid {
+  display: flex;
+  gap: 50px; /* Wider gap per photo */
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.org-review-container .contact-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.org-review-container .contact-label {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.org-review-container .contact-value {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 500;
+}
+
+/* --- Tags Grid (Updated Box Form) --- */
+.org-review-container .tags-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.org-review-container .tag-box {
+  background-color: #ECFDF5; /* Exact mint green from photo */
+  padding: 20px; /* More padding for "box" feel */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.org-review-container .tag-label {
+  font-size: 11px;
+  color: #6B7280;
+  margin-bottom: 8px;
+  text-transform: uppercase; /* Often used in these labels */
+  letter-spacing: 0.02em;
+}
+
+.org-review-container .tag-value {
+  font-size: 14px;
+  color: #064E3B; /* Dark green text */
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* --- Action Buttons (Scoped) --- */
+.org-review-container .action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 0; 
+}
+
+.org-review-container .btn-secondary {
+  background: white;
+  border: 1px solid #E5E7EB;
+  padding: 10px 24px;
+  border-radius: 6px;
+  color: #6B7280;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.org-review-container .right-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.org-review-container .btn-text {
+  background: none;
+  border: none;
+  color: #6B7280;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+.org-review-container .btn-text:hover {
+  color: #333;
+}
+
+.org-review-container .btn-primary {
+  background-color: #ECFDF5; 
+  border: none;
+  padding: 10px 28px;
+  border-radius: 6px;
+  color: #064E3B;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.org-review-container .btn-primary:hover {
+  background-color: #A7F3D0;
+}
+
+/* --- Right Panel (Scoped) --- */
+.org-review-container .right-panel {
+  width: 320px; /* Slightly wider */
+  background-color: #ECFDF5; /* Matching mint tone */
+  border-left: 1px solid #E5E7EB;
+  padding: 30px;
+  flex-shrink: 0;
+}
+
+.org-review-container .standards-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+.org-review-container .standards-subtitle {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.org-review-container .checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.org-review-container .check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: #4B5563;
+}
+
+.org-review-container .icon-check {
+  color: #10B981; /* Bright emerald */
+  font-size: 18px;
+}
+
+.org-review-container .icon-cross {
+  color: #EF4444;
+  background: #FEE2E2;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+
+
+/* FILE: src/pages/OrgWorkScope.css */
+
+/* --- Base Styles & Layout (Reused from Page 1) --- */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F9FAFB;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar */
+.sidebar-left {
+    width: 240px;
+    background: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+.logo-section { margin-bottom: 32px; padding-left: 8px; }
+.nav-menu { display: flex; flex-direction: column; gap: 8px; }
+.nav-item {
+    display: flex; align-items: center; padding: 10px 12px;
+    border-radius: 8px; color: #6B7280; font-size: 14px;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+}
+.nav-item:hover { background-color: #F3F4F6; color: #374151; }
+.nav-item.active { background-color: #ECFDF5; color: #065F46; font-weight: 600; }
+.nav-icon { margin-right: 12px; width: 20px; height: 20px; }
+.nav-badge { margin-left: auto; background: #F3F4F6; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+.sidebar-footer { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+
+/* Main Content Area */
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+}
+
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 600; color: #111827; margin: 0; }
+.icon-btn { background: none; border: none; cursor: pointer; color: #6B7280; }
+
+/* Progress Bar (Specific state for Page 2) */
+.progress-bar-container { margin-bottom: 32px; }
+.progress-bar {
+    display: flex; align-items: center; justify-content: center;
+    background-color: #ECFDF5; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB;
+}
+.progress-step { display: flex; align-items: center; font-size: 14px; font-weight: 500; color: #6B7280; }
+.progress-step.done { color: #065F46; } /* Completed Step color */
+.progress-step.active { color: #065F46; font-weight: 600; }
+.step-icon-box {
+    display: flex; justify-content: center; align-items: center;
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid #D1D5DB;
+    margin-right: 8px; font-size: 12px;
+}
+.progress-step.done .step-icon-box { background-color: #065F46; border-color: #065F46; color: #fff; }
+.progress-step.active .step-icon-box { border-color: #065F46; background-color: #D1FAE5; color: #065F46; }
+.progress-arrow { margin: 0 16px; color: #9CA3AF; }
+
+/* Form Section Base */
+.form-section {
+    background-color: #fff; padding: 32px; border-radius: 12px;
+    border: 1px solid #E5E7EB; margin-bottom: 24px;
+}
+.form-group { margin-bottom: 24px; }
+.form-label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+.form-label span { color: #DC2626; }
+.form-input {
+    width: 100%; padding: 10px 16px; border: 1px solid #E5E7EB; border-radius: 8px;
+    font-size: 14px; color: #374151; outline: none; box-sizing: border-box; font-family: 'Inter', sans-serif;
+}
+.form-input:focus { border-color: #10B981; }
+.form-input::placeholder { color: #9CA3AF; }
+
+/* --- PAGE 2 SPECIFIC STYLES --- */
+
+/* 1. Textarea */
+.form-textarea {
+    width: 100%; padding: 10px 16px; border: 1px solid #E5E7EB; border-radius: 8px;
+    font-size: 14px; color: #374151; outline: none; box-sizing: border-box;
+    font-family: 'Inter', sans-serif; resize: vertical; min-height: 100px;
+}
+.form-textarea:focus { border-color: #10B981; }
+.form-textarea::placeholder { color: #9CA3AF; }
+
+/* 2. Support Level Cards */
+.support-cards-container { display: flex; gap: 16px; }
+.support-card {
+    flex: 1; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px;
+    cursor: pointer; transition: all 0.2s; background: #fff;
+}
+.support-card:hover { border-color: #10B981; background-color: #F0FDF4; }
+.support-card.selected { border-color: #10B981; background-color: #ECFDF5; }
+.support-card-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+.support-card-desc { font-size: 12px; color: #6B7280; line-height: 1.4; }
+
+/* 3. Talent Engagement Pills */
+.pills-row { display: flex; gap: 12px; }
+.eng-pill {
+    padding: 8px 24px; background-color: #F3F4F6; border-radius: 20px;
+    font-size: 14px; color: #4B5563; cursor: pointer; transition: all 0.2s; font-weight: 500;
+}
+.eng-pill:hover { background-color: #E5E7EB; }
+.eng-pill.selected { background-color: #ECFDF5; color: #065F46; font-weight: 600; }
+
+/* 4. Option Grids (Radios & Checkboxes) */
+.options-grid-2col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px 32px; /* Row gap, Column gap */
+    max-width: 500px;
+}
+.option-label {
+    display: flex; align-items: center; font-size: 14px; color: #374151; cursor: pointer;
+}
+/* Customizing inputs to match the green theme */
+.option-input {
+    margin-right: 12px; width: 18px; height: 18px; accent-color: #10B981; cursor: pointer;
+}
+
+/* 5. Contact Row */
+.contact-row { display: flex; gap: 24px; }
+.contact-col { flex: 1; }
+
+/* 6. Footer Actions */
+.form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 32px; }
+.action-right { display: flex; gap: 24px; align-items: center; }
+.btn-outline {
+    background: none; border: 1px solid #E5E7EB; color: #374151; padding: 10px 24px;
+    border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer;
+}
+.btn-outline:hover { background-color: #F9FAFB; border-color: #D1D5DB; }
+.btn-text { background: none; border: none; font-size: 14px; font-weight: 500; color: #6B7280; cursor: pointer; }
+.btn-text:hover { color: #374151; }
+.btn-primary {
+    background-color: #D1FAE5; color: #065F46; padding: 12px 32px; border-radius: 8px;
+    font-weight: 600; font-size: 14px; border: none; cursor: pointer;
+}
+.btn-primary:hover { background-color: #A7F3D0; }
+/* Save & Next Button */
+.btn-primary {
+    background-color: #D1FAE5; /* Light Green */
+    color: #065F46; /* Dark Green Text */
+    padding: 10px 24px; border-radius: 6px;
+    font-weight: 600; font-size: 13px; border: none; cursor: pointer;
+}
+.btn-primary:hover { background-color: #A7F3D0; }
+/* --- Save Draft Button (The Pill Shape) --- */
+.btn-draft {
+    background-color: #ffffff;
+    border: 1px solid #E5E7EB;
+    border-radius: 100px; /* High radius makes it a pill */
+    padding: 10px 24px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-draft:hover {
+    border-color: #D1D5DB;
+    background-color: #F9FAFB;
+}
+
+/* FILE: src/pages/OrganizationOpportunities.css */
+
+/* --- Main Layout --- */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #F9FAFB;
+    font-family: 'Inter', sans-serif;
+}
+
+.sidebar-left {
+    width: 240px;
+    background: #FFFFFF;
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+/* ... (Sidebar styles assumed global or existing) ... */
+
+.main-content {
+    flex: 1;
+    padding: 24px 32px;
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll bar from main container */
+    min-width: 1000px; /* Ensure table doesn't crush on small screens */
+}
+
+/* --- Header & Search --- */
+.opportunities-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.search-bar-container {
+    position: relative;
+}
+
+.search-bar-input {
+    padding: 10px 16px 10px 40px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #374151;
+    width: 240px;
+    outline: none;
+    background: white;
+}
+
+.search-icon-placeholder {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    pointer-events: none;
+    display: flex;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: #6B7280;
+    display: flex;
+}
+
+.btn-create-opportunity {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+/* --- Filters --- */
+.filters-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+    background-color: #F9FAFB;
+    padding: 12px 0;
+}
+
+.filters-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.filter-dropdown {
+    padding: 8px 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #374151;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-by-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sort-by-label {
+    font-size: 14px;
+    color: #6B7280;
+}
+
+/* =========================================
+   STRICT GRID SYSTEM FOR ALIGNMENT
+   ========================================= */
+
+/* This defines the columns for BOTH the header and the card */
+.column-headers, .opportunity-card {
+    display: grid;
+    /* Grid Template Explanation:
+       Overview: 3 parts
+       Status: 1.8 parts
+       Commitments: 2 parts
+       Compensation: 2 parts
+       Pipeline: 2.2 parts (Wider to fit 3 numbers)
+       Actions: 1 part
+    */
+    grid-template-columns: 3fr 1.8fr 2fr 2fr 2.2fr 1fr;
+    gap: 16px; /* Spacing between columns */
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* --- Column Headers Specifics --- */
+.column-headers {
+    padding: 12px 24px;
+    background-color: #F9FAFB;
+    border-bottom: 1px solid #E5E7EB;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.col-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.col-header.actions {
+    text-align: right;
+}
+
+/* --- Opportunity Card Specifics --- */
+.opportunity-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-top: none;
+    padding: 24px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 48px;
+}
+
+/* --- Section Styling --- */
+
+/* 1. Overview */
+.opp-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.opp-details {
+    font-size: 14px;
+    color: #6B7280;
+    margin-bottom: 8px;
+}
+.opp-posted {
+    font-size: 12px;
+    color: #9CA3AF;
+}
+
+/* 2. Status */
+.card-section.status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.badge-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.badge {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.badge.live { background-color: #ECFDF5; color: #065F46; }
+.badge.action-required { background-color: #FEF3C7; color: #92400E; }
+
+.status-text {
+    font-size: 14px;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #F59E0B;
+    border-radius: 50%;
+}
+
+/* 3. Commitments & 4. Compensation */
+.card-section.commitments, 
+.card-section.compensation {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #374151;
+}
+.info-icon-placeholder {
+    color: #9CA3AF;
+    display: flex;
+    width: 16px;
+    justify-content: center;
+}
+
+/* 5. Pipeline - CRITICAL FIX */
+.card-section.pipeline {
+    display: flex;
+    flex-direction: row; /* Force horizontal layout */
+    gap: 24px; /* Space between the numbers */
+}
+
+.pipeline-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat-count {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #6B7280;
+}
+
+/* 6. Actions */
+.card-section.actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+}
+
+.btn-view-candidates {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    color: #374151;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* --- Empty State --- */
+.empty-state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0;
+    text-align: center;
+}
+
+.empty-state-text {
+    font-size: 18px;
+    color: #9CA3AF;
+    margin-bottom: 24px;
+    font-style: italic;
+}
+
+.btn-post-first {
+    background-color: #D1FAE5;
+    color: #065F46;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.chevron-icon {
+    color: #9CA3AF;
+    display: flex;
+}
+
+
+
+/* src/OrganizationProfile.css */
+
+/* --- Main Layout --- */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh; /* Changed from height to min-height based on your referenced file */
+  font-family: 'Inter', sans-serif;
+  background-color: #F9FAFB;
+}
+
+/* --- Sidebar Styles --- */
+.sidebar {
+  width: 240px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px;
+  
+  /* STRICT FLEX LAYOUT FOR BOTTOM ALIGNMENT */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This pushes the top div up and bottom div down */
+  
+  /* Ensure sidebar stays full height */
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+}
+
+/* Container for Logo + Top Nav */
+.sidebar-top-section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container for Profile, Settings, Support... */
+.sidebar-bottom-section {
+  /* No special margins needed because parent has justify-content: space-between */
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.logo-container {
+  margin-bottom: 32px;
+}
+
+.logo {
+  height: 110px;
+  width: auto;
+}
+
+.nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.nav-item.active {
+  background-color: #ecfdf5;
+  color: #065f46;
+}
+
+.nav-icon {
+  margin-right: 12px;
+  color: inherit;
+}
+
+.nav-badge {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+/* --- Main Content Styles --- */
+.main-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  min-width: 0; /* Prevents flex overflow issues */
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* --- Profile Header --- */
+.profile-header-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.avatar-container {
+  position: relative;
+  margin-right: 24px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  background-color: #d1d5db;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.profile-description-container {
+  display: flex;
+  align-items: center;
+}
+
+.profile-description-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #6b7280;
+  margin-right: 12px;
+  background-color: #f9fafb;
+}
+
+.save-description-btn {
+  padding: 8px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+}
+
+/* --- Form & Layout --- */
+.form-container {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.form-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #9ca3af;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
+}
+
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pill {
+  padding: 6px 14px;
+  background-color: #F9FAFB;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pill:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.pill.selected {
+  background-color: #d1fae5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.radio-input {
+  margin-right: 10px;
+  accent-color: #10b981;
+  width: 16px;
+  height: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.revert-btn {
+  padding: 10px 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+}
+
+.save-btn {
+  padding: 10px 24px;
+  background-color: #d1fae5;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #065f46;
+  cursor: pointer;
+}
+
+/* --- Modal Styles --- */
+.org-logo-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.org-logo-modal-card {
+  background-color: #ffffff;
+  width: 500px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  box-sizing: border-box;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.org-logo-modal-close-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 4px;
+}
+
+.org-logo-modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.org-logo-modal-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.org-logo-upload-area {
+  border: 2px dashed #e5e7eb;
+  border-radius: 12px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+  cursor: pointer;
+  background-color: #FAFAFA;
+}
+
+.org-logo-upload-icon-circle {
+  width: 48px;
+  height: 48px;
+  background-color: #ecfdf5;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #10b981;
+}
+
+.org-logo-separator-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.org-logo-separator-line {
+  flex: 1;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.org-logo-separator-text {
+  padding: 0 16px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.org-logo-modal-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 32px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.org-logo-modal-input:focus {
+  border-color: #10b981;
+}
+
+.org-logo-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.org-logo-modal-back-btn {
+  padding: 8px 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+}
+
+.org-logo-modal-save-btn {
+  padding: 8px 32px;
+  background-color: #d1fae5;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #065f46;
+  cursor: pointer;
+}

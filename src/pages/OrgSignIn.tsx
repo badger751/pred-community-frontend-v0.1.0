@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import "../auth.css";
-import { login } from "../api/auth";
+import { supabase } from "../lib/supabaseClient";
+import { useAuthStore } from "../stores/authStore";
 
 function OrganizationLogin() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,53 @@ function OrganizationLogin() {
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const resolveExistingSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.user) return;
+
+      const userId = session.user.id;
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error("[OrgSignIn] Failed to resolve role from profiles", profileError);
+        return;
+      }
+
+      if (!profile?.role) {
+        console.warn("[OrgSignIn] No profile found; staying on org sign-in");
+        return;
+      }
+
+      const role = profile.role.toLowerCase();
+      const onboardingTable = role === "organization" ? "organization_profiles" : "talent_profiles";
+      const dashboardRoute = role === "organization" ? "/org" : "/talent-dashboard-v2";
+      const onboardingRoute = role === "organization" ? "/organization-onboarding" : "/talent-onboarding";
+
+      const { data: onboarding } = await supabase
+        .from(onboardingTable)
+        .select("onboarding_completed")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (onboarding?.onboarding_completed === true) {
+        navigate(dashboardRoute, { replace: true });
+      } else {
+        navigate(onboardingRoute, { replace: true });
+      }
+    };
+
+    resolveExistingSession();
+  }, [navigate]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -19,12 +67,37 @@ function OrganizationLogin() {
     setLoading(true);
 
     try {
-      const res = await login({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
 
-      localStorage.setItem("access_token", res.access_token);
-      localStorage.setItem("role", res.role ?? "organization");
+      if (error) throw error;
 
-      navigate("/organization-onboarding");
+      await useAuthStore.getState().bootstrapAuth();
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const userId = session?.user?.id;
+
+      if (!userId) {
+        console.warn("[OrgSignIn] No user id after login; staying on page");
+        return;
+      }
+
+      const { data: onboarding } = await supabase
+        .from("organization_profiles")
+        .select("onboarding_completed")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (onboarding?.onboarding_completed === true) {
+        navigate("/organization-dashboard", { replace: true });
+      } else {
+        navigate("/organization-onboarding", { replace: true });
+      }
     } catch (error) {
       console.error("Organization login failed:", error);
       alert("Login failed. Please check your credentials.");
@@ -61,21 +134,7 @@ function OrganizationLogin() {
 
       {/* SIGN IN CARD */}
       <div className="auth-card">
-        <h3 className="sign-in-title">Sign In With</h3>
-
-        <div className="social-login">
-          <button className="social-btn">
-            <img src="/facebook.png" alt="facebook" />
-          </button>
-          <button className="social-btn">
-            <img src="/apple.png" alt="apple" />
-          </button>
-          <button className="social-btn">
-            <img src="/google.png" alt="google" />
-          </button>
-        </div>
-
-        <div className="or-text">or</div>
+        <h3 className="sign-in-title">Sign In</h3>
 
         <label className="input-label">Work email*</label>
         <input
@@ -129,6 +188,15 @@ function OrganizationLogin() {
             Sign Up
           </Link>
         </p>
+      </div>
+
+      <div className="auth-bottom-actions">
+        <Link to="/login" className="top-action">
+          Sign in as Talent
+        </Link>
+        <Link to="/organization-signup" className="top-action">
+          Sign up
+        </Link>
       </div>
     </div>
   );

@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../auth.css";
 import { useOnboardingStore } from "../stores/onboardingStore"; // ← new import
+import { useAuthStore } from "../stores/authStore";
 
 function TalentOnboardingStep2() {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   // Get setters and current values from store
   const { step2, setStep2 } = useOnboardingStore();
@@ -83,20 +85,16 @@ function TalentOnboardingStep2() {
         <img src="/Logo.svg" alt="Predulive" />
       </div>
 
-      {/* TOP RIGHT BUTTONS */}
+      {/* TOP RIGHT ACTIONS (desktop) */}
       <div className="auth-top-right">
         <button
-          className="top-action"
-          onClick={() => navigate("/organization-signup")}
+          className="top-action logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
         >
-          Sign in as Organization
-        </button>
-
-        <button
-          className="top-action"
-          onClick={() => navigate("/login")}
-        >
-          Sign in
+          Log Out
         </button>
       </div>
 
@@ -252,6 +250,18 @@ function TalentOnboardingStep2() {
             Save & Next
           </button>
         </div>
+      </div>
+
+      <div className="auth-bottom-actions">
+        <button
+          className="top-action logout-btn"
+          onClick={async () => {
+            await logout();
+            navigate("/login", { replace: true });
+          }}
+        >
+          Log Out
+        </button>
       </div>
     </div>
   );
