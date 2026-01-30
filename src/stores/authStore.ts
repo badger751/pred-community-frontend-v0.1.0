@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { supabase } from "../lib/supabaseClient";
+import { devBypass, devMockUser } from "../lib/devBypass";
 
 interface User {
   id: string;
@@ -29,6 +30,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   -------------------------------------------------- */
   bootstrapAuth: async () => {
     try {
+      // Dev bypass check - eliminated in production build
+      if (!import.meta.env.PROD && devBypass.isEnabled) {
+        console.log("[authStore] 🔓 Dev bypass active - using mock user");
+        set({
+          user: devMockUser,
+          accessToken: "dev-bypass-token",
+          isAuthenticated: true,
+          isHydrated: true,
+        });
+        return;
+      }
+
       const {
         data: { session },
       } = await supabase.auth.getSession();

@@ -31,6 +31,7 @@ import OrgConfirmEmail from "./pages/OrgConfirmEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthListener from "./components/AuthListener";
 import PageTransition from "./components/PageTransition";
+import DevControls from "./components/DevControls";
 
 /* ---------------------------------------------
    App Bootstrap Layer (Session Rehydration)
@@ -54,6 +55,7 @@ function App() {
       <BrowserRouter>
         <AuthListener />
         <AnimatedRoutes />
+        <DevControls />
       </BrowserRouter>
     </AppBootstrap>
   );

@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { type ReactNode, useEffect } from "react";
 import { useAuthStore } from "../stores/authStore";
+import { devBypass } from "../lib/devBypass";
 
 interface ProtectedRouteProps {
   children?: ReactNode;
@@ -10,6 +11,12 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const { isAuthenticated, user, isHydrated } = useAuthStore();
   const location = useLocation();
+
+  // Dev bypass check - eliminated in production build
+  if (!import.meta.env.PROD && devBypass.isEnabled) {
+    console.log("[ProtectedRoute] 🔓 Dev bypass active - allowing access");
+    return <>{children}</>;
+  }
 
   // Debug logging – very helpful for role issues
   useEffect(() => {
