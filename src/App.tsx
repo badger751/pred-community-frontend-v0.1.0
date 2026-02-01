@@ -22,6 +22,9 @@ import OrgOnboarding3 from "./pages/OrgOnboarding3";
 import OrgSignIn from "./pages/OrgSignIn";
 import TalentDashboardV2 from "./pages/TalentDashboardV2";
 import OrganizationDashboard from "./pages/OrganizationDashboard";
+import OrganizationPostOpportunity from "./pages/OrganizationPostOpportunity";
+import OpportunitiesPage from "./pages/OpportunitiesPage";
+import TalentPoolPage from "./pages/TalentPoolPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword"; // <-- import the new page
 import ConfirmEmail from "./pages/ConfirmEmail";
@@ -150,6 +153,30 @@ function AnimatedRoutes() {
           element={
             <ProtectedRoute>
               <OrganizationDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/organization-post-opportunity"
+          element={
+            <ProtectedRoute>
+              <OrganizationPostOpportunity />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/opportunities"
+          element={
+            <ProtectedRoute>
+              <OpportunitiesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/talent-pool"
+          element={
+            <ProtectedRoute>
+              <TalentPoolPage />
             </ProtectedRoute>
           }
         />
