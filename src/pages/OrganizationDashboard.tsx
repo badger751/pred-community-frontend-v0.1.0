@@ -18,7 +18,7 @@ const OrganizationDashboard: React.FC = () => {
   const [showModal, setShowModal] = useState(true); // Control the modal state
   const [orgName, setOrgName] = useState<string>("Organization");
   const [loadingName, setLoadingName] = useState<boolean>(true);
-
+ 
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 

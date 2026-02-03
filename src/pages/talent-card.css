@@ -30,35 +30,38 @@
   background: #fff7ed;
   color: #c2410c;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 600; /* Semi-Bold weight for badges */
   padding: 4px 12px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
+  font-family: var(--font-primary);
 }
 
 .pill-trusted {
   background: #f0fdf4;
   color: #15803d;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 600; /* Semi-Bold weight for badges */
   padding: 4px 12px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
+  font-family: var(--font-primary);
 }
 
 .pill-collaborations {
   background: #f9fafb;
   color: #6b7280;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 500; /* Medium weight for neutral badges */
   padding: 4px 12px;
   border-radius: 20px;
   display: flex;
   align-items: center;
+  font-family: var(--font-primary);
 }
 
 /* Action Icons */
@@ -117,17 +120,20 @@
 
 .profile-name {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 700; /* Bold weight for main titles */
   color: #111827;
   margin-bottom: 2px;
+  font-family: var(--font-primary);
 }
 
 .profile-title {
   font-size: 14px;
+  font-weight: 400; /* Regular weight for body text */
   color: #6b7280;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-family: var(--font-primary);
 }
 
 .profile-separator {
@@ -160,8 +166,9 @@
 
 .stat-text {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 500; /* Medium weight for stats */
   color: #1e40af;
+  font-family: var(--font-primary);
 }
 
 /* 5. Domain & Skill Tags */
@@ -179,6 +186,7 @@
   padding: 4px 12px;
   font-size: 12px;
   color: #4b5563;
+  font-family: var(--font-primary);
 }
 
 /* 6. Card Footer */
@@ -194,6 +202,7 @@
   font-size: 11px;
   color: #9ca3af;
   margin-bottom: 4px;
+  font-family: var(--font-primary);
 }
 
 .action-group {
@@ -204,13 +213,14 @@
 
 .action-conversation {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 600; /* Semi-Bold weight for interactive elements */
   color: #111827;
   text-decoration: none;
   background: none;
   border: none;
   cursor: pointer;
   transition: text-decoration 0.2s ease;
+  font-family: var(--font-primary);
 }
 
 .action-conversation:hover {
@@ -223,10 +233,11 @@
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 600; /* Semi-Bold weight for buttons */
   color: #111827;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  font-family: var(--font-primary);
 }
 
 .action-portfolio:hover {
@@ -240,10 +251,12 @@
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 14px;
+  font-weight: 500; /* Medium weight for interactive elements */
   color: #374151;
   cursor: pointer;
   transition: all 0.2s ease;
   outline: none;
+  font-family: var(--font-primary);
 }
 
 .filter-dropdown:hover {
@@ -269,7 +282,7 @@
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 600; /* Semi-Bold weight for buttons */
   color: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -277,6 +290,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-family: var(--font-primary);
 }
 
 .view-teams-btn:hover {
@@ -298,10 +312,11 @@
   border-radius: 8px;
   padding: 8px 16px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 500; /* Medium weight for interactive elements */
   color: #6b7280;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-family: var(--font-primary);
 }
 
 .clear-filters-btn:hover {
@@ -334,6 +349,7 @@
   font-size: 14px;
   color: #374151;
   flex: 1;
+  font-family: var(--font-primary);
 }
 
 .enhanced-search-bar input::placeholder {
@@ -369,6 +385,7 @@
   margin-top: 16px;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+  padding: 0 24px; /* Add horizontal padding to create space between filter groups */
 }
 
 .filter-row-secondary > div:last-child {
@@ -379,6 +396,12 @@
   gap: 16px;
 }
 
+/* Add additional spacing between filter groups */
+.filter-group-spacing {
+  display: flex;
+  gap: 16px;
+}
+
 /* Sort Dropdown Special */
 .sort-dropdown {
   background: #f8fafc;
@@ -386,11 +409,12 @@
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 500; /* Medium weight for interactive elements */
   color: #475569;
   cursor: pointer;
   transition: all 0.2s ease;
   outline: none;
+  font-family: var(--font-primary);
 }
 
 .sort-dropdown:hover {

@@ -1,0 +1,1001 @@
+/* --- SCOPED CONTAINER --- */
+.org-review-container {
+    display: flex;
+    height: 100vh;
+    background-color: #F8F9FA;
+    /* Light grey overall background */
+    font-family: 'Inter', sans-serif;
+    color: #333;
+    width: 100%;
+}
+
+/* --- Left Sidebar (Scoped) --- */
+
+
+/* --- Main Content Area (Scoped) --- */
+.org-review-container .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.org-review-container .top-header {
+    background-color: transparent;
+    /* Blends with grey bg per photo 2 */
+    padding: 20px 40px 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.org-review-container .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* --- WIZARD PROGRESS BAR (Photo 2 Style: White Floating Pill) --- */
+
+/* The outer container - Transparent background */
+.org-review-container .wizard-container {
+    background-color: #ffffff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* The actual bar - White, Rounded, Shadowed */
+.org-review-container .wizard-bar {
+    background-color: #ECFDF5;
+    border-radius: 50px;
+    /* Pill shape */
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    /* Pushes outer arrows to the ends */
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* Soft floating shadow */
+    border: 1px solid #f1f1f1;
+
+    /* Centers everything and pulls them close together */
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    /* Adjust this number to get them closer/further */
+
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f1f1f1;
+}
+
+/* Step Container */
+.org-review-container .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: default;
+}
+
+/* Circle Icon Base */
+.org-review-container .step-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* --- COMPLETED STATE --- */
+.org-review-container .step.completed {
+    color: #064E3B;
+    /* Dark Green Text */
+}
+
+.org-review-container .step.completed .step-icon {
+    background-color: #064E3B;
+    /* Solid Dark Green Circle */
+    color: #ffffff;
+    /* White Check */
+}
+
+/* --- ACTIVE STATE --- */
+.org-review-container .step.active {
+    color: #064E3B;
+    font-weight: 700;
+}
+
+.org-review-container .step.active .step-icon {
+    background-color: transparent;
+    color: #064E3B;
+    border: 1.5px solid #064E3B;
+    /* Green Ring */
+}
+
+/* Thin Arrows between steps (->) */
+.org-review-container .step-arrow {
+    color: #D1D5DB;
+    /* Light Gray arrow */
+    font-weight: 300;
+    font-size: 18px;
+    margin: 0 15px;
+}
+
+/* Outer Navigation Arrows (< >) */
+.org-review-container .nav-arrow {
+    cursor: pointer;
+    color: #9CA3AF;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.org-review-container .nav-arrow:hover {
+    color: #064E3B;
+}
+
+.org-review-container .step-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Completed Step */
+.org-review-container .step.completed {
+    color: #064E3B;
+}
+
+.org-review-container .step.completed .step-icon {
+    background-color: #064E3B;
+    color: #ffffff;
+}
+
+/* Active Step */
+.org-review-container .step.active {
+    color: #064E3B;
+    font-weight: 600;
+}
+
+.org-review-container .step.active .step-icon {
+    background-color: transparent;
+    color: #064E3B;
+    border: 1.5px solid #064E3B;
+}
+
+/* Inactive/Next Step */
+.org-review-container .step.inactive {
+    color: #999;
+}
+
+.org-review-container .step.inactive .step-icon {
+    border: 1px solid #ccc;
+    color: #999;
+}
+
+/* Arrow between steps text (->) */
+.org-review-container .step-arrow {
+    color: #ccc;
+    font-size: 16px;
+}
+
+/* --- Review Card (Scoped) --- */
+.org-review-container .content-scroll {
+    padding: 0 40px 40px 40px;
+}
+
+.org-review-container .review-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.org-review-container .job-title {
+    font-size: 22px;
+    /* Slightly larger per photo */
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 12px;
+}
+
+.org-review-container .job-meta {
+    color: #6B7280;
+    font-size: 13px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #F3F4F6;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Using bullet points for meta separation */
+.org-review-container .job-meta span {
+    position: relative;
+}
+
+.org-review-container .job-meta span:not(:last-child)::after {
+    content: "•";
+    margin-left: 15px;
+    color: #D1D5DB;
+}
+
+.org-review-container .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 12px;
+    color: #374151;
+}
+
+.org-review-container .description-text {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4B5563;
+    margin-bottom: 20px;
+}
+
+.org-review-container .deliverables-list {
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #4B5563;
+}
+
+.org-review-container .deliverables-list li {
+    margin-bottom: 8px;
+}
+
+.org-review-container .contact-grid {
+    display: flex;
+    gap: 50px;
+    /* Wider gap per photo */
+    margin-top: 25px;
+    margin-bottom: 30px;
+}
+
+.org-review-container .contact-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.org-review-container .contact-label {
+    font-size: 12px;
+    color: #9CA3AF;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.org-review-container .contact-value {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 500;
+}
+
+/* --- Tags Grid (Updated Box Form) --- */
+.org-review-container .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.org-review-container .tag-box {
+    background-color: #ECFDF5;
+    /* Exact mint green from photo */
+    padding: 20px;
+    /* More padding for "box" feel */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.org-review-container .tag-label {
+    font-size: 11px;
+    color: #6B7280;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    /* Often used in these labels */
+    letter-spacing: 0.02em;
+}
+
+.org-review-container .tag-value {
+    font-size: 14px;
+    color: #064E3B;
+    /* Dark green text */
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* --- Action Buttons (Scoped) --- */
+.org-review-container .action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 0;
+}
+
+.org-review-container .btn-secondary {
+    background: white;
+    border: 1px solid #E5E7EB;
+    padding: 10px 24px;
+    border-radius: 6px;
+    color: #6B7280;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.org-review-container .right-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.org-review-container .btn-text {
+    background: none;
+    border: none;
+    color: #6B7280;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.org-review-container .btn-text:hover {
+    color: #333;
+}
+
+.org-review-container .btn-primary {
+    background-color: #ECFDF5;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    color: #064E3B;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.org-review-container .btn-primary:hover {
+    background-color: #A7F3D0;
+}
+
+/* --- Right Panel (Scoped) --- */
+.org-review-container .right-panel {
+    width: 320px;
+    /* Slightly wider */
+    background-color: #ECFDF5;
+    /* Matching mint tone */
+    border-left: 1px solid #E5E7EB;
+    padding: 30px;
+    flex-shrink: 0;
+}
+
+.org-review-container .standards-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 10px;
+}
+
+.org-review-container .standards-subtitle {
+    font-size: 13px;
+    color: #6B7280;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.org-review-container .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.org-review-container .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: #4B5563;
+}
+
+.org-review-container .icon-check {
+    color: #10B981;
+    /* Bright emerald */
+    font-size: 18px;
+}
+
+.org-review-container .icon-cross {
+    color: #EF4444;
+    background: #FEE2E2;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+/* --- MOBILE RESPONSIVE OPTIMIZATIONS --- */
+
+/* Tablet Optimizations (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .org-review-container {
+        height: 100vh;
+    }
+    
+    .org-review-container .main-content {
+        flex: 1;
+        padding: 0;
+    }
+    
+    .org-review-container .top-header {
+        padding: 16px 24px 12px 24px;
+        background-color: white;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .org-review-container .page-title {
+        font-size: 17px;
+    }
+    
+    .org-review-container .wizard-container {
+        padding: 16px 24px;
+        background-color: #F8F9FA;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .org-review-container .wizard-bar {
+        padding: 14px 20px;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .org-review-container .step {
+        font-size: 13px;
+        gap: 6px;
+    }
+    
+    .org-review-container .step-icon {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+    
+    .org-review-container .step-arrow {
+        margin: 0 6px;
+        font-size: 14px;
+    }
+    
+    .org-review-container .nav-arrow {
+        display: flex;
+        font-size: 18px;
+    }
+    
+    .org-review-container .content-scroll {
+        padding: 24px;
+        flex: 1;
+        overflow-y: auto;
+    }
+    
+    .org-review-container .review-card {
+        padding: 32px 28px;
+        border-radius: 10px;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .org-review-container .job-meta {
+        font-size: 12px;
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    
+    .org-review-container .job-meta span:not(:last-child)::after {
+        margin-left: 12px;
+    }
+    
+    .org-review-container .section-title {
+        font-size: 15px;
+        margin-top: 28px;
+        margin-bottom: 10px;
+    }
+    
+    .org-review-container .description-text {
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+    }
+    
+    .org-review-container .deliverables-list {
+        font-size: 13px;
+        padding-left: 20px;
+    }
+    
+    .org-review-container .contact-grid {
+        gap: 40px;
+        margin-top: 24px;
+        margin-bottom: 28px;
+    }
+    
+    .org-review-container .tags-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 32px;
+        margin-bottom: 32px;
+    }
+    
+    .org-review-container .tag-box {
+        padding: 18px;
+        border-radius: 7px;
+    }
+    
+    .org-review-container .tag-label {
+        font-size: 10px;
+        margin-bottom: 7px;
+        letter-spacing: 0.01em;
+    }
+    
+    .org-review-container .tag-value {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .org-review-container .action-row {
+        margin-top: 20px;
+        padding-top: 16px;
+    }
+    
+    .org-review-container .btn-secondary,
+    .org-review-container .btn-text {
+        padding: 11px 20px;
+        font-size: 13px;
+    }
+    
+    .org-review-container .btn-primary {
+        padding: 11px 24px;
+        font-size: 13px;
+    }
+    
+    .org-review-container .right-panel {
+        width: 300px;
+        padding: 24px;
+        background-color: #F0FDF4;
+        border-left: 1px solid #E5E7EB;
+        flex-shrink: 0;
+        overflow-y: auto;
+    }
+    
+    .org-review-container .standards-title {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+    
+    .org-review-container .standards-subtitle {
+        font-size: 12px;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+    
+    .org-review-container .checklist {
+        gap: 16px;
+    }
+    
+    .org-review-container .check-item {
+        font-size: 13px;
+    }
+    
+    .org-review-container .icon-check {
+        font-size: 17px;
+    }
+}
+
+/* Tablet Landscape Orientation */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .org-review-container .wizard-bar {
+        max-width: 500px;
+        padding: 12px 16px;
+    }
+    
+    .org-review-container .content-scroll {
+        padding: 20px 24px;
+    }
+    
+    .org-review-container .review-card {
+        padding: 28px 24px;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 18px;
+    }
+    
+    .org-review-container .tags-grid {
+        gap: 14px;
+    }
+    
+    .org-review-container .right-panel {
+        width: 280px;
+        padding: 20px;
+    }
+}
+
+/* Tablet Portrait Orientation */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .org-review-container .wizard-bar {
+        max-width: 400px;
+        padding: 16px 20px;
+    }
+    
+    .org-review-container .review-card {
+        padding: 36px 32px;
+        max-width: 600px;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 22px;
+    }
+    
+    .org-review-container .job-meta {
+        font-size: 13px;
+    }
+    
+    .org-review-container .tags-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    
+    .org-review-container .tag-box {
+        padding: 20px;
+    }
+    
+    .org-review-container .right-panel {
+        width: 320px;
+        padding: 28px;
+    }
+    
+    .org-review-container .standards-title {
+        font-size: 16px;
+    }
+}
+
+/* Tablets and Small Screens */
+@media (max-width: 768px) {
+    .org-review-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .org-review-container .main-content {
+        padding: 0;
+    }
+    
+    .org-review-container .top-header {
+        padding: 16px 20px 12px 20px;
+        background-color: white;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .org-review-container .page-title {
+        font-size: 16px;
+    }
+    
+    .org-review-container .wizard-container {
+        padding: 16px 20px;
+        background-color: white;
+        border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .org-review-container .wizard-bar {
+        padding: 12px 16px;
+        gap: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .org-review-container .step {
+        font-size: 12px;
+    }
+    
+    .org-review-container .step-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+    
+    .org-review-container .step-arrow {
+        margin: 0 4px;
+        font-size: 12px;
+    }
+    
+    /* Hide navigation arrows on mobile */
+    .org-review-container .nav-arrow {
+        display: none;
+    }
+    
+    .org-review-container .content-scroll {
+        padding: 20px;
+    }
+    
+    .org-review-container .review-card {
+        padding: 24px 20px;
+        border-radius: 8px;
+        margin: 0;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .org-review-container .job-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        font-size: 12px;
+    }
+    
+    .org-review-container .job-meta span:not(:last-child)::after {
+        content: "";
+        margin-left: 0;
+    }
+    
+    .org-review-container .section-title {
+        font-size: 14px;
+        margin-top: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .org-review-container .description-text {
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+    
+    .org-review-container .deliverables-list {
+        font-size: 13px;
+        padding-left: 16px;
+    }
+    
+    .org-review-container .contact-grid {
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 20px;
+        margin-bottom: 24px;
+    }
+    
+    .org-review-container .tags-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .org-review-container .tag-box {
+        padding: 16px;
+        border-radius: 6px;
+    }
+    
+    .org-review-container .tag-label {
+        font-size: 10px;
+        margin-bottom: 6px;
+    }
+    
+    .org-review-container .tag-value {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+    
+    .org-review-container .action-row {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid #E5E7EB;
+    }
+    
+    .org-review-container .btn-secondary,
+    .org-review-container .btn-primary {
+        width: 100%;
+        padding: 14px 20px;
+        text-align: center;
+        border-radius: 8px;
+    }
+    
+    .org-review-container .right-actions {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+    
+    .org-review-container .btn-text {
+        width: 100%;
+        padding: 12px 20px;
+        text-align: center;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+    }
+    
+    .org-review-container .right-panel {
+        width: 100%;
+        padding: 20px;
+        border-left: none;
+        border-top: 1px solid #E5E7EB;
+        background-color: white;
+    }
+    
+    .org-review-container .standards-title {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .org-review-container .standards-subtitle {
+        font-size: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .org-review-container .checklist {
+        gap: 12px;
+    }
+    
+    .org-review-container .check-item {
+        font-size: 13px;
+    }
+    
+    .org-review-container .icon-check {
+        font-size: 16px;
+    }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+    .org-review-container .top-header {
+        padding: 12px 16px 8px 16px;
+    }
+    
+    .org-review-container .page-title {
+        font-size: 15px;
+    }
+    
+    .org-review-container .wizard-container {
+        padding: 12px 16px;
+    }
+    
+    .org-review-container .wizard-bar {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+    
+    .org-review-container .step {
+        font-size: 11px;
+        gap: 4px;
+    }
+    
+    .org-review-container .step-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+    }
+    
+    .org-review-container .step-arrow {
+        font-size: 10px;
+        margin: 0 2px;
+    }
+    
+    .org-review-container .content-scroll {
+        padding: 16px;
+    }
+    
+    .org-review-container .review-card {
+        padding: 20px 16px;
+        border-radius: 6px;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+    
+    .org-review-container .section-title {
+        font-size: 13px;
+        margin-top: 20px;
+        margin-bottom: 6px;
+    }
+    
+    .org-review-container .description-text,
+    .org-review-container .deliverables-list {
+        font-size: 12px;
+    }
+    
+    .org-review-container .tag-box {
+        padding: 12px;
+    }
+    
+    .org-review-container .tag-value {
+        font-size: 12px;
+    }
+    
+    .org-review-container .right-panel {
+        padding: 16px;
+    }
+    
+    .org-review-container .check-item {
+        font-size: 12px;
+        gap: 8px;
+    }
+    
+    .org-review-container .icon-check {
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+}
+
+/* Extra Small Phones */
+@media (max-width: 360px) {
+    .org-review-container .wizard-bar {
+        padding: 8px 8px;
+        gap: 4px;
+    }
+    
+    .org-review-container .step {
+        font-size: 10px;
+    }
+    
+    .org-review-container .step-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 8px;
+    }
+    
+    .org-review-container .step-arrow {
+        font-size: 8px;
+        margin: 0 1px;
+    }
+    
+    .org-review-container .content-scroll {
+        padding: 12px;
+    }
+    
+    .org-review-container .review-card {
+        padding: 16px 12px;
+    }
+    
+    .org-review-container .job-title {
+        font-size: 15px;
+    }
+    
+    .org-review-container .tag-box {
+        padding: 10px;
+    }
+}

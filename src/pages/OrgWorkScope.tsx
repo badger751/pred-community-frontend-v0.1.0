@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import './OrgWorkScope.css';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useOpportunityCreationStore } from '../stores/opportunityCreationStore';
+import "../workscope.css";
 
 // --- Icons ---
 const BellIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>;
@@ -17,17 +19,31 @@ const SupportIcon = () => <svg className="nav-icon" viewBox="0 0 24 24" fill="no
 const AskAIIcon = () => <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>;
 
 const OrgWorkScope: React.FC = () => {
-    // --- State Management for Form Fields ---
-    const [supportLevel, setSupportLevel] = useState(''); 
-    const [engagement, setEngagement] = useState('');
-    const [commMode, setCommMode] = useState('');
-    const [appReqs, setAppReqs] = useState<string[]>([]);
+    // Store hooks
+    const { 
+        workScope, 
+        setWorkScope, 
+        nextStep, 
+        is_loading, 
+        error, 
+        clearError 
+    } = useOpportunityCreationStore();
+
+    const navigate = useNavigate();
 
     // Helper for checkbox toggling
     const toggleAppReq = (req: string) => {
-        setAppReqs(prev => 
-            prev.includes(req) ? prev.filter(r => r !== req) : [...prev, req]
-        );
+        const currentReqs = workScope.application_requirements || [];
+        setWorkScope({ 
+            application_requirements: currentReqs.includes(req) 
+                ? currentReqs.filter(r => r !== req) 
+                : [...currentReqs, req]
+        });
+    };
+
+    const handleSaveAndNext = () => {
+        nextStep();
+        navigate('/org-review-opportunity');
     };
 
     return (
@@ -86,28 +102,39 @@ const OrgWorkScope: React.FC = () => {
                     {/* Detailed Description */}
                     <div className="form-group">
                         <label className="form-label">Detailed description<span>*</span></label>
-                        <textarea className="form-textarea" placeholder="List out the key requirements and responsibilities here"></textarea>
+                        <textarea 
+                            className="form-textarea" 
+                            placeholder="List out the key requirements and responsibilities here"
+                            value={workScope.description || ''}
+                            onChange={(e) => setWorkScope({ description: e.target.value })}
+                        ></textarea>
                     </div>
 
                     {/* Key Deliverables */}
                     <div className="form-group">
                         <label className="form-label">Key deliverables<span>*</span></label>
-                        <input type="text" className="form-input" placeholder="List out the key deliverables here" />
+                        <input 
+                            type="text" 
+                            className="form-input" 
+                            placeholder="List out the key deliverables here" 
+                            value={workScope.key_deliverables || ''}
+                            onChange={(e) => setWorkScope({ key_deliverables: e.target.value })}
+                        />
                     </div>
 
                     {/* Support Level Cards */}
                     <div className="form-group">
                         <label className="form-label">Support level<span>*</span></label>
                         <div className="support-cards-container">
-                            <div className={`support-card ${supportLevel === 'Training-friendly' ? 'selected' : ''}`} onClick={() => setSupportLevel('Training-friendly')}>
+                            <div className={`support-card ${workScope.support_level === 'Training-friendly' ? 'selected' : ''}`} onClick={() => setWorkScope({ support_level: 'Training-friendly' })}>
                                 <div className="support-card-title">Training-friendly</div>
                                 <div className="support-card-desc">High mentorship provided</div>
                             </div>
-                            <div className={`support-card ${supportLevel === 'Balanced' ? 'selected' : ''}`} onClick={() => setSupportLevel('Balanced')}>
+                            <div className={`support-card ${workScope.support_level === 'Balanced' ? 'selected' : ''}`} onClick={() => setWorkScope({ support_level: 'Balanced' })}>
                                 <div className="support-card-title">Balanced</div>
                                 <div className="support-card-desc">Regular check-ins conducted</div>
                             </div>
-                            <div className={`support-card ${supportLevel === 'Independent' ? 'selected' : ''}`} onClick={() => setSupportLevel('Independent')}>
+                            <div className={`support-card ${workScope.support_level === 'Independent' ? 'selected' : ''}`} onClick={() => setWorkScope({ support_level: 'Independent' })}>
                                 <div className="support-card-title">Independent</div>
                                 <div className="support-card-desc">Outcome-focused</div>
                             </div>
@@ -118,15 +145,15 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Talent engagement</label>
                         <div className="pills-row">
-                            {['Invite-only', 'Application-based', 'Both'].map(option => (
-                                <div 
-                                    key={option} 
-                                    className={`eng-pill ${engagement === option ? 'selected' : ''}`}
-                                    onClick={() => setEngagement(option)}
-                                >
-                                    {option}
-                                </div>
-                            ))}
+                                {['Invite-only', 'Application-based', 'Both'].map(option => (
+                                    <div 
+                                        key={option} 
+                                        className={`eng-pill ${workScope.talent_engagement === option ? 'selected' : ''}`}
+                                        onClick={() => setWorkScope({ talent_engagement: option })}
+                                    >
+                                        {option}
+                                    </div>
+                                ))}
                         </div>
                     </div>
 
@@ -134,12 +161,12 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Primary communication mode</label>
                         <div className="options-grid-2col">
-                            {['Email', 'WhatsApp', 'Slack', 'Other', 'Discord'].map(mode => (
-                                <label key={mode} className="option-label">
-                                    <input type="radio" name="commMode" className="option-input" checked={commMode === mode} onChange={() => setCommMode(mode)} />
-                                    {mode}
-                                </label>
-                            ))}
+                                {['Email', 'WhatsApp', 'Slack', 'Other', 'Discord'].map(mode => (
+                                    <label key={mode} className="option-label">
+                                        <input type="radio" name="commMode" className="option-input" checked={workScope.primary_communication_mode === mode} onChange={() => setWorkScope({ primary_communication_mode: mode })} />
+                                        {mode}
+                                    </label>
+                                ))}
                         </div>
                     </div>
 
@@ -147,12 +174,12 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Application requirements<span>*</span></label>
                         <div className="options-grid-2col">
-                            {['Portfolio link', 'Resume', 'Work sample', 'Short note'].map(req => (
-                                <label key={req} className="option-label">
-                                    <input type="checkbox" className="option-input" checked={appReqs.includes(req)} onChange={() => toggleAppReq(req)} />
-                                    {req}
-                                </label>
-                            ))}
+                                {['Portfolio link', 'Resume', 'Work sample', 'Short note'].map(req => (
+                                    <label key={req} className="option-label">
+                                        <input type="checkbox" className="option-input" checked={workScope.application_requirements?.includes(req)} onChange={() => toggleAppReq(req)} />
+                                        {req}
+                                    </label>
+                                ))}
                         </div>
                     </div>
 
@@ -160,17 +187,59 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Primary Contact<span>*</span></label>
                         <div className="contact-row">
-                            <input type="text" className="form-input" placeholder="Full name" />
-                            <input type="email" className="form-input" placeholder="Email" />
+                            <input 
+                                type="text" 
+                                className="form-input" 
+                                placeholder="Full name" 
+                                value={workScope.primary_contact_name || ''}
+                                onChange={(e) => setWorkScope({ primary_contact_name: e.target.value })}
+                            />
+                            <input 
+                                type="email" 
+                                className="form-input" 
+                                placeholder="Email" 
+                                value={workScope.primary_contact_email || ''}
+                                onChange={(e) => setWorkScope({ primary_contact_email: e.target.value })}
+                            />
                         </div>
                     </div>
 
+                    {/* Error Display */}
+                    {error && (
+                        <div className="error-message" style={{ 
+                            marginBottom: '16px', 
+                            padding: '12px', 
+                            backgroundColor: '#FEE2E2', 
+                            color: '#DC2626', 
+                            borderRadius: '6px',
+                            fontSize: '14px'
+                        }}>
+                            {error}
+                            <button 
+                                onClick={clearError} 
+                                style={{ 
+                                    marginLeft: '12px', 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    color: '#DC2626', 
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    )}
+
                     {/* Footer Actions - With Pill Button */}
                     <div className="form-actions">
-                        <button className="btn-draft">Save Draft</button>
+                        <button className="btn-draft" disabled={is_loading}>
+                            {is_loading ? 'Saving...' : 'Save Draft'}
+                        </button>
                         <div className="action-right">
                             <button className="btn-text">Clear all</button>
-                            <button className="btn-primary">Save & Next</button>
+                            <button className="btn-primary" onClick={handleSaveAndNext} disabled={is_loading}>
+                                {is_loading ? 'Saving...' : 'Save & Next'}
+                            </button>
                         </div>
                     </div>
 

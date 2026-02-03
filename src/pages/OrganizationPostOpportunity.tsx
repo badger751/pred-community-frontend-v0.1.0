@@ -1,6 +1,8 @@
 // FILE: src/pages/OrgPostOpportunity.tsx
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useOpportunityCreationStore } from '../stores/opportunityCreationStore';
 import '../postopportunity.css';
 
 // Placeholder Icons
@@ -17,12 +19,23 @@ const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1
 const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
 
 const OrgPostOpportunity: React.FC = () => {
-    // State for form fields
-    const [selectedType, setSelectedType] = useState<string | null>(null);
-    const [workSetup, setWorkSetup] = useState<string | null>(null);
-    const [difficulty, setDifficulty] = useState<string | null>(null);
-    const [startDateType, setStartDateType] = useState<string | null>(null);
-    const [compensationType, setCompensationType] = useState<string | null>(null);
+    const navigate = useNavigate();
+    
+    // Store hook
+    const { 
+        coreDetails, 
+        setCoreDetails, 
+        nextStep, 
+        is_loading, 
+        error, 
+        clearError 
+    } = useOpportunityCreationStore();
+
+    const handleSaveAndNext = () => {
+        // Auto-save will happen in nextStep() action
+        nextStep();
+        navigate('/orgworkscope');
+    };
 
     // Mobile menu state
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -110,7 +123,7 @@ const OrgPostOpportunity: React.FC = () => {
         const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         setSelectedDate(newDate);
         setIsDatePickerOpen(false);
-        setStartDateType('Specific date'); // Ensure correct pill is active
+        setCoreDetails({ start_date_type: 'Specific date' }); // Ensure correct pill is active
     };
 
     // --- Year View Handlers ---
@@ -348,8 +361,8 @@ const OrgPostOpportunity: React.FC = () => {
                             {opportunityTypes.map((type, index) => (
                                 <div 
                                     key={index} 
-                                    className={`type-card ${selectedType === type.title ? 'selected' : ''}`}
-                                    onClick={() => setSelectedType(type.title)}
+                        className={`type-card ${coreDetails.opportunity_type === type.title ? 'selected' : ''}`}
+                        onClick={() => setCoreDetails({ opportunity_type: type.title })}
                                 >
                                     <div className="type-card-title">{type.title}</div>
                                     <div className="type-card-desc">{type.desc}</div>
@@ -363,13 +376,23 @@ const OrgPostOpportunity: React.FC = () => {
                         <div className="form-col">
                             <div className="form-group">
                                 <label className="form-label">Opportunity title<span>*</span></label>
-                                <input type="text" className="form-input" placeholder="Enter title" />
+                                <input 
+                                    type="text" 
+                                    className="form-input" 
+                                    placeholder="Enter title" 
+                                    value={coreDetails.title || ''}
+                                    onChange={(e) => setCoreDetails({ title: e.target.value })}
+                                />
                             </div>
-                        </div>
-                        <div className="form-col">
-                            <div className="form-group">
+                            <div className="form-col">
                                 <label className="form-label">Duration</label>
-                                <input type="text" className="form-input" placeholder="e.g. 2 weeks, 1 month etc." />
+                                <input 
+                                    type="text" 
+                                    className="form-input" 
+                                    placeholder="e.g. 2 weeks, 1 month etc." 
+                                    value={coreDetails.duration || ''}
+                                    onChange={(e) => setCoreDetails({ duration: e.target.value })}
+                                />
                             </div>
                         </div>
                     </div>
@@ -379,7 +402,11 @@ const OrgPostOpportunity: React.FC = () => {
                         <div className="form-col">
                             <div className="form-group">
                                 <label className="form-label">Domain<span>*</span></label>
-                                <select className="form-input">
+                                <select 
+                                    className="form-input"
+                                    value={coreDetails.domain || ''}
+                                    onChange={(e) => setCoreDetails({ domain: e.target.value })}
+                                >
                                     <option value="">Choose a domain</option>
                                     {/* Add domain options here */}
                                 </select>
@@ -398,8 +425,8 @@ const OrgPostOpportunity: React.FC = () => {
                                     {['Remote', 'In-Person', 'Hybrid'].map(setup => (
                                         <div 
                                             key={setup} 
-                                            className={`pill ${workSetup === setup ? 'selected' : ''}`}
-                                            onClick={() => setWorkSetup(setup)}
+                                            className={`pill ${coreDetails.work_setup === setup ? 'selected' : ''}`}
+                                            onClick={() => setCoreDetails({ work_setup: setup })}
                                         >
                                             {setup}
                                         </div>
@@ -433,21 +460,40 @@ const OrgPostOpportunity: React.FC = () => {
                                 <div className="form-row">
                                     <div className="radio-group">
                                         <label className="radio-label">
-                                            <input type="radio" name="compensation" className="radio-input" onChange={() => setCompensationType('paid')} /> Paid
+                                            <input type="radio" name="compensation" className="radio-input" onChange={() => setCoreDetails({ compensation_type: 'paid' })} /> Paid
                                         </label>
                                         <label className="radio-label">
-                                            <input type="radio" name="compensation" className="radio-input" onChange={() => setCompensationType('unpaid')} /> Unpaid
+                                            <input type="radio" name="compensation" className="radio-input" onChange={() => setCoreDetails({ compensation_type: 'unpaid' })} /> Unpaid
                                         </label>
                                     </div>
-                                    {compensationType === 'paid' && (
-                                        <input type="text" className="form-input" placeholder="Enter exact amount" style={{marginLeft: '24px'}} />
+                                    {coreDetails.compensation_type === 'paid' && (
+                                        <input 
+                                            type="text" 
+                                            className="form-input" 
+                                            placeholder="Enter exact amount" 
+                                            style={{marginLeft: '24px'}}
+                                            value={coreDetails.compensation_amount || ''}
+                                            onChange={(e) => setCoreDetails({ compensation_amount: e.target.value })}
+                                        />
                                     )}
                                 </div>
-                            </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Difficulty (With inline details input) */}
+                {/* Weekly Time Commitment */}
+                <div className="form-group">
+                    <label className="form-label">Weekly time commitment<span>*</span></label>
+                    <input 
+                        type="text" 
+                        className="form-input" 
+                        placeholder="e.g. 10-15 hrs/week"
+                        value={coreDetails.weekly_time_commitment || ''}
+                        onChange={(e) => setCoreDetails({ weekly_time_commitment: e.target.value })}
+                    />
+                </div>
+
+                {/* Difficulty (With inline details input) */}
                     <div className="form-group">
                         <label className="form-label">Difficulty<span>*</span></label>
                         <div className="difficulty-row">
@@ -455,8 +501,8 @@ const OrgPostOpportunity: React.FC = () => {
                                 {['Beginner-Friendly', 'Intermediate', 'Advanced'].map(diff => (
                                     <div 
                                         key={diff} 
-                                        className={`pill ${difficulty === diff ? 'selected' : ''}`}
-                                        onClick={() => setDifficulty(diff)}
+                                        className={`pill ${coreDetails.difficulty === diff ? 'selected' : ''}`}
+                                        onClick={() => setCoreDetails({ difficulty: diff })}
                                     >
                                         {diff}
                                     </div>
@@ -478,9 +524,9 @@ const OrgPostOpportunity: React.FC = () => {
                                 {['Specific date', 'Flexible', 'ASAP'].map(type => (
                                     <div 
                                         key={type} 
-                                        className={`pill ${startDateType === type ? 'selected' : ''}`}
+                                        className={`pill ${coreDetails.start_date_type === type ? 'selected' : ''}`}
                                         onClick={() => {
-                                            setStartDateType(type);
+                                            setCoreDetails({ start_date_type: type });
                                             if (type !== 'Specific date') setSelectedDate(null);
                                         }}
                                     >
@@ -553,12 +599,42 @@ const OrgPostOpportunity: React.FC = () => {
 
                 </div>
 
+                {/* Error Display */}
+                {error && (
+                    <div className="error-message" style={{ 
+                        marginBottom: '16px', 
+                        padding: '12px', 
+                        backgroundColor: '#FEE2E2', 
+                        color: '#DC2626', 
+                        borderRadius: '6px',
+                        fontSize: '14px'
+                    }}>
+                        {error}
+                        <button 
+                            onClick={clearError} 
+                            style={{ 
+                                marginLeft: '12px', 
+                                background: 'none', 
+                                border: 'none', 
+                                color: '#DC2626', 
+                                cursor: 'pointer'
+                            }}
+                        >
+                            ✕
+                        </button>
+                    </div>
+                )}
+
                 {/* Form Actions */}
                 <div className="form-actions">
-                    <button className="btn-outline">Save Draft</button>
+                    <button className="btn-outline" disabled={is_loading}>
+                        {is_loading ? 'Saving...' : 'Save Draft'}
+                    </button>
                     <div className="action-right">
                         <button className="btn-secondary">Clear all</button>
-                        <button className="btn-primary">Save & Next</button>
+                        <button className="btn-primary" onClick={handleSaveAndNext} disabled={is_loading}>
+                            {is_loading ? 'Saving...' : 'Save & Next'}
+                        </button>
                     </div>
                 </div>
 

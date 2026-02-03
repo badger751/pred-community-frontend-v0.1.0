@@ -24,6 +24,8 @@ import TalentDashboardV2 from "./pages/TalentDashboardV2";
 import OrganizationDashboard from "./pages/OrganizationDashboard";
 import OrganizationPostOpportunity from "./pages/OrganizationPostOpportunity";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
+import OrgWorkScope from "./pages/OrgWorkScope";
+import OrgReviewOpportunity from "./pages/OrgReviewOpportunity";
 import TalentPoolPage from "./pages/TalentPoolPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword"; // <-- import the new page
@@ -169,6 +171,22 @@ function AnimatedRoutes() {
           element={
             <ProtectedRoute>
               <OpportunitiesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orgworkscope"
+          element={
+            <ProtectedRoute>
+              <OrgWorkScope />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/org-review-opportunity"
+          element={
+            <ProtectedRoute>
+              <OrgReviewOpportunity />
             </ProtectedRoute>
           }
         />
