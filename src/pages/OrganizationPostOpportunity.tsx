@@ -24,16 +24,14 @@ const OrgPostOpportunity: React.FC = () => {
     // Store hook
     const { 
         coreDetails, 
-        setCoreDetails, 
-        nextStep, 
-        is_loading, 
-        error, 
-        clearError 
+        setCoreDetails,
+        is_loading,
+        error,
+        clearError
     } = useOpportunityCreationStore();
 
     const handleSaveAndNext = () => {
-        // Auto-save will happen in nextStep() action
-        nextStep();
+        // Store is updated via setCoreDetails on each field; just navigate
         navigate('/orgworkscope');
     };
 

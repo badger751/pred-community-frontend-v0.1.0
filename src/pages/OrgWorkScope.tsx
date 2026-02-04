@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOpportunityCreationStore } from '../stores/opportunityCreationStore';
+import toast from 'react-hot-toast';
 import "../workscope.css";
 
 // --- Icons ---
@@ -23,11 +24,14 @@ const OrgWorkScope: React.FC = () => {
     const { 
         workScope, 
         setWorkScope, 
-        nextStep, 
         is_loading, 
-        error, 
         clearError 
     } = useOpportunityCreationStore();
+
+    // Clear errors on mount to prevent premature banners
+    useEffect(() => {
+        clearError();
+    }, []);
 
     const navigate = useNavigate();
 
@@ -42,7 +46,7 @@ const OrgWorkScope: React.FC = () => {
     };
 
     const handleSaveAndNext = () => {
-        nextStep();
+        // Store is updated via setWorkScope on each field; just navigate
         navigate('/org-review-opportunity');
     };
 
@@ -200,35 +204,17 @@ const OrgWorkScope: React.FC = () => {
                                 placeholder="Email" 
                                 value={workScope.primary_contact_email || ''}
                                 onChange={(e) => setWorkScope({ primary_contact_email: e.target.value })}
+                                onBlur={() => {
+                                    const email = workScope.primary_contact_email || '';
+                                    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+                                        toast.error('Email address must be valid (e.g., user@example.com)');
+                                    }
+                                }}
                             />
                         </div>
                     </div>
 
-                    {/* Error Display */}
-                    {error && (
-                        <div className="error-message" style={{ 
-                            marginBottom: '16px', 
-                            padding: '12px', 
-                            backgroundColor: '#FEE2E2', 
-                            color: '#DC2626', 
-                            borderRadius: '6px',
-                            fontSize: '14px'
-                        }}>
-                            {error}
-                            <button 
-                                onClick={clearError} 
-                                style={{ 
-                                    marginLeft: '12px', 
-                                    background: 'none', 
-                                    border: 'none', 
-                                    color: '#DC2626', 
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                ✕
-                            </button>
-                        </div>
-                    )}
+
 
                     {/* Footer Actions - With Pill Button */}
                     <div className="form-actions">

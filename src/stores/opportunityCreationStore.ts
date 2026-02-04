@@ -344,8 +344,7 @@ export const useOpportunityCreationStore = create<OpportunityCreationStore>()(
         console.log('[OpportunityStore] Moving to step:', nextStep);
         set({ current_step: nextStep });
         
-        // Auto-save when step changes and data is valid
-        get().saveDraft();
+
       },
 
       previousStep: () => {
@@ -355,8 +354,7 @@ export const useOpportunityCreationStore = create<OpportunityCreationStore>()(
         console.log('[OpportunityStore] Moving to previous step:', prevStep);
         set({ current_step: prevStep });
         
-        // Auto-save when step changes
-        get().saveDraft();
+
       },
 
       // Enhanced validation before save

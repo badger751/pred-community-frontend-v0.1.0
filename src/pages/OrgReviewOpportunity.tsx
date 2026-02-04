@@ -31,13 +31,16 @@ const OrgReviewOpportunity = () => {
     submitOpportunity,
     loadDraft,
     is_loading,
+    clearError,
   } = useOpportunityCreationStore();
 
   useEffect(() => {
     if (id) {
       loadDraft(id);
     }
-  }, [id, loadDraft]);
+    // Clear any stale error banner on mount
+    clearError();
+  }, [id, loadDraft, clearError]);
 
   return (
     <div className="org-review-container">
