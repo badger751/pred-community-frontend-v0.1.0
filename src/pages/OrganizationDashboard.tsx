@@ -4,21 +4,111 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
 import { useAuthStore } from "../stores/authStore";
+import { useOpportunitiesStore, type FullOpportunity } from "../stores/opportunitiesStore";
+import OpportunityDetailModal from "../components/OpportunityDetailModal";
 import toast from "react-hot-toast";
 import "../dashboard.css";
+import "../opportunities.css";
 import VerificationModal from "../components/VerificationModal"; // Import the modal
 
 // Mobile Navigation Icons
 const HamburgerIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
 const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
+// Shared card component (inline to avoid extraction overhead)
+const OpportunityCard: React.FC<{ opportunity: FullOpportunity; onClick: () => void }> = ({ opportunity, onClick }) => {
+  const getStatusClass = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'live': return 'opportunity-status-live';
+      case 'draft': return 'opportunity-status-draft';
+      case 'paused': return 'opportunity-status-paused';
+      case 'closed': return 'opportunity-status-closed';
+      default: return 'opportunity-status-badge';
+    }
+  };
+  return (
+    <div className="opportunity-card" onClick={onClick}>
+      <div className="opportunity-card-grid">
+        <div className="opportunity-overview">
+          <h3 className="opportunity-title">{opportunity.title}</h3>
+          <div className="opportunity-meta">
+            <div className="opportunity-meta-item">
+              <span>{opportunity.type}</span>
+            </div>
+            <div className="opportunity-skills">
+              {opportunity.stack.slice(0, 3).map((skill) => (
+                <span key={skill} className="opportunity-skill-chip">{skill}</span>
+              ))}
+              {opportunity.stack.length > 3 && (
+                <span className="opportunity-skill-chip">+{opportunity.stack.length - 3}</span>
+              )}
+            </div>
+            <div className="opportunity-posted-time">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span>Posted {opportunity.postedAt}</span>
+            </div>
+          </div>
+        </div>
+        <div className="opportunity-detail-item">
+          <span className="opportunity-detail-value truncate">{opportunity.domain || '-'}</span>
+        </div>
+        <div className="opportunity-detail-item">
+          <span className="opportunity-detail-value">{opportunity.difficulty || '-'}</span>
+        </div>
+        <div className="opportunity-detail-item">
+          <div className={`opportunity-mentorship ${opportunity.mentorship_provided ? 'opportunity-mentorship-yes' : 'opportunity-mentorship-no'}`}>
+            {opportunity.mentorship_provided ? '✓' : '—'}
+          </div>
+        </div>
+        <div className="opportunity-detail-item">
+          <span className="opportunity-detail-value truncate">
+            {opportunity.deadline || opportunity.start_timeline || 'Flexible'}
+          </span>
+        </div>
+        <div>
+          <div className={`opportunity-status-badge ${getStatusClass(opportunity.status)}`}>
+            {opportunity.status}
+          </div>
+        </div>
+        <div className="opportunity-overview">
+          <div className="space-y-2">
+            <div className="opportunity-detail-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span className="opportunity-detail-value">{opportunity.commitments.duration}</span>
+            </div>
+            <div className="opportunity-detail-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <span className="opportunity-detail-value">{opportunity.commitments.hoursPerWeek}h/w</span>
+            </div>
+            <div className="opportunity-detail-item">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span className="opportunity-detail-value">{opportunity.commitments.location}</span>
+            </div>
+          </div>
+        </div>
+        <div className="opportunity-views">
+          <span>{opportunity.views_count || 0}</span>
+        </div>
+        <div>
+          <button className={`opportunity-action-btn ${opportunity.status === 'LIVE' ? 'opportunity-action-primary' : 'opportunity-action-secondary'}`}>
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const OrganizationDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { logout, user, isAuthenticated } = useAuthStore();
+  const { opportunities, loading, fetchOpportunities } = useOpportunitiesStore();
   const [showModal, setShowModal] = useState(true); // Control the modal state
   const [orgName, setOrgName] = useState<string>("Organization");
   const [loadingName, setLoadingName] = useState<boolean>(true);
- 
+  const [selectedOpportunity, setSelectedOpportunity] = useState<FullOpportunity | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -45,6 +135,11 @@ const OrganizationDashboard: React.FC = () => {
     checkOnboardingStatus();
   }, [user?.id, isAuthenticated, navigate]);
 
+  // Fetch opportunities on mount
+  useEffect(() => {
+    fetchOpportunities();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Mobile menu handlers
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -52,6 +147,16 @@ const OrganizationDashboard: React.FC = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  // Modal handlers
+  const openModal = (opp: FullOpportunity) => {
+    setSelectedOpportunity(opp);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedOpportunity(null);
   };
 
   // Close menu on escape key
@@ -125,6 +230,9 @@ const OrganizationDashboard: React.FC = () => {
 
     fetchOrgProfile();
   }, []);
+
+  // Derive active opportunities
+  const activeOpportunities = opportunities.filter(o => o.status.toLowerCase() === 'active');
 
   return (
     <>
@@ -464,11 +572,25 @@ const OrganizationDashboard: React.FC = () => {
 
           <section className="section-container">
             <h3 className="section-title">Active opportunities</h3>
-            <div className="empty-state-container">
-              <p className="empty-state-text">
-                You haven't posted any opportunities yet.
-              </p>
-            </div>
+            {loading ? (
+              <div className="opportunities-grid">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="skeleton opportunity-card-skeleton" aria-hidden />
+                ))}
+              </div>
+            ) : activeOpportunities.length > 0 ? (
+              <div className="opportunities-grid">
+                {activeOpportunities.map((opportunity) => (
+                  <OpportunityCard key={opportunity.id} opportunity={opportunity} onClick={() => openModal(opportunity)} />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state-container">
+                <p className="empty-state-text">
+                  You haven't posted any opportunities yet.
+                </p>
+              </div>
+            )}
           </section>
 
           <section className="section-container">
@@ -693,11 +815,18 @@ const OrganizationDashboard: React.FC = () => {
         </div>
       </aside>
 
-      {/* --- MODAL ADDED HERE --- */}
+      {/* --- MODALS --- */}
       <VerificationModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
       />
+      {selectedOpportunity && (
+        <OpportunityDetailModal
+          opportunity={selectedOpportunity}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
+      )}
     </div>
     </>
   );

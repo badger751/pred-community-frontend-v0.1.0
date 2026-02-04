@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   LayoutGrid, 
@@ -15,243 +15,177 @@ import {
   Search,
   Clock,
   MapPin,
-  DollarSign,
   Calendar,
-  UserPlus
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
-import '../dashboard.css';
-
-interface Opportunity {
-  id: string;
-  title: string;
-  type: string;
-  stack: string[];
-  postedAt: string;
-  status: 'LIVE' | 'DRAFT' | 'PAUSED' | 'CLOSED';
-  statusNote?: string;
-  commitments: {
-    duration: string;
-    hoursPerWeek: number;
-    location: string;
-  };
-  compensation: {
-    isPaid: boolean;
-    amount?: string;
-    totalBudget?: string;
-  };
-  pipeline: {
-    applied: number;
-    shortlisted: number;
-    selected: number;
-  };
-  actionLabel: string;
-}
+import { useOpportunitiesStore, type FullOpportunity } from '../stores/opportunitiesStore';
+import OpportunityDetailModal from '../components/OpportunityDetailModal';
+import '../opportunities.css';
 
 const OpportunitiesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+  const [selectedOpportunity, setSelectedOpportunity] = useState<FullOpportunity | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const mockOpportunities: Opportunity[] = [
-    {
-      id: '1',
-      title: 'Frontend Development for Mobile App',
-      type: 'Project',
-      stack: ['React', 'TypeScript'],
-      postedAt: '2 hr ago',
-      status: 'LIVE',
-      statusNote: 'No candidates yet',
-      commitments: {
-        duration: '3 months',
-        hoursPerWeek: 15,
-        location: 'Remote'
-      },
-      compensation: {
-        isPaid: true,
-        amount: '35-45K/month',
-        totalBudget: '1.5L'
-      },
-      pipeline: {
-        applied: 0,
-        shortlisted: 0,
-        selected: 0
-      },
-      actionLabel: 'Browse Talent Pool'
-    },
-    {
-      id: '2',
-      title: 'UX Design System for Mobile App',
-      type: 'Internship',
-      stack: ['Figma', 'Design Systems'],
-      postedAt: '5 hr ago',
-      status: 'DRAFT',
-      statusNote: 'Missing details',
-      commitments: {
-        duration: '1 month',
-        hoursPerWeek: 10,
-        location: 'Remote'
-      },
-      compensation: {
-        isPaid: true,
-        amount: '15-20K/month',
-        totalBudget: '75K'
-      },
-      pipeline: {
-        applied: 0,
-        shortlisted: 0,
-        selected: 0
-      },
-      actionLabel: 'Edit Draft'
-    },
-    {
-      id: '3',
-      title: 'Backend API Development',
-      type: 'Full-time',
-      stack: ['Node.js', 'MongoDB'],
-      postedAt: '1 day ago',
-      status: 'PAUSED',
-      statusNote: 'Under review',
-      commitments: {
-        duration: '6 months',
-        hoursPerWeek: 40,
-        location: 'Hybrid'
-      },
-      compensation: {
-        isPaid: true,
-        amount: '60-80K/month',
-        totalBudget: '4.8L'
-      },
-      pipeline: {
-        applied: 12,
-        shortlisted: 3,
-        selected: 0
-      },
-      actionLabel: 'View Candidates'
-    }
-  ];
+  // Store hooks
+  const { 
+    opportunities, 
+    loading, 
+    error, 
+    fetchOpportunities, 
+    refreshOpportunities, 
+    clearError 
+  } = useOpportunitiesStore();
 
-  const StatusBadge: React.FC<{ status: string; note?: string }> = ({ status, note }) => {
-    const baseClasses = "px-3 py-1 rounded-full text-xs font-semibold";
-    
-    switch (status) {
-      case 'LIVE':
-        return (
-          <div className="flex flex-col">
-            <span className={`${baseClasses} bg-green-100 text-green-800`}>{status}</span>
-            {note && <span className="text-xs text-gray-500 mt-1">{note}</span>}
-          </div>
-        );
-      case 'DRAFT':
-        return (
-          <div className="flex flex-col">
-            <span className={`${baseClasses} bg-orange-100 text-orange-800`}>{status}</span>
-            {note && <span className="text-xs text-gray-500 mt-1">{note}</span>}
-          </div>
-        );
-      case 'PAUSED':
-        return (
-          <div className="flex flex-col">
-            <span className={`${baseClasses} bg-red-100 text-red-800`}>{status}</span>
-            {note && <span className="text-xs text-gray-500 mt-1">{note}</span>}
-          </div>
-        );
-      case 'CLOSED':
-        return (
-          <div className="flex flex-col">
-            <span className={`${baseClasses} bg-gray-100 text-gray-800`}>{status}</span>
-            {note && <span className="text-xs text-gray-500 mt-1">{note}</span>}
-          </div>
-        );
-      default:
-        return <span className={baseClasses}>{status}</span>;
-    }
-  };
+  // Fetch opportunities on component mount
+  useEffect(() => {
+    fetchOpportunities();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const OpportunityRow: React.FC<{ opportunity: Opportunity }> = ({ opportunity }) => {
+  // Filter and sort opportunities
+  const filteredAndSortedOpportunities = opportunities
+    .filter(opp => {
+      // Search filter
+      const matchesSearch = searchTerm === '' || 
+        opp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        opp.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        opp.stack.some(s => s.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      // Status filter
+      const matchesStatus = statusFilter === 'all' || 
+        opp.status.toLowerCase() === statusFilter.toLowerCase();
+      
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'recent':
+          // Sort by most recent (we'll need to parse postedAt for proper sorting)
+          return 0; // TODO: Implement proper date sorting
+        case 'name':
+          return a.title.localeCompare(b.title);
+        case 'status':
+          return a.status.localeCompare(b.status);
+        case 'candidates':
+          return b.pipeline.applied - a.pipeline.applied;
+        default:
+          return 0;
+      }
+    });
+
+  
+
+  const OpportunityRow: React.FC<{ opportunity: FullOpportunity; onClick: () => void }> = ({ opportunity, onClick }) => {
+    const getStatusClass = (status: string) => {
+      switch (status.toLowerCase()) {
+        case 'live': return 'opportunity-status-live';
+        case 'draft': return 'opportunity-status-draft';
+        case 'paused': return 'opportunity-status-paused';
+        case 'closed': return 'opportunity-status-closed';
+        default: return 'opportunity-status-badge';
+      }
+    };
+
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-        <div className="grid grid-cols-12 gap-4 items-center">
+      <div 
+        className="opportunity-card"
+        onClick={onClick}
+      >
+        <div className="opportunity-card-grid">
           {/* Overview */}
-          <div className="col-span-4">
-            <h3 className="font-semibold text-gray-900 mb-1">{opportunity.title}</h3>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span>{opportunity.type}</span>
-              <span>•</span>
-              <span>{opportunity.stack.join(', ')}</span>
+          <div className="opportunity-overview">
+            <h3 className="opportunity-title">{opportunity.title}</h3>
+            <div className="opportunity-meta">
+              <div className="opportunity-meta-item">
+                <span>{opportunity.type}</span>
+              </div>
+              <div className="opportunity-skills">
+                {opportunity.stack.slice(0, 3).map((skill) => (
+                  <span key={skill} className="opportunity-skill-chip">{skill}</span>
+                ))}
+                {opportunity.stack.length > 3 && (
+                  <span className="opportunity-skill-chip">+{opportunity.stack.length - 3}</span>
+                )}
+              </div>
+              <div className="opportunity-posted-time">
+                <Clock size={12} />
+                <span>Posted {opportunity.postedAt}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
-              <Clock size={12} />
-              <span>Posted {opportunity.postedAt}</span>
+          </div>
+
+          {/* Domain */}
+          <div className="opportunity-detail-item">
+            <span className="opportunity-detail-value truncate">{opportunity.domain || '-'}</span>
+          </div>
+
+          {/* Experience */}
+          <div className="opportunity-detail-item">
+            <span className="opportunity-detail-value">{opportunity.difficulty || '-'}</span>
+          </div>
+
+          {/* Mentorship */}
+          <div className="opportunity-detail-item">
+            <div className={`opportunity-mentorship ${opportunity.mentorship_provided ? 'opportunity-mentorship-yes' : 'opportunity-mentorship-no'}`}>
+              {opportunity.mentorship_provided ? '✓' : '—'}
             </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="opportunity-detail-item">
+            <span className="opportunity-detail-value truncate">
+              {opportunity.deadline || opportunity.start_timeline || 'Flexible'}
+            </span>
           </div>
 
           {/* Status */}
-          <div className="col-span-2">
-            <StatusBadge status={opportunity.status} note={opportunity.statusNote} />
+          <div>
+            <div className={`opportunity-status-badge ${getStatusClass(opportunity.status)}`}>
+              {opportunity.status}
+            </div>
+            {opportunity.statusNote && (
+              <div className="opportunity-status-note">{opportunity.statusNote}</div>
+            )}
           </div>
 
           {/* Commitments */}
-          <div className="col-span-2">
-            <div className="space-y-1 text-sm">
-              <div className="flex items-center gap-1 text-gray-600">
-                <Calendar size={12} />
-                <span>{opportunity.commitments.duration}</span>
+          <div className="opportunity-overview">
+            <div className="space-y-2">
+              <div className="opportunity-detail-item">
+                <Calendar size={12} className="text-gray-400" />
+                <span className="opportunity-detail-value">{opportunity.commitments.duration}</span>
               </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <Clock size={12} />
-                <span>{opportunity.commitments.hoursPerWeek} hrs/week</span>
+              <div className="opportunity-detail-item">
+                <Clock size={12} className="text-gray-400" />
+                <span className="opportunity-detail-value">{opportunity.commitments.hoursPerWeek}h/w</span>
               </div>
-              <div className="flex items-center gap-1 text-gray-600">
-                <MapPin size={12} />
-                <span>{opportunity.commitments.location}</span>
+              <div className="opportunity-detail-item">
+                <MapPin size={12} className="text-gray-400" />
+                <span className="opportunity-detail-value">{opportunity.commitments.location}</span>
               </div>
             </div>
           </div>
 
-          {/* Compensation */}
-          <div className="col-span-2">
-            <div className="space-y-1 text-sm">
-              <div className="flex items-center gap-1">
-                <DollarSign size={12} className={opportunity.compensation.isPaid ? 'text-green-600' : 'text-gray-400'} />
-                <span className={opportunity.compensation.isPaid ? 'text-green-600' : 'text-gray-400'}>
-                  {opportunity.compensation.isPaid ? 'Paid' : 'Unpaid'}
-                </span>
-              </div>
-              {opportunity.compensation.amount && (
-                <div className="text-gray-600">{opportunity.compensation.amount}</div>
-              )}
-              {opportunity.compensation.totalBudget && (
-                <div className="text-xs text-gray-500">Total: {opportunity.compensation.totalBudget}</div>
-              )}
-            </div>
-          </div>
-
-          {/* Pipeline */}
-          <div className="col-span-1">
-            <div className="text-sm space-y-1">
-              <div className="flex items-center gap-1">
-                <UserPlus size={12} className="text-blue-600" />
-                <span className="text-gray-600">{opportunity.pipeline.applied}</span>
-                <span className="text-xs text-gray-500">applied</span>
-              </div>
-              {opportunity.pipeline.shortlisted > 0 && (
-                <div className="text-xs text-green-600">{opportunity.pipeline.shortlisted} shortlisted</div>
-              )}
-              {opportunity.pipeline.selected > 0 && (
-                <div className="text-xs text-blue-600">{opportunity.pipeline.selected} selected</div>
-              )}
-            </div>
+          {/* Views */}
+          <div className="opportunity-views">
+            <span>{opportunity.views_count || 0}</span>
           </div>
 
           {/* Actions */}
-          <div className="col-span-1">
-            <Link 
-              to="#" 
-              className="text-green-600 hover:text-green-700 text-sm font-medium hover:underline"
+          <div>
+            <button 
+              className={`opportunity-action-btn ${opportunity.status === 'LIVE' ? 'opportunity-action-primary' : 'opportunity-action-secondary'}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                // Handle action button click if needed
+              }}
             >
               {opportunity.actionLabel}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -304,25 +238,34 @@ const OpportunitiesPage: React.FC = () => {
       </aside>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="main-content flex-1">
+      <main className="opportunities-container flex-1">
         {/* Header */}
-        <header className="top-header flex justify-between items-center mb-6">
-          <h1 className="page-title text-2xl font-bold text-gray-900">Opportunities</h1>
-          <div className="header-actions flex items-center gap-4">
-            <div className="search-bar">
-              <Search size={18} className="search-icon-svg" />
+        <header className="opportunities-header">
+          <h1 className="opportunities-title">Opportunities</h1>
+          <div className="opportunities-header-actions">
+            <div className="opportunities-search-bar">
+              <Search size={18} className="opportunities-search-icon" />
               <input 
                 type="text"
                 placeholder="Search opportunities..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="opportunities-search-input"
               />
             </div>
-            <button className="icon-btn">
-              <Bell size={20} className="bell-icon-svg" />
+            <button 
+              className="opportunities-btn-secondary"
+              onClick={() => refreshOpportunities()}
+              title="Refresh opportunities"
+            >
+              <RefreshCw size={16} className={`opportunities-btn-icon ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+            <button className="opportunities-btn-secondary">
+              <Bell size={16} className="opportunities-btn-icon" />
             </button>
             <button 
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+              className="opportunities-btn-primary"
               onClick={() => navigate('/organization-post-opportunity')}
             >
               Create New Opportunity
@@ -330,12 +273,35 @@ const OpportunitiesPage: React.FC = () => {
           </div>
         </header>
 
+        {/* Error State */}
+        {error && (
+          <div className="opportunities-error-state">
+            <div className="flex items-center">
+              <AlertCircle size={20} className="opportunities-error-icon" />
+              <div>
+                <p className="opportunities-error-message">Error loading opportunities</p>
+                <p className="opportunities-error-detail">{error}</p>
+              </div>
+              <button 
+                onClick={() => {
+                  clearError();
+                  fetchOpportunities();
+                }}
+                className="opportunities-btn-primary"
+                style={{ marginTop: '12px' }}
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Filter Bar */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-4">
+        <div className="opportunities-filter-bar">
+          <div className="opportunities-filter-row">
+            <div className="opportunities-filter-group">
               <select 
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="opportunities-select"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -346,14 +312,14 @@ const OpportunitiesPage: React.FC = () => {
                 <option value="closed">Closed</option>
               </select>
               
-              <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select className="opportunities-select">
                 <option value="">Pipeline Status</option>
                 <option value="no-candidates">No Candidates</option>
                 <option value="has-candidates">Has Candidates</option>
                 <option value="in-review">In Review</option>
               </select>
               
-              <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+              <select className="opportunities-select">
                 <option value="">Opportunity Type</option>
                 <option value="project">Project</option>
                 <option value="internship">Internship</option>
@@ -362,10 +328,10 @@ const OpportunitiesPage: React.FC = () => {
               </select>
             </div>
             
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
+            <div className="opportunities-filter-group">
+              <span className="opportunities-sort-label">Sort by:</span>
               <select 
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="opportunities-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -379,30 +345,77 @@ const OpportunitiesPage: React.FC = () => {
         </div>
 
         {/* Table Header */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 mb-4">
-          <div className="grid grid-cols-12 gap-4 items-center text-xs font-semibold text-gray-600 uppercase">
-            <div className="col-span-4">Overview</div>
+        <div className="opportunities-table-header">
+          <div className="opportunities-table-row">
+            <div className="col-span-3">Overview</div>
+            <div className="col-span-1">Domain</div>
+            <div className="col-span-1">Experience</div>
+            <div className="col-span-1">Mentorship</div>
+            <div className="col-span-1">Timeline</div>
             <div className="col-span-2">Status</div>
             <div className="col-span-2">Commitments</div>
-            <div className="col-span-2">Compensation</div>
-            <div className="col-span-1">Pipeline</div>
+            <div className="col-span-1">Views</div>
             <div className="col-span-1">Actions</div>
           </div>
         </div>
 
         {/* Opportunities List */}
-        <div className="space-y-3">
-          {mockOpportunities.map((opportunity) => (
-            <OpportunityRow key={opportunity.id} opportunity={opportunity} />
-          ))}
+        <div className="opportunities-list">
+          {loading ? (
+            // Loading skeleton
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="opportunity-skeleton">
+                <div className="opportunity-card-grid">
+                  <div className="opportunity-overview">
+                    <div className="opportunity-skeleton" style={{ width: '80%', height: '20px', marginBottom: '8px' }}></div>
+                    <div className="opportunity-skeleton" style={{ width: '60%', height: '14px', marginBottom: '4px' }}></div>
+                    <div className="opportunity-skeleton" style={{ width: '40%', height: '12px' }}></div>
+                  </div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '80px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                </div>
+              </div>
+            ))
+          ) : filteredAndSortedOpportunities.length > 0 ? (
+            filteredAndSortedOpportunities.map((opportunity) => (
+              <OpportunityRow 
+                key={opportunity.id} 
+                opportunity={opportunity}
+                onClick={() => {
+                  setSelectedOpportunity(opportunity);
+                  setIsModalOpen(true);
+                }}
+              />
+            ))
+          ) : (
+            <div className="opportunities-empty-state">
+              <Briefcase size={64} className="opportunities-empty-icon" />
+              <h3 className="opportunities-empty-title">No Opportunities Found</h3>
+              <p className="opportunities-empty-description">
+                {searchTerm || statusFilter !== 'all' 
+                  ? 'No opportunities found matching your filters. Try adjusting your search terms or filters.' 
+                  : 'No opportunities found. Create your first opportunity to get started!'}
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Empty State (if no opportunities) */}
-        {mockOpportunities.length === 0 && (
-          <div className="empty-state-container">
-            <p className="empty-state-text">No opportunities found. Create your first opportunity!</p>
-          </div>
-        )}
+        {/* Opportunity Detail Modal */}
+        <OpportunityDetailModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedOpportunity(null);
+          }}
+          opportunity={selectedOpportunity}
+        />
       </main>
     </div>
   );

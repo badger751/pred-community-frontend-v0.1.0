@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+/* --- Opportunity Detail Modal Styles --- */
+
+/* Overlay & Container (reuse dashboard modal base) */
+.modal-overlay { /* already in dashboard.css */ }
+.modal-container {
+  @apply bg-white rounded-xl p-8 shadow-lg;
+  width: 600px;
+  max-width: 95%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Close button (top-right) */
+.opportunity-modal-close-btn {
+  @apply absolute top-4 right-4 text-gray-500 hover:text-gray-700;
+  width: 24px;
+  height: 24px;
+}
+
+/* Header */
+.opportunity-modal-header {
+  @apply flex flex-col md:flex-row justify-between items-start md:items-center mb-6;
+}
+.opportunity-modal-header h2 {
+  @apply text-2xl font-bold text-gray-900 mb-2 md:mb-0;
+}
+.opportunity-modal-meta {
+  @apply flex flex-wrap items-center gap-2 text-sm text-gray-600;
+}
+
+/* Scrollable Content */
+.opportunity-modal-body {
+  @apply overflow-y-auto flex-1 space-y-8 pr-4;
+}
+
+/* Section Titles */
+.opportunity-modal-section {
+  @apply space-y-4;
+}
+.opportunity-modal-section-title {
+  @apply text-lg font-semibold text-gray-900 flex items-center gap-2;
+}
+.opportunity-modal-section-content {
+  @apply text-sm text-gray-700 space-y-2;
+}
+
+/* Badges & Pills */
+.opportunity-modal-badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+}
+.opportunity-status-live    { @apply bg-green-100 text-green-800; }
+.opportunity-status-draft   { @apply bg-yellow-100 text-yellow-800; }
+.opportunity-status-paused  { @apply bg-red-100 text-red-800; }
+.opportunity-status-closed  { @apply bg-gray-100 text-gray-800; }
+
+/* Detail grid (2-column on desktop) */
+.opportunity-modal-details {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4;
+}
+.opportunity-modal-detail-label {
+  @apply text-xs text-gray-500 uppercase tracking-wide;
+}
+.opportunity-modal-detail-value {
+  @apply text-sm text-gray-700 font-medium;
+}
+
+/* Lists (deliverables, requirements, outcomes) */
+.opportunity-modal-list {
+  @apply list-disc list-inside text-sm text-gray-700 space-y-1;
+}
+
+/* Views */
+.opportunity-views {
+  @apply flex items-center gap-4 text-sm text-gray-700 bg-gray-50 rounded-lg px-4 py-2 border border-gray-200;
+}
+
+/* Mentorship */
+.opportunity-mentorship {
+  @apply inline-flex items-center justify-center w-5 h-5 rounded-full text-sm font-medium border-2;
+}
+.opportunity-mentorship-yes {
+  @apply bg-green-100 text-green-600 border-green-300;
+}
+.opportunity-mentorship-no {
+  @apply bg-gray-100 text-gray-600 border-gray-300;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-container {
+    @apply p-4;
+    max-height: 90vh;
+  }
+  .opportunity-modal-header {
+    @apply items-start;
+  }
+  .opportunity-modal-section-title {
+    @apply text-base;
+  }
+  .opportunity-modal-details {
+    @apply grid-cols-1;
+  }
+}
