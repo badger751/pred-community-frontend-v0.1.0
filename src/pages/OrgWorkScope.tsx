@@ -145,7 +145,7 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Talent engagement</label>
                         <div className="pills-row">
-                                {['Invite-only', 'Application-based', 'Both'].map(option => (
+                                {['invite-only', 'application-based', 'Both'].map(option => (
                                     <div 
                                         key={option} 
                                         className={`eng-pill ${workScope.talent_engagement === option ? 'selected' : ''}`}
@@ -161,7 +161,7 @@ const OrgWorkScope: React.FC = () => {
                     <div className="form-group">
                         <label className="form-label">Primary communication mode</label>
                         <div className="options-grid-2col">
-                                {['Email', 'WhatsApp', 'Slack', 'Other', 'Discord'].map(mode => (
+                                {['email', 'whatsApp', 'slack', 'platform', 'discord'].map(mode => (
                                     <label key={mode} className="option-label">
                                         <input type="radio" name="commMode" className="option-input" checked={workScope.primary_communication_mode === mode} onChange={() => setWorkScope({ primary_communication_mode: mode })} />
                                         {mode}

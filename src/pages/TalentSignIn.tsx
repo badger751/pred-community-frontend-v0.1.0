@@ -12,7 +12,7 @@ function TalentSignIn() {
 
       {/* TOP RIGHT */}
       <div className="auth-top-right">
-        <Link to="/talent-signup" className="top-action">
+        <Link to="/signup" className="top-action">
           Sign up as Talent
         </Link>
         <Link to="/login" className="top-action">

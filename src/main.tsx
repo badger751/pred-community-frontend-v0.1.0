@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
+import './validation.css';
 import App from './App';
 import { supabase } from './lib/supabaseClient';
 import { useAuthStore } from './stores/authStore';

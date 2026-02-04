@@ -14,13 +14,36 @@ const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" heigh
 
 const OrganizationDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { logout, user, isAuthenticated } = useAuthStore();
   const [showModal, setShowModal] = useState(true); // Control the modal state
   const [orgName, setOrgName] = useState<string>("Organization");
   const [loadingName, setLoadingName] = useState<boolean>(true);
  
   // Mobile menu state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Onboarding protection - redirect if not completed
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      if (!user?.id || !isAuthenticated) return;
+      
+      try {
+        const { data: onboarding } = await supabase
+          .from("organization_profiles")
+          .select("onboarding_completed")
+          .eq("id", user.id)
+          .maybeSingle();
+          
+        if (onboarding?.onboarding_completed !== true) {
+          navigate("/organization-onboarding", { replace: true });
+        }
+      } catch (error) {
+        console.error("[OrganizationDashboard] Error checking onboarding status:", error);
+      }
+    };
+    
+    checkOnboardingStatus();
+  }, [user?.id, isAuthenticated, navigate]);
 
   // Mobile menu handlers
   const toggleMobileMenu = () => {

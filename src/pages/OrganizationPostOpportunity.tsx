@@ -77,6 +77,17 @@ const OrgPostOpportunity: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const dateInputRef = useRef<HTMLDivElement>(null);
 
+    const domainOptions = [
+        'Technology & Software',
+        'Design & Creative', 
+        'Marketing & Communications',
+        'Business & Finance',
+        'Education & Research',
+        'Healthcare & Medicine',
+        'Engineering & Manufacturing',
+        'Nonprofit & Social Impact'
+    ];
+
     const opportunityTypes = [
         { title: 'Short term project', desc: '1-2 week scoped tasks with clear deliverables' },
         { title: 'Long term project', desc: 'Ongoing work over multiple milestones' },
@@ -123,7 +134,10 @@ const OrgPostOpportunity: React.FC = () => {
         const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         setSelectedDate(newDate);
         setIsDatePickerOpen(false);
-        setCoreDetails({ start_date_type: 'Specific date' }); // Ensure correct pill is active
+        setCoreDetails({ 
+            start_date_type: 'Specific date',
+            start_date: newDate 
+        }); // Ensure correct pill is active and store the date
     };
 
     // --- Year View Handlers ---
@@ -408,14 +422,22 @@ const OrgPostOpportunity: React.FC = () => {
                                     onChange={(e) => setCoreDetails({ domain: e.target.value })}
                                 >
                                     <option value="">Choose a domain</option>
-                                    {/* Add domain options here */}
+                                    {domainOptions.map(domain => (
+                                        <option key={domain} value={domain}>{domain}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
                         <div className="form-col">
                             <div className="form-group">
                                 <label className="form-label">Estimated total budget<span>*</span></label>
-                                <input type="text" className="form-input" placeholder="Enter budget" />
+                                <input 
+                                    type="text" 
+                                    className="form-input" 
+                                    placeholder="Enter budget" 
+                                    value={coreDetails.compensation_amount || ''}
+                                    onChange={(e) => setCoreDetails({ compensation_amount: e.target.value })}
+                                />
                             </div>
                         </div>
                         <div className="form-col">
@@ -481,17 +503,7 @@ const OrgPostOpportunity: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Weekly Time Commitment */}
-                <div className="form-group">
-                    <label className="form-label">Weekly time commitment<span>*</span></label>
-                    <input 
-                        type="text" 
-                        className="form-input" 
-                        placeholder="e.g. 10-15 hrs/week"
-                        value={coreDetails.weekly_time_commitment || ''}
-                        onChange={(e) => setCoreDetails({ weekly_time_commitment: e.target.value })}
-                    />
-                </div>
+
 
                 {/* Difficulty (With inline details input) */}
                     <div className="form-group">
@@ -511,7 +523,13 @@ const OrgPostOpportunity: React.FC = () => {
                             
                             {/* Input container takes remaining width */}
                             <div className="details-input-container">
-                                <input type="text" className="details-input" placeholder="Add more details" />
+                                <input 
+                                    type="text" 
+                                    className="details-input" 
+                                    placeholder="Add more details"
+                                    value={coreDetails.difficulty_details || ''}
+                                    onChange={(e) => setCoreDetails({ difficulty_details: e.target.value })}
+                                />
                             </div>
                         </div>
                     </div>

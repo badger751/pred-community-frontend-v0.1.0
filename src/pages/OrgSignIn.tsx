@@ -94,7 +94,7 @@ function OrganizationLogin() {
         .maybeSingle();
 
       if (onboarding?.onboarding_completed === true) {
-        navigate("/organization-dashboard", { replace: true });
+        navigate("/org", { replace: true });
       } else {
         navigate("/organization-onboarding", { replace: true });
       }

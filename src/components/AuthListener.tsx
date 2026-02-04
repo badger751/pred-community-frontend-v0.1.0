@@ -50,7 +50,7 @@ export default function AuthRedirector() {
 
         const onboardingRoot =
           role === "organization"
-            ? "/org"
+            ? "/organization-onboarding"
             : "/talent-onboarding";
 
         const dashboardRoute =

@@ -144,7 +144,7 @@ const OrgReviewOpportunity = () => {
               {coreDetails.compensation_amount && <span> • </span>}
               {coreDetails.duration && <span>{coreDetails.duration}</span>}
               {coreDetails.duration && <span> • </span>}
-              <span>Remote</span>
+              <span>{coreDetails.work_setup || 'Not specified'}</span>
               <span> • </span>
               {coreDetails.domain && <span>{coreDetails.domain}</span>}
               {coreDetails.domain && <span> • </span>}

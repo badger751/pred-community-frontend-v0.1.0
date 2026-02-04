@@ -2,8 +2,15 @@ import axios from "axios";
 import { useAuthStore } from "../stores/authStore";
 import { supabase } from "../lib/supabaseClient";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
+
+// Validate required environment variables
+if (!import.meta.env.VITE_API_BASE_URL && import.meta.env.PROD) {
+  throw new Error("VITE_API_BASE_URL is required in production");
+}
+
 const api = axios.create({
-  baseURL: "/api",
+  baseURL,
   withCredentials: true,
 });
 

@@ -8,7 +8,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import SelectRole from "./pages/SelectRole";
 import TalentDashboard from "./pages/TalentDashboard";
-import OrgDashboard from "./pages/OrgDashboard";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -20,6 +19,7 @@ import OrgOnboarding1 from "./pages/OrgOnboarding1";
 import OrgOnboarding2 from "./pages/OrgOnboarding2";
 import OrgOnboarding3 from "./pages/OrgOnboarding3";
 import OrgSignIn from "./pages/OrgSignIn";
+import TalentSignIn from "./pages/TalentSignIn";
 import TalentDashboardV2 from "./pages/TalentDashboardV2";
 import OrganizationDashboard from "./pages/OrganizationDashboard";
 import OrganizationPostOpportunity from "./pages/OrganizationPostOpportunity";
@@ -83,6 +83,7 @@ function AnimatedRoutes() {
         <Route path="/confirm-email" element={<ConfirmEmail />} />
         <Route path="/organization-confirm-email" element={<OrgConfirmEmail />} />
         <Route path="/organization-signin" element={<OrgSignIn />} />
+        <Route path="/talent-signin" element={<TalentSignIn />} />
         <Route path="/home" element={<Home />} />
 
         {/* ================= PROTECTED ROUTES ================= */}
@@ -105,9 +106,30 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
-        <Route path="/talent-onboarding" element={<TalentOnboarding />} />
-        <Route path="/talent-onboarding-2" element={<TalentOnboardingStep2 />} />
-        <Route path="/talent-onboarding-3" element={<TalentOnboardingStep3 />} />
+        <Route
+          path="/talent-onboarding"
+          element={
+            <ProtectedRoute>
+              <TalentOnboarding />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/talent-onboarding-2"
+          element={
+            <ProtectedRoute>
+              <TalentOnboardingStep2 />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/talent-onboarding-3"
+          element={
+            <ProtectedRoute>
+              <TalentOnboardingStep3 />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/talent-dashboard-v2"
           element={
@@ -118,14 +140,7 @@ function AnimatedRoutes() {
         />
 
         {/* -------- Organization -------- */}
-        <Route
-          path="/organization"
-          element={
-            <ProtectedRoute>
-              <OrgDashboard />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/organization-onboarding"
           element={
