@@ -1,6 +1,6 @@
 // FILE: src/components/AddProfilePhotoModal.tsx
 import React from 'react';
-import '../orgProfile.css'; // We will add the specific styles to this file in Step 2
+import '../orgprofile.css'; // We will add the specific styles to this file in Step 2
 
 interface AddProfilePhotoModalProps {
   isOpen: boolean;

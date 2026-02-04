@@ -23,6 +23,22 @@ import { useOpportunitiesStore, type FullOpportunity } from '../stores/opportuni
 import OpportunityDetailModal from '../components/OpportunityDetailModal';
 import '../opportunities.css';
 
+// --- Mobile Navigation Icons ---
+const HamburgerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
 const OpportunitiesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -30,6 +46,32 @@ const OpportunitiesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState('recent');
   const [selectedOpportunity, setSelectedOpportunity] = useState<FullOpportunity | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Mobile navigation state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Mobile menu handlers
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  // Handle Escape Key & Background Scroll Lock
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMobileMenu();
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden'; 
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   // Store hooks
   const { 
@@ -193,231 +235,296 @@ const OpportunitiesPage: React.FC = () => {
   };
 
   return (
-    <div className="dashboard-container flex">
-      {/* --- LEFT SIDEBAR --- */}
-      <aside className="sidebar-left">
-        <div className="logo-section">
-          <img src="/Logo.svg" alt="Predulive Logo" className="logo-img" style={{ width: '120px' }} />
+    <>
+      {/* --- MOBILE TOP NAVIGATION --- */}
+      <header className="mobile-top-nav">
+        <button className="hamburger-btn" onClick={toggleMobileMenu} aria-label="Toggle navigation menu">
+          <HamburgerIcon />
+        </button>
+        <div className="mobile-logo-section">
+          <img src="/Logo.svg" alt="Predulive Logo" />
         </div>
+      </header>
 
-        <nav className="nav-menu">
-          <Link to="/organization" className="nav-item">
-            <LayoutGrid size={18} /> Overview
-          </Link>
-          <div className="nav-item">
-            <Mail size={18} /> Outreach <span className="nav-badge">1</span>
-          </div>
-          <div className="nav-item">
-            <Users size={18} /> Talent Pool
-          </div>
-          <div className="nav-item active">
-            <Briefcase size={18} /> Opportunities
-          </div>
-          <div className="nav-item">
-            <Trophy size={18} /> Contest
-          </div>
-        </nav>
-
-        <div className="sidebar-footer">
-          <Link to="/org/profile" className="nav-item">
-            <User size={18} /> Profile
-          </Link>
-          <div className="nav-item">
-            <Settings size={18} /> Settings
-          </div>
-          <div className="nav-item">
-            <LifeBuoy size={18} /> Support
-          </div>
-          <div className="nav-item">
-            <Sparkles size={18} /> Ask AI
-          </div>
-          <div className="nav-item" style={{ marginTop: '10px' }}>
-            <LogOut size={18} /> Log Out
-          </div>
-        </div>
-      </aside>
-
-      {/* --- MAIN CONTENT --- */}
-      <main className="opportunities-container flex-1">
-        {/* Header */}
-        <header className="opportunities-header">
-          <h1 className="opportunities-title">Opportunities</h1>
-          <div className="opportunities-header-actions">
-            <div className="opportunities-search-bar">
-              <Search size={18} className="opportunities-search-icon" />
-              <input 
-                type="text"
-                placeholder="Search opportunities..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="opportunities-search-input"
-              />
-            </div>
-            <button 
-              className="opportunities-btn-secondary"
-              onClick={() => refreshOpportunities()}
-              title="Refresh opportunities"
-            >
-              <RefreshCw size={16} className={`opportunities-btn-icon ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </button>
-            <button className="opportunities-btn-secondary">
-              <Bell size={16} className="opportunities-btn-icon" />
-            </button>
-            <button 
-              className="opportunities-btn-primary"
-              onClick={() => navigate('/organization-post-opportunity')}
-            >
-              Create New Opportunity
-            </button>
-          </div>
-        </header>
-
-        {/* Error State */}
-        {error && (
-          <div className="opportunities-error-state">
-            <div className="flex items-center">
-              <AlertCircle size={20} className="opportunities-error-icon" />
-              <div>
-                <p className="opportunities-error-message">Error loading opportunities</p>
-                <p className="opportunities-error-detail">{error}</p>
-              </div>
-              <button 
-                onClick={() => {
-                  clearError();
-                  fetchOpportunities();
-                }}
-                className="opportunities-btn-primary"
-                style={{ marginTop: '12px' }}
-              >
-                Retry
+      {/* --- MOBILE MENU OVERLAY --- */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu}>
+          <nav className="mobile-nav-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header">
+              <button className="mobile-close-btn" onClick={closeMobileMenu} aria-label="Close navigation menu">
+                <CloseIcon />
               </button>
             </div>
-          </div>
-        )}
-
-        {/* Filter Bar */}
-        <div className="opportunities-filter-bar">
-          <div className="opportunities-filter-row">
-            <div className="opportunities-filter-group">
-              <select 
-                className="opportunities-select"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="live">Live</option>
-                <option value="draft">Draft</option>
-                <option value="paused">Paused</option>
-                <option value="closed">Closed</option>
-              </select>
-              
-              <select className="opportunities-select">
-                <option value="">Pipeline Status</option>
-                <option value="no-candidates">No Candidates</option>
-                <option value="has-candidates">Has Candidates</option>
-                <option value="in-review">In Review</option>
-              </select>
-              
-              <select className="opportunities-select">
-                <option value="">Opportunity Type</option>
-                <option value="project">Project</option>
-                <option value="internship">Internship</option>
-                <option value="full-time">Full-time</option>
-                <option value="part-time">Part-time</option>
-              </select>
-            </div>
             
-            <div className="opportunities-filter-group">
-              <span className="opportunities-sort-label">Sort by:</span>
-              <select 
-                className="opportunities-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="recent">Most Recent</option>
-                <option value="name">Name</option>
-                <option value="status">Status</option>
-                <option value="candidates">Most Candidates</option>
-              </select>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/org'); closeMobileMenu(); }}>
+              <LayoutGrid size={20} className="nav-icon" />
+              Overview
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Mail size={20} className="nav-icon" />
+              Outreach <span className="nav-badge">1</span>
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/talent-pool'); closeMobileMenu(); }}>
+              <Users size={20} className="nav-icon" />
+              Talent Pool
+            </div>
+            <div className="nav-item mobile-nav-item active" onClick={() => { closeMobileMenu(); }}>
+              <Briefcase size={20} className="nav-icon" />
+              Opportunities
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Trophy size={20} className="nav-icon" />
+              Contest
+            </div>
+
+            <div className="mobile-nav-divider"></div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/org-profile'); closeMobileMenu(); }}>
+              <User size={20} className="nav-icon" />
+              Profile
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Settings size={20} className="nav-icon" />
+              Settings
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <LifeBuoy size={20} className="nav-icon" />
+              Support
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Sparkles size={20} className="nav-icon" />
+              Ask AI
+            </div>
+          </nav>
+        </div>
+      )}
+
+      <div className="dashboard-container flex">
+        {/* --- LEFT SIDEBAR --- */}
+        <aside className="sidebar-left">
+          <div className="logo-section">
+            <img src="/Logo.svg" alt="Predulive Logo" className="logo-img" style={{ width: '120px' }} />
+          </div>
+
+          <nav className="nav-menu">
+            <Link to="/org" className="nav-item">
+              <LayoutGrid size={18} /> Overview
+            </Link>
+            <div className="nav-item">
+              <Mail size={18} /> Outreach <span className="nav-badge">1</span>
+            </div>
+            <div className="nav-item">
+              <Users size={18} /> Talent Pool
+            </div>
+            <div className="nav-item active">
+              <Briefcase size={18} /> Opportunities
+            </div>
+            <div className="nav-item">
+              <Trophy size={18} /> Contest
+            </div>
+          </nav>
+
+          <div className="sidebar-footer">
+            <Link to="/org-profile" className="nav-item">
+              <User size={18} /> Profile
+            </Link>
+            <div className="nav-item">
+              <Settings size={18} /> Settings
+            </div>
+            <div className="nav-item">
+              <LifeBuoy size={18} /> Support
+            </div>
+            <div className="nav-item">
+              <Sparkles size={18} /> Ask AI
+            </div>
+            <div className="nav-item" style={{ marginTop: '10px' }}>
+              <LogOut size={18} /> Log Out
             </div>
           </div>
-        </div>
+        </aside>
 
-        {/* Table Header */}
-        <div className="opportunities-table-header">
-          <div className="opportunities-table-row">
-            <div className="col-span-3">Overview</div>
-            <div className="col-span-1">Domain</div>
-            <div className="col-span-1">Experience</div>
-            <div className="col-span-1">Mentorship</div>
-            <div className="col-span-1">Timeline</div>
-            <div className="col-span-2">Status</div>
-            <div className="col-span-2">Commitments</div>
-            <div className="col-span-1">Views</div>
-            <div className="col-span-1">Actions</div>
-          </div>
-        </div>
-
-        {/* Opportunities List */}
-        <div className="opportunities-list">
-          {loading ? (
-            // Loading skeleton
-            Array.from({ length: 3 }).map((_, index) => (
-              <div key={index} className="opportunity-skeleton">
-                <div className="opportunity-card-grid">
-                  <div className="opportunity-overview">
-                    <div className="opportunity-skeleton" style={{ width: '80%', height: '20px', marginBottom: '8px' }}></div>
-                    <div className="opportunity-skeleton" style={{ width: '60%', height: '14px', marginBottom: '4px' }}></div>
-                    <div className="opportunity-skeleton" style={{ width: '40%', height: '12px' }}></div>
-                  </div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '80px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
-                  <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
-                </div>
+        {/* --- MAIN CONTENT --- */}
+        <main className="opportunities-container flex-1">
+          {/* Header */}
+          <header className="opportunities-header">
+            <h1 className="opportunities-title">Opportunities</h1>
+            <div className="opportunities-header-actions">
+              <div className="opportunities-search-bar">
+                <Search size={18} className="opportunities-search-icon" />
+                <input 
+                  type="text"
+                  placeholder="Search opportunities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="opportunities-search-input"
+                />
               </div>
-            ))
-          ) : filteredAndSortedOpportunities.length > 0 ? (
-            filteredAndSortedOpportunities.map((opportunity) => (
-              <OpportunityRow 
-                key={opportunity.id} 
-                opportunity={opportunity}
-                onClick={() => {
-                  setSelectedOpportunity(opportunity);
-                  setIsModalOpen(true);
-                }}
-              />
-            ))
-          ) : (
-            <div className="opportunities-empty-state">
-              <Briefcase size={64} className="opportunities-empty-icon" />
-              <h3 className="opportunities-empty-title">No Opportunities Found</h3>
-              <p className="opportunities-empty-description">
-                {searchTerm || statusFilter !== 'all' 
-                  ? 'No opportunities found matching your filters. Try adjusting your search terms or filters.' 
-                  : 'No opportunities found. Create your first opportunity to get started!'}
-              </p>
+              <button 
+                className="opportunities-btn-secondary"
+                onClick={() => refreshOpportunities()}
+                title="Refresh opportunities"
+              >
+                <RefreshCw size={16} className={`opportunities-btn-icon ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+              <button className="opportunities-btn-secondary">
+                <Bell size={16} className="opportunities-btn-icon" />
+              </button>
+              <button 
+                className="opportunities-btn-primary"
+                onClick={() => navigate('/organization-post-opportunity')}
+              >
+                Create New Opportunity
+              </button>
+            </div>
+          </header>
+
+          {/* Error State */}
+          {error && (
+            <div className="opportunities-error-state">
+              <div className="flex items-center">
+                <AlertCircle size={20} className="opportunities-error-icon" />
+                <div>
+                  <p className="opportunities-error-message">Error loading opportunities</p>
+                  <p className="opportunities-error-detail">{error}</p>
+                </div>
+                <button 
+                  onClick={() => {
+                    clearError();
+                    fetchOpportunities();
+                  }}
+                  className="opportunities-btn-primary"
+                  style={{ marginTop: '12px' }}
+                >
+                  Retry
+                </button>
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Opportunity Detail Modal */}
-        <OpportunityDetailModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedOpportunity(null);
-          }}
-          opportunity={selectedOpportunity}
-        />
-      </main>
-    </div>
+          {/* Filter Bar */}
+          <div className="opportunities-filter-bar">
+            <div className="opportunities-filter-row">
+              <div className="opportunities-filter-group">
+                <select 
+                  className="opportunities-select"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  <option value="all">All Status</option>
+                  <option value="live">Live</option>
+                  <option value="draft">Draft</option>
+                  <option value="paused">Paused</option>
+                  <option value="closed">Closed</option>
+                </select>
+                
+                <select className="opportunities-select">
+                  <option value="">Pipeline Status</option>
+                  <option value="no-candidates">No Candidates</option>
+                  <option value="has-candidates">Has Candidates</option>
+                  <option value="in-review">In Review</option>
+                </select>
+                
+                <select className="opportunities-select">
+                  <option value="">Opportunity Type</option>
+                  <option value="project">Project</option>
+                  <option value="internship">Internship</option>
+                  <option value="full-time">Full-time</option>
+                  <option value="part-time">Part-time</option>
+                </select>
+              </div>
+              
+              <div className="opportunities-filter-group">
+                <span className="opportunities-sort-label">Sort by:</span>
+                <select 
+                  className="opportunities-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="recent">Most Recent</option>
+                  <option value="name">Name</option>
+                  <option value="status">Status</option>
+                  <option value="candidates">Most Candidates</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Table Header */}
+          <div className="opportunities-table-header">
+            <div className="opportunities-table-row">
+              <div className="col-span-3">Overview</div>
+              <div className="col-span-1">Domain</div>
+              <div className="col-span-1">Experience</div>
+              <div className="col-span-1">Mentorship</div>
+              <div className="col-span-1">Timeline</div>
+              <div className="col-span-2">Status</div>
+              <div className="col-span-2">Commitments</div>
+              <div className="col-span-1">Views</div>
+              <div className="col-span-1">Actions</div>
+            </div>
+          </div>
+
+          {/* Opportunities List */}
+          <div className="opportunities-list">
+            {loading ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <div key={index} className="opportunity-skeleton">
+                  <div className="opportunity-card-grid">
+                    <div className="opportunity-overview">
+                      <div className="opportunity-skeleton" style={{ width: '80%', height: '20px', marginBottom: '8px' }}></div>
+                      <div className="opportunity-skeleton" style={{ width: '60%', height: '14px', marginBottom: '4px' }}></div>
+                      <div className="opportunity-skeleton" style={{ width: '40%', height: '12px' }}></div>
+                    </div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '80px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '40px' }}></div>
+                    <div className="opportunity-skeleton" style={{ height: '16px', width: '60px' }}></div>
+                  </div>
+                </div>
+              ))
+            ) : filteredAndSortedOpportunities.length > 0 ? (
+              filteredAndSortedOpportunities.map((opportunity) => (
+                <OpportunityRow 
+                  key={opportunity.id} 
+                  opportunity={opportunity}
+                  onClick={() => {
+                    setSelectedOpportunity(opportunity);
+                    setIsModalOpen(true);
+                  }}
+                />
+              ))
+            ) : (
+              <div className="opportunities-empty-state">
+                <Briefcase size={64} className="opportunities-empty-icon" />
+                <h3 className="opportunities-empty-title">No Opportunities Found</h3>
+                <p className="opportunities-empty-description">
+                  {searchTerm || statusFilter !== 'all' 
+                    ? 'No opportunities found matching your filters. Try adjusting your search terms or filters.' 
+                    : 'No opportunities found. Create your first opportunity to get started!'}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Opportunity Detail Modal */}
+          <OpportunityDetailModal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setSelectedOpportunity(null);
+            }}
+            opportunity={selectedOpportunity}
+          />
+        </main>
+      </div>
+    </>
   );
 };
 

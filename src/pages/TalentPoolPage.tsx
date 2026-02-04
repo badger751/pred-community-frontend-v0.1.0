@@ -46,18 +46,18 @@ const HamburgerIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" h
 const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
 const showVerificationToast = () => {
-    toast("Identity is under verification process. Platform will be unlocked when done.", {
-      icon: "🔒",
-      duration: 4500,
+    toast("You have full access to the platform. Explore all features now!", {
+      icon: "✅",
+      duration: 3000,
       style: {
-        border: "1px solid #374151",
-        background: "#1f2937",
-        color: "#f3f4f6",
+        border: "1px solid #10b981",
+        background: "#ecfdf5",
+        color: "#065f46",
         borderRadius: "8px",
         padding: "14px 20px",
       },
     });
-  }
+  };
 
 
 
@@ -310,7 +310,7 @@ const TalentPoolPage: React.FC = () => {
             <div className="mobile-nav-divider"></div>
 
             {/* Secondary Navigation */}
-            <div className="nav-item mobile-nav-item">
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/org-profile'); closeMobileMenu(); }}>
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -367,7 +367,7 @@ const TalentPoolPage: React.FC = () => {
         </div>
 
         <nav className="nav-menu">
-          <Link to="/organization" className="nav-item">
+          <Link to="/org" className="nav-item">
             <LayoutGrid size={18} /> Overview
           </Link>
           <div className="nav-item">
@@ -385,7 +385,7 @@ const TalentPoolPage: React.FC = () => {
         </nav>
 
         <div className="sidebar-footer">
-          <Link to="/org/profile" className="nav-item">
+          <Link to="/org-profile" className="nav-item">
             <User size={18} /> Profile
           </Link>
           <div className="nav-item">

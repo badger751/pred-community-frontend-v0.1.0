@@ -2,16 +2,39 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  LayoutGrid, 
+  Mail, 
+  Users, 
+  Briefcase, 
+  Trophy, 
+  User, 
+  Settings, 
+  LifeBuoy, 
+  Sparkles, 
+  Bell, 
+  ChevronRight,
+  ChevronLeft,
+  Calendar
+} from 'lucide-react';
 import { useOpportunityCreationStore } from '../stores/opportunityCreationStore';
 import '../postopportunity.css';
 
 // Placeholder Icons
-const ChevronRightIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>;
-const ChevronLeftIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>;
-const CalendarIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>;
-const BellIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>;
-const HamburgerIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>;
-const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
+const HamburgerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
 
 // Helper to get days in a month
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
@@ -226,53 +249,44 @@ const OrgPostOpportunity: React.FC = () => {
                             </button>
                         </div>
                         
-                        {/* Primary Navigation */}
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { navigate('/org'); closeMobileMenu(); }}>
+                            <LayoutGrid size={20} className="nav-icon" />
                             Overview
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+                            <Mail size={20} className="nav-icon" />
                             Outreach <span className="nav-badge">1</span>
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { navigate('/talent-pool'); closeMobileMenu(); }}>
+                            <Users size={20} className="nav-icon" />
                             Talent Pool
                         </div>
-                        <div className="nav-item mobile-nav-item active">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        <div className="nav-item mobile-nav-item active" onClick={() => { navigate('/opportunities'); closeMobileMenu(); }}>
+                            <Briefcase size={20} className="nav-icon" />
                             Opportunities
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+                            <Trophy size={20} className="nav-icon" />
                             Contest
                         </div>
 
                         <div className="mobile-nav-divider"></div>
 
                         {/* Secondary Navigation */}
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { navigate('/org-profile'); closeMobileMenu(); }}>
+                            <User size={20} className="nav-icon" />
                             Profile
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                            </svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+                            <Settings size={20} className="nav-icon" />
                             Settings
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                            </svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+                            <LifeBuoy size={20} className="nav-icon" />
                             Support
                         </div>
-                        <div className="nav-item mobile-nav-item">
-                            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
+                        <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+                            <Sparkles size={20} className="nav-icon" />
                             Ask AI
                         </div>
                     </nav>
@@ -286,55 +300,44 @@ const OrgPostOpportunity: React.FC = () => {
                     <img src="/Logo.svg" alt="Predulive Logo" style={{ height: "auto", width: "120px" }} />
                 </div>
                 <nav className="nav-menu">
-                    <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
+                    <div className="nav-item" onClick={() => navigate('/org')}>
+                        <LayoutGrid size={18} className="nav-icon" />
                         Overview
                     </div>
                     <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        <Mail size={18} className="nav-icon" />
                         Outreach <span className="nav-badge">1</span>
                     </div>
-                    <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <div className="nav-item" onClick={() => navigate('/talent-pool')}>
+                        <Users size={18} className="nav-icon" />
                         Talent Pool
                     </div>
-                    <div className="nav-item active">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <div className="nav-item active" onClick={() => navigate('/opportunities')}>
+                        <Briefcase size={18} className="nav-icon" />
                         Opportunities
                     </div>
                     <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                        <Trophy size={18} className="nav-icon" />
                         Contest
                     </div>
                 </nav>
                 <div className="sidebar-footer">
                     {/* Profile */}
-                    <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
+                    <div className="nav-item" onClick={() => navigate('/org-profile')}>
+                        <User size={18} className="nav-icon" />
                         Profile
                     </div>
-                    {/* Settings */}
                     <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
+                        <Settings size={18} className="nav-icon" />
                         Settings
                     </div>
-                    {/* Support */}
                     <div className="nav-item">
-                        <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                        </svg>
+                        <LifeBuoy size={18} className="nav-icon" />
                         Support
                     </div>
-                    {/* Ask AI */}
                     <div className="nav-item">
-             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
-            Ask AI
+                        <Sparkles size={18} className="nav-icon" />
+                        Ask AI
                     </div>
                 </div>
             </aside>
@@ -343,7 +346,7 @@ const OrgPostOpportunity: React.FC = () => {
             <main className="main-content">
                 <header className="page-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <h1 className="page-title">Create an Opportunity</h1>
-                    <button className="icon-btn"><BellIcon /></button>
+                    <button className="icon-btn"><Bell size={20} /></button>
                 </header>
 
                 {/* Progress Bar */}
@@ -352,11 +355,11 @@ const OrgPostOpportunity: React.FC = () => {
                         <div className="progress-step active">
                             <span className="step-number">1</span> Core Details
                         </div>
-                        <ChevronRightIcon />
+                        <ChevronRight size={16} />
                         <div className="progress-step">
                             <span className="step-number">2</span> Work Scope
                         </div>
-                        <ChevronRightIcon />
+                        <ChevronRight size={16} />
                         <div className="progress-step">
                             <span className="step-number">3</span> Review
                         </div>
@@ -561,7 +564,7 @@ const OrgPostOpportunity: React.FC = () => {
                                     readOnly
                                     onClick={toggleDatePicker}
                                 />
-                                <div className="date-icon-absolute"><CalendarIcon /></div>
+                                <div className="date-icon-absolute"><Calendar size={16} /></div>
 
                                 {/* --- Date Picker Popup --- */}
                                 {isDatePickerOpen && (
@@ -570,11 +573,11 @@ const OrgPostOpportunity: React.FC = () => {
                                             /* --- Calendar View --- */
                                             <>
                                                 <div className="calendar-header">
-                                                    <button className="nav-btn" onClick={prevMonth}><ChevronLeftIcon /></button>
+                                                    <button className="nav-btn" onClick={prevMonth}><ChevronLeft size={20} /></button>
                                                     <button className="month-year-btn" onClick={switchToYearView}>
                                                         {monthNames[month]} {year}
                                                     </button>
-                                                    <button className="nav-btn" onClick={nextMonth}><ChevronRightIcon /></button>
+                                                    <button className="nav-btn" onClick={nextMonth}><ChevronRight size={20} /></button>
                                                 </div>
                                                 <div className="calendar-grid">
                                                     {weekDays.map(day => <div key={day} className="week-day">{day}</div>)}
@@ -585,11 +588,11 @@ const OrgPostOpportunity: React.FC = () => {
                                             /* --- Year Selection View --- */
                                             <>
                                                 <div className="calendar-header">
-                                                    <button className="nav-btn" onClick={prevYearRange}><ChevronLeftIcon /></button>
+                                                    <button className="nav-btn" onClick={prevYearRange}><ChevronLeft size={20} /></button>
                                                     <div className="month-year-btn" style={{cursor: 'default'}}>
                                                         {startYear} - {endYear}
                                                     </div>
-                                                    <button className="nav-btn" onClick={nextYearRange}><ChevronRightIcon /></button>
+                                                    <button className="nav-btn" onClick={nextYearRange}><ChevronRight size={20} /></button>
                                                 </div>
                                                 <div className="years-grid">
                                                     {years.map(y => {

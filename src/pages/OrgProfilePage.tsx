@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import "../dashboard.css";
-import "../orgProfile.css";
+import "../orgprofile.css";
 import AddProfilePhotoModal from "../components/ProfilePhotoModal";
 
 const OrgProfilePage: React.FC = () => {

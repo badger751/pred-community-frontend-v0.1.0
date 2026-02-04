@@ -236,7 +236,7 @@ const mapToBackendFormat = (coreDetails: CoreDetails, workScope: WorkScope, isDr
   primary_contact_email: workScope.primary_contact_email || '',
   
   // Status
-  opportunity_status: isDraft ? 'draft' : 'active',
+  status: isDraft ? 'draft' : 'live',
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString()
 });
@@ -259,36 +259,6 @@ export const useOpportunityCreationStore = create<OpportunityCreationStore>()(
       setCoreDetails: (data: Partial<CoreDetails>) => {
         console.log('[OpportunityStore] Setting core details:', data);
         
-        // Real-time URL validation for website_url
-        if ('website_url' in data && data.website_url) {
-          const url = data.website_url;
-          if (url.trim()) {
-            if (!validators.url(url)) {
-              toast.error(fieldMessages.website_url);
-            }
-          }
-        }
-        
-        // Real-time URL validation for linkedin_url
-        if ('linkedin_url' in data && data.linkedin_url) {
-          const linkedin = data.linkedin_url;
-          if (linkedin.trim()) {
-            if (!validators.url(linkedin) || !linkedin.includes('linkedin.com')) {
-              toast.error(fieldMessages.linkedin_url);
-            }
-          }
-        }
-        
-        // Real-time validation for compensation amount
-        if ('compensation_amount' in data && data.compensation_amount) {
-          const amount = data.compensation_amount;
-          if (amount.trim()) {
-            if (!validators.number(amount)) {
-              toast.error(fieldMessages.compensation_amount);
-            }
-          }
-        }
-        
         // Update store state
         set((state) => ({
           coreDetails: { ...state.coreDetails, ...data }
@@ -298,18 +268,6 @@ export const useOpportunityCreationStore = create<OpportunityCreationStore>()(
       // Work Scope Actions
       setWorkScope: (data: Partial<WorkScope>) => {
         console.log('[OpportunityStore] Setting work scope:', data);
-        
-        // Real-time email validation
-        if ('primary_contact_email' in data && data.primary_contact_email) {
-          const email = data.primary_contact_email;
-          if (email.trim()) {
-            if (!validators.email(email)) {
-              toast.error(fieldMessages.primary_contact_email);
-            }
-          }
-        }
-        
-        
         
         // Update store state - NO AUTO-SAVE (explicit save only)
         set((state) => ({

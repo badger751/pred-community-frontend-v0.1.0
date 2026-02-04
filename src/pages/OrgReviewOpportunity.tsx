@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  LayoutGrid,
   Bell,
   Briefcase,
   Check,
@@ -20,6 +21,22 @@ import {
 
 import { useOpportunityCreationStore } from "../stores/opportunityCreationStore";
 import "../orgreview.css";
+
+// --- Mobile Navigation Icons ---
+const HamburgerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
 
 const OrgReviewOpportunity = () => {
   const navigate = useNavigate();
@@ -42,51 +59,140 @@ const OrgReviewOpportunity = () => {
     clearError();
   }, [id, loadDraft, clearError]);
 
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Mobile menu handlers
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  // Close menu on escape key & scroll lock
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMobileMenu();
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <div className="org-review-container">
-      {/* --- LEFT SIDEBAR --- */}
-      <aside className="sidebar">
-        <div className="logo-section">
-          <img src="/Logo.svg" alt="Predulive Logo" className="logo-img" />
+    <>
+      {/* --- MOBILE TOP NAVIGATION --- */}
+      <header className="mobile-top-nav">
+        <button className="hamburger-btn" onClick={toggleMobileMenu} aria-label="Toggle navigation menu">
+          <HamburgerIcon />
+        </button>
+        <div className="mobile-logo-section">
+          <img src="/Logo.svg" alt="Predulive Logo" />
         </div>
+      </header>
 
-        <nav className="nav-menu">
-          <div className="nav-item" onClick={() => navigate("/organization")}
-          >
-            <Briefcase size={18} /> Opportunities
-          </div>
-          <div className="nav-item" onClick={() => navigate("/organization")}
-          >
-            <Users size={18} /> Talent Pool
-          </div>
-          <div className="nav-item" onClick={() => navigate("/organization")}
-          >
-            <Mail size={18} /> Outreach <span className="badge">1</span>
-          </div>
-          <div className="nav-item" onClick={() => navigate("/organization")}
-          >
-            <Trophy size={18} /> Contest
-          </div>
-        </nav>
+      {/* --- MOBILE MENU OVERLAY --- */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu}>
+          <nav className="mobile-nav-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header">
+              <button className="mobile-close-btn" onClick={closeMobileMenu} aria-label="Close navigation menu">
+                <CloseIcon />
+              </button>
+            </div>
 
-        <div className="sidebar-footer">
-          <div className="nav-item" onClick={() => navigate("/org/profile")}>
-            <User size={18} /> Profile
-          </div>
-          <div className="nav-item">
-            <Settings size={18} /> Settings
-          </div>
-          <div className="nav-item">
-            <LifeBuoy size={18} /> Support
-          </div>
-          <div className="nav-item">
-            <Sparkles size={18} /> Ask AI
-          </div>
-          <div className="nav-item" style={{ marginTop: "10px" }}>
-            <LogOut size={18} /> Log Out
-          </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate("/org"); closeMobileMenu(); }}>
+              <LayoutGrid size={20} className="nav-icon" />
+              Overview
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Mail size={20} className="nav-icon" />
+              Outreach <span className="nav-badge">1</span>
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate("/talent-pool"); closeMobileMenu(); }}>
+              <Users size={20} className="nav-icon" />
+              Talent Pool
+            </div>
+            <div className="nav-item mobile-nav-item active" onClick={() => { navigate("/opportunities"); closeMobileMenu(); }}>
+              <Briefcase size={20} className="nav-icon" />
+              Opportunities
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Trophy size={20} className="nav-icon" />
+              Contest
+            </div>
+
+            <div className="mobile-nav-divider"></div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate("/org-profile"); closeMobileMenu(); }}>
+              <User size={20} className="nav-icon" />
+              Profile
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Settings size={20} className="nav-icon" />
+              Settings
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <LifeBuoy size={20} className="nav-icon" />
+              Support
+            </div>
+            <div className="nav-item mobile-nav-item" onClick={() => { closeMobileMenu(); }}>
+              <Sparkles size={20} className="nav-icon" />
+              Ask AI
+            </div>
+          </nav>
         </div>
-      </aside>
+      )}
+
+      <div className="org-review-container">
+        {/* --- LEFT SIDEBAR --- */}
+        <aside className="sidebar">
+          <div className="logo-section">
+            <img src="/Logo.svg" alt="Predulive Logo" className="logo-img" />
+          </div>
+
+          <nav className="nav-menu">
+            <div className="nav-item" onClick={() => navigate("/org")}>
+              <LayoutGrid size={18} /> Overview
+            </div>
+            <div className="nav-item" onClick={() => navigate("/opportunities")}>
+              <Briefcase size={18} /> Opportunities
+            </div>
+            <div className="nav-item" onClick={() => navigate("/talent-pool")}>
+              <Users size={18} /> Talent Pool
+            </div>
+            <div className="nav-item">
+              <Mail size={18} /> Outreach <span className="badge">1</span>
+            </div>
+            <div className="nav-item">
+              <Trophy size={18} /> Contest
+            </div>
+          </nav>
+
+          <div className="sidebar-footer">
+            <div className="nav-item" onClick={() => navigate("/org-profile")}>
+              <User size={18} /> Profile
+            </div>
+            <div className="nav-item">
+              <Settings size={18} /> Settings
+            </div>
+            <div className="nav-item">
+              <LifeBuoy size={18} /> Support
+            </div>
+            <div className="nav-item">
+              <Sparkles size={18} /> Ask AI
+            </div>
+            <div className="nav-item" style={{ marginTop: "10px" }} onClick={() => navigate("/login")}>
+              <LogOut size={18} /> Log Out
+            </div>
+          </div>
+        </aside>
 
       {/* --- MAIN CONTENT CENTER --- */}
       <main className="main-content">
@@ -269,7 +375,8 @@ const OrgReviewOpportunity = () => {
           )}
         </div>
       </aside>
-    </div>
+      </div>
+    </>
   );
 };
 

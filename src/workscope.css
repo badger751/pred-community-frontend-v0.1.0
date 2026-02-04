@@ -366,3 +366,209 @@
     border-color: #D1D5DB;
     background-color: #F9FAFB;
 }
+
+/* --- MOBILE NAVIGATION STYLES --- */
+
+/* Top Navigation Bar */
+.mobile-top-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E5E7EB;
+    z-index: 1000;
+    padding: 16px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hamburger-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: #4B5563;
+}
+
+.hamburger-btn:hover {
+    background-color: #F3F4F6;
+    color: #111827;
+}
+
+.mobile-logo-section img {
+    width: 100px;
+    height: auto;
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.mobile-nav-dropdown {
+    background: #FFFFFF;
+    width: 280px;
+    height: 100%;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    animation: slideIn 0.3s ease-out;
+}
+
+.mobile-nav-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 16px;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.mobile-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    color: #6B7280;
+}
+
+.mobile-close-btn:hover {
+    background-color: #F3F4F6;
+    color: #374151;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    color: #4B5563;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.mobile-nav-item:hover {
+    background-color: #F9FAFB;
+    color: #374151;
+}
+
+.mobile-nav-item.active {
+    background-color: #ECFDF5;
+    color: #065F46;
+}
+
+.mobile-nav-divider {
+    height: 1px;
+    background-color: #E5E7EB;
+    margin: 8px 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile: 768px and below */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding-top: 60px;
+        /* Account for fixed top nav */
+    }
+
+    .sidebar-left {
+        display: none;
+        /* Hide desktop sidebar completely */
+    }
+
+    .mobile-top-nav {
+        display: flex;
+        /* Show mobile top nav */
+    }
+
+    .main-content {
+        padding: 16px;
+        height: auto;
+        overflow-y: visible;
+    }
+
+    .support-cards-container {
+        flex-direction: column;
+    }
+
+    .pills-row {
+        flex-wrap: wrap;
+    }
+
+    .options-grid-2col {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .action-right {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .btn-primary,
+    .btn-draft,
+    .btn-text {
+        width: 100%;
+        text-align: center;
+    }
+}

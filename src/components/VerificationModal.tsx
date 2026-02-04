@@ -29,32 +29,30 @@ const VerificationModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           </svg>
         </button>
 
-        <div className="modal-icon-badge">
+        <div className="modal-icon-badge" style={{ backgroundColor: '#ecfdf5' }}>
           <svg
             width="24"
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#ef4444"
-            strokeWidth="2"
+            stroke="#10b981"
+            strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
         </div>
 
-        <h2 className="modal-header">Account verification in progress</h2>
+        <h2 className="modal-header">The platform is now live!</h2>
 
         <p className="modal-desc">
-          To maintain trust and credibility on the platform, some features are
-          available only after your account is verified.
+          We've successfully verified your account. You now have full access
+          to all features and can start engaging with talent immediately.
         </p>
 
         <p className="modal-desc">
-          We're reviewing your account details. This can take up to 5 business
-          days.
+          Thank you for your patience. Let's build something great together.
         </p>
 
         <div className="modal-btn-row">

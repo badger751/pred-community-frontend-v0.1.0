@@ -28,9 +28,10 @@ import OrgWorkScope from "./pages/OrgWorkScope";
 import OrgReviewOpportunity from "./pages/OrgReviewOpportunity";
 import TalentPoolPage from "./pages/TalentPoolPage";
 import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword"; // <-- import the new page
+import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmail from "./pages/ConfirmEmail";
 import OrgConfirmEmail from "./pages/OrgConfirmEmail";
+import OrganizationProfile from "./pages/OrganizationProfile";
 
 // --- Components ---
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -210,6 +211,14 @@ function AnimatedRoutes() {
           element={
             <ProtectedRoute>
               <TalentPoolPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/org-profile"
+          element={
+            <ProtectedRoute>
+              <OrganizationProfile />
             </ProtectedRoute>
           }
         />
