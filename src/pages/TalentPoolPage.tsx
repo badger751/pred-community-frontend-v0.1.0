@@ -1,4 +1,5 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabaseClient';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   LayoutGrid, 
@@ -97,56 +98,73 @@ const TalentPoolPage: React.FC = () => {
   });
   const [sortBy, setSortBy] = useState('relevance');
 
-  const mockTalent: TalentProfile[] = [
-    {
-      id: '1',
-      name: 'Sarah Chen',
-      avatar: '/api/placeholder/60/60',
-      title: 'Senior Frontend Developer',
-      availability: 'Available now',
-      isGoodMatch: true,
-      isTrusted: true,
-      history: '4 Successful Collaborations',
-      yoe: 5,
-      location: 'San Francisco',
-      timezone: 'PST',
-      workStyle: 'Remote',
-      skills: ['React', 'TypeScript', 'UI/UX', 'Frontend'],
-      lastActive: '5 mins ago'
-    },
-    {
-      id: '2',
-      name: 'Marcus Rodriguez',
-      avatar: '/api/placeholder/60/60',
-      title: 'Full Stack Engineer',
-      availability: 'Available in 2 weeks',
-      isGoodMatch: false,
-      isTrusted: false,
-      history: '2 Successful Collaborations',
-      yoe: 3,
-      location: 'Austin',
-      timezone: 'CST',
-      workStyle: 'Hybrid',
-      skills: ['Node.js', 'MongoDB', 'React', 'Backend'],
-      lastActive: '15 mins ago'
-    },
-    {
-      id: '3',
-      name: 'Emily Watson',
-      avatar: '/api/placeholder/60/60',
-      title: 'UX Designer',
-      availability: 'Available now',
-      isGoodMatch: true,
-      isTrusted: true,
-      history: '7 Successful Collaborations',
-      yoe: 4,
-      location: 'New York',
-      timezone: 'EST',
-      workStyle: 'Remote',
-      skills: ['Figma', 'Design Systems', 'User Research', 'UI Design'],
-      lastActive: '2 mins ago'
-    }
-  ];
+  const [talents, setTalents] = useState<TalentProfile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Helper for null values
+  const formatValue = (val: any) => (val === null || val === undefined || val === '') ? "- Pending" : val;
+
+  useEffect(() => {
+    const fetchTalents = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Step 1: Fetch onboarding data
+        const { data: talentData, error: talentError } = await supabase
+          .from('talent_profiles')
+          .select('*')
+          .eq('onboarding_completed', true);
+
+        if (talentError) throw talentError;
+
+        if (talentData && talentData.length > 0) {
+          // Step 2: Fetch account data (Name/Email) for these members
+          const userIds = talentData.map((t: any) => t.id);
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('id, full_name, email, avatar_url')
+            .in('id', userIds);
+
+          if (profileError) throw profileError;
+
+          // Create a lookup map for profiles
+          const profileMap = (profileData || []).reduce((acc: any, p: any) => {
+            acc[p.id] = p;
+            return acc;
+          }, {});
+
+          const formattedTalents: TalentProfile[] = talentData.map((item: any) => {
+            const profile = profileMap[item.id] || {};
+            return {
+              id: item.id,
+              name: formatValue(profile.full_name || item.id.substring(0, 8)),
+              email: profile.email,
+              avatar: profile.avatar_url || 'https://via.placeholder.com/60',
+              title: item.headline || item.current_status || "- Pending",
+              availability: formatValue(item.availability),
+              isGoodMatch: false, 
+              isTrusted: false, 
+              history: 'New to Community', 
+              yoe: item.experience_years || 0,
+              location: (item.city && item.country) ? `${item.city}, ${item.country}` : "- Pending",
+              timezone: formatValue(item.timezone),
+              workStyle: formatValue(item.work_style),
+              skills: item.skills || item.domains || [],
+              lastActive: item.updated_at ? "Recently" : "Not specified"
+            };
+          });
+          setTalents(formattedTalents);
+        }
+      } catch (err) {
+        console.error('Error fetching talents:', err);
+        toast.error('Failed to load talent pool');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTalents();
+  }, []);
     const clearAllFilters = () => {
     setPrimaryFilters({
       candidateType: 'all',
@@ -561,17 +579,25 @@ const TalentPoolPage: React.FC = () => {
         </div>
 
         {/* Talent Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {mockTalent.map((talent) => (
-            <TalentCard key={talent.id} talent={talent} />
-          ))}
-        </div>
-
-        {/* Empty State (if no talent) */}
-        {mockTalent.length === 0 && (
-          <div className="empty-state-container">
-            <p className="empty-state-text">No talent found matching your criteria.</p>
+        {isLoading ? (
+          <div className="flex items-center justify-center p-20">
+             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {talents.map((talent) => (
+                <TalentCard key={talent.id} talent={talent} />
+              ))}
+            </div>
+
+            {/* Empty State (if no talent) */}
+            {talents.length === 0 && (
+              <div className="empty-state-container">
+                <p className="empty-state-text">No talent found matching your criteria.</p>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>

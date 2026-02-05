@@ -5,6 +5,22 @@ import { useAuthStore } from "../stores/authStore";
 import "../dashboard.css";
 import toast from 'react-hot-toast';
 
+// --- Icons for Mobile Navigation ---
+const HamburgerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
 
 
 interface Opportunity {
@@ -29,6 +45,29 @@ const TalentDashboardV2: React.FC = () => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loadingOpps, setLoadingOpps] = useState<boolean>(true);
   const [oppError, setOppError] = useState<string | null>(null);
+
+  // --- Mobile Menu State & Logic ---
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeMobileMenu();
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden'; 
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     // 1. Fetch user name from profiles
@@ -108,18 +147,130 @@ const TalentDashboardV2: React.FC = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      {/* LEFT SIDEBAR - unchanged */}
-      <aside className="sidebar-left">
-        <div className="logo-section">
-          <img 
-            src="/Logo.svg" 
-            alt="Predulive Logo" 
-            style={{ height: "auto", width: "120px" }} 
-          />
+    <>
+      {/* --- MOBILE TOP NAVIGATION --- */}
+      <header className="mobile-top-nav">
+        <button className="hamburger-btn" onClick={toggleMobileMenu} aria-label="Toggle navigation menu">
+          <HamburgerIcon />
+        </button>
+        <div className="mobile-logo-section">
+          <img src="/Logo.svg" alt="Logo" />
         </div>
+      </header>
 
-        <nav className="nav-menu">
+      {/* --- MOBILE MENU OVERLAY --- */}
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu}>
+          <nav className="mobile-nav-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header">
+              <button className="mobile-close-btn" onClick={closeMobileMenu} aria-label="Close navigation menu">
+                <CloseIcon />
+              </button>
+            </div>
+            
+            <div className="nav-item mobile-nav-item active" onClick={() => { closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              Overview
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+              </svg>
+              Opportunities
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              Outreach
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+              Portfolio
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+              </svg>
+              Contests
+            </div>
+
+            <div className="mobile-nav-divider"></div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Profile
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              Settings
+            </div>
+
+            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <rect x="7" y="7" width="3" height="3"></rect>
+                <rect x="14" y="7" width="3" height="3"></rect>
+                <rect x="7" y="14" width="3" height="3"></rect>
+                <rect x="14" y="14" width="3" height="3"></rect>
+              </svg>
+              Ask AI
+            </div>
+
+            <div className="mobile-nav-divider"></div>
+
+            <div className="nav-item mobile-nav-item" onClick={async () => {
+              await logout();
+              navigate("/login", { replace: true });
+            }}>
+              <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Log Out
+            </div>
+          </nav>
+        </div>
+      )}
+
+      <div className="dashboard-container">
+        {/* LEFT SIDEBAR - unchanged */}
+        <aside className="sidebar-left">
+          <div className="logo-section">
+            <img 
+              src="/Logo.svg" 
+              alt="Predulive Logo" 
+              style={{ height: "auto", width: "120px" }} 
+            />
+          </div>
+
+          <nav className="nav-menu">
           <div className="nav-item active">
             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -430,7 +581,8 @@ const TalentDashboardV2: React.FC = () => {
           <a href="#" className="small-link">See how to improve credibility</a>
         </div>
       </aside>
-    </div>
+      </div>
+    </>
   );
 };
 

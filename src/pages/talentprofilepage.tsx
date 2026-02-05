@@ -1,4 +1,4 @@
-// FILE: src/pages/OrgProfilePage.tsx
+// FILE: src/pages/talentPage.tsx
 
 import React, { useState } from "react";
 import "../dashboard.css";
