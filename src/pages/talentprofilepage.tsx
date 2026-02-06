@@ -1,39 +1,73 @@
-// FILE: src/pages/talentPage.tsx
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
+import { useAuthStore } from "../stores/authStore";
 import "../dashboard.css";
 import "../orgprofile.css";
 import AddProfilePhotoModal from "../components/ProfilePhotoModal";
+import toast from "react-hot-toast";
 
-const OrgProfilePage: React.FC = () => {
+// --- Icons ---
+const HamburgerIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+);
+
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+);
+
+const TalentProfilePage: React.FC = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuthStore();
+  
+  // --- States ---
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // --- 1. INITIALIZE ALL STATES TO FALSE / EMPTY ---
+  // Profile Basic
+  const [fullName, setFullName] = useState<string>("");
+  const [headline, setHeadline] = useState("");
+  const [bio, setBio] = useState("");
 
-  // Checkboxes: Current Focus
+  // Professional Links
+  const [links, setLinks] = useState({
+    linkedin: "",
+    github: "",
+    portfolio: "",
+  });
+
+  // Focus & Status
   const [currentFocus, setCurrentFocus] = useState({
     earn: false,
     gainExperience: false,
     explore: false,
   });
-
-  // Radio: Best Describes
   const [descBest, setDescBest] = useState(""); 
-
-  // Radio: Qualification
   const [qualification, setQualification] = useState("");
+  const [specialization, setSpecialization] = useState("");
 
-  // Checkboxes: Work Style
+  // Details
+  const [ageRange, setAgeRange] = useState("");
+  const [startTimeline, setStartTimeline] = useState("");
+  const [experienceYears, setExperienceYears] = useState(0);
+
+  // Work Preferences
   const [workStyle, setWorkStyle] = useState({
     collaborative: false,
     independent: false,
     guided: false,
   });
-
-  // Radio: Time Commitment
   const [timeCommitment, setTimeCommitment] = useState("");
-
-  // Checkboxes: Opportunities
+  
   const [opportunities, setOpportunities] = useState({
     projects: false,
     internship: false,
@@ -43,7 +77,15 @@ const OrgProfilePage: React.FC = () => {
     fullTime: false,
   });
 
-  // --- 2. NEW STATE FOR INTERESTED DOMAINS ---
+  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
+
+  // Location
+  const [location, setLocation] = useState({
+    city: "",
+    country: "",
+    timezone: "",
+  });
+
   const allDomains = [
     "Software / Product",
     "Data / AI",
@@ -54,271 +96,320 @@ const OrgProfilePage: React.FC = () => {
     "Research / Academia",
     "Other"
   ];
-  
-  const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
 
-  // --- HANDLERS ---
+  // --- Fetch Logic ---
+  useEffect(() => {
+    const fetchFullProfile = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user?.id) return;
 
-  const handleFocusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentFocus({ ...currentFocus, [e.target.name]: e.target.checked });
-  };
+        // Fetch from 'profiles'
+        const { data: profileBase, error: profileError } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", session.user.id)
+          .single();
 
-  const handleWorkStyleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWorkStyle({ ...workStyle, [e.target.name]: e.target.checked });
-  };
+        if (profileError) throw profileError;
+        setFullName(profileBase.full_name || "");
 
-  const handleOppChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOpportunities({ ...opportunities, [e.target.name]: e.target.checked });
-  };
+        // Fetch from 'talent_profiles'
+        const { data: tp, error: tpError } = await supabase
+          .from("talent_profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single();
 
-  const toggleDomain = (domain: string) => {
-    if (selectedDomains.includes(domain)) {
-      setSelectedDomains(selectedDomains.filter(d => d !== domain));
-    } else {
-      setSelectedDomains([...selectedDomains, domain]);
+        if (tpError && tpError.code !== 'PGRST116') throw tpError;
+
+        if (tp) {
+          setHeadline(tp.headline || "");
+          setBio(tp.bio || "");
+          setLinks({
+            linkedin: tp.linkedin_url || "",
+            github: tp.github_url || "",
+            portfolio: tp.portfolio_url || "",
+          });
+          
+          // Focus mapping
+          if (tp.focus_right_now) {
+            const focusArr = tp.focus_right_now.split(", ");
+            setCurrentFocus({
+              earn: focusArr.includes("Earn"),
+              gainExperience: focusArr.includes("Gain experience"),
+              explore: focusArr.includes("Explore"),
+            });
+          }
+
+          setDescBest(tp.current_status || "");
+          setQualification(tp.education_level || "");
+          setSpecialization(tp.major_specialization || "");
+          setAgeRange(tp.age_range || "");
+          setStartTimeline(tp.start_timeline || "");
+          setExperienceYears(tp.experience_years || 0);
+
+          // Work Style
+          setWorkStyle({
+            collaborative: tp.work_style === "Collaborative",
+            independent: tp.work_style === "Independent",
+            guided: tp.work_style === "Guided",
+          });
+
+          setTimeCommitment(tp.weekly_commitment || "");
+          setSelectedDomains(tp.domains || []);
+
+          // Opportunities
+          const opps = tp.opportunity_types || [];
+          setOpportunities({
+            projects: opps.includes("Projects"),
+            internship: opps.includes("Internship"),
+            research: opps.includes("Research"),
+            contract: opps.includes("Contract roles"),
+            partTime: opps.includes("Part-time roles"),
+            fullTime: opps.includes("Full-time roles"),
+          });
+
+          setLocation({
+            city: tp.city || "",
+            country: tp.country || "",
+            timezone: tp.timezone || "",
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        toast.error("Failed to load profile data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFullProfile();
+  }, []);
+
+  // --- Handlers ---
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user?.id) return;
+
+      const focusArr = [];
+      if (currentFocus.earn) focusArr.push("Earn");
+      if (currentFocus.gainExperience) focusArr.push("Gain experience");
+      if (currentFocus.explore) focusArr.push("Explore");
+
+      const oppsArr = [];
+      if (opportunities.projects) oppsArr.push("Projects");
+      if (opportunities.internship) oppsArr.push("Internship");
+      if (opportunities.research) oppsArr.push("Research");
+      if (opportunities.contract) oppsArr.push("Contract roles");
+      if (opportunities.partTime) oppsArr.push("Part-time roles");
+      if (opportunities.fullTime) oppsArr.push("Full-time roles");
+
+      const wStyle = workStyle.collaborative ? "Collaborative" : 
+                    workStyle.independent ? "Independent" : 
+                    workStyle.guided ? "Guided" : "";
+
+      const payload = {
+        headline,
+        bio,
+        linkedin_url: links.linkedin,
+        github_url: links.github,
+        portfolio_url: links.portfolio,
+        focus_right_now: focusArr.join(", "),
+        current_status: descBest,
+        education_level: qualification,
+        major_specialization: specialization,
+        age_range: ageRange,
+        start_timeline: startTimeline,
+        experience_years: experienceYears,
+        work_style: wStyle,
+        weekly_commitment: timeCommitment,
+        domains: selectedDomains,
+        opportunity_types: oppsArr,
+        city: location.city,
+        country: location.country,
+        timezone: location.timezone,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { error } = await supabase
+        .from("talent_profiles")
+        .upsert({ id: session.user.id, ...payload });
+
+      if (error) throw error;
+      toast.success("Profile updated successfully!");
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Failed to save changes");
+    } finally {
+      setSaving(false);
     }
   };
 
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  if (loading) return <div className="loading-spinner">Loading Premium Profile...</div>;
+
   return (
-    <div className="dashboard-container">
-      <AddProfilePhotoModal 
-        isOpen={isPhotoModalOpen} 
-        onClose={() => setIsPhotoModalOpen(false)} 
-      />
+    <>
+      <header className="mobile-top-nav">
+        <button className="hamburger-btn" onClick={toggleMobileMenu}><HamburgerIcon /></button>
+        <div className="mobile-logo-section"><img src="/Logo.svg" alt="Logo" /></div>
+      </header>
 
-      {/* --- LEFT SIDEBAR (Unchanged) --- */}
-      <aside className="sidebar-left">
-        <div className="logo-section">
-          <img src="/Logo.svg" alt="Predulive Logo" style={{ height: "auto", width: "120px" }} />
+      {isMobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu}>
+          <nav className="mobile-nav-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-nav-header"><button className="mobile-close-btn" onClick={closeMobileMenu}><CloseIcon /></button></div>
+            <div className="nav-item mobile-nav-item" onClick={() => navigate('/talent-dashboard-v2')}>Overview</div>
+            <div className="nav-item mobile-nav-item active">Profile</div>
+            <div className="nav-item mobile-nav-item" onClick={async () => { await logout(); navigate("/login"); }}>Log Out</div>
+          </nav>
         </div>
-        <nav className="nav-menu">
-          <div className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
-            Overview
-          </div>
-          <div className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            Outreach <span className="nav-badge">1</span>
-          </div>
-          <div className="nav-item">
-             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            Talent Pool
-          </div>
-          <div className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-            Opportunities
-          </div>
-           <div className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
-            Contest
-          </div>
-        </nav>
+      )}
 
-        <div className="sidebar-footer">
-          <div className="nav-item active">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            Profile
+      <div className="dashboard-container">
+        <aside className="sidebar-left">
+          <div className="logo-section"><img src="/Logo.svg" alt="Predulive" style={{ width: "120px" }} /></div>
+          <nav className="nav-menu">
+            <div className="nav-item" onClick={() => navigate('/talent-dashboard-v2')}>Overview</div>
+          </nav>
+          <div className="sidebar-footer">
+            <div className="nav-item active">Profile</div>
+            <div className="nav-item" onClick={async () => { await logout(); navigate("/login"); }}>Log Out</div>
           </div>
-          <div className="nav-item">
-            <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Settings
-          </div>
-           <div className="nav-item">
-             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
-            Support
-          </div>
-          <div className="nav-item">
-             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path></svg>
-            Ask AI
-          </div>
-        </div>
-      </aside>
+        </aside>
 
-      {/* --- MAIN CONTENT --- */}
-      <main className="main-content">
-        <div className="profile-header-section">
-            <div className="header-bc">Profile</div>
-            <div className="profile-banner-card">
-                
-                <div 
-                  className="avatar-container" 
-                  onClick={() => setIsPhotoModalOpen(true)}
-                  style={{ cursor: 'pointer' }}
-                >
-                    <div className="avatar-circle"></div>
-                    <div className="edit-icon-badge">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                    </div>
+        <main className="main-content">
+          <div className="scrollable-content">
+            <section className="reveal-item delay-1">
+              <div className="header-bc">Settings &gt; Profile</div>
+              <div className="profile-banner-card">
+                <div className="avatar-container" onClick={() => setIsPhotoModalOpen(true)}>
+                  <div className="avatar-circle">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <div className="edit-icon-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></div>
                 </div>
 
-                <div className="banner-info">
-                    <h1>Full name</h1>
-                    <span className="banner-desc">
-                        Describe yourself in 3-4 words 
-                        <span className="add-desc-link">Add Description</span>
-                    </span>
+                <div className="banner-info" style={{ flex: 1 }}>
+                  <h1 style={{ marginBottom: '8px' }}>{fullName}</h1>
+                  <input 
+                    type="text" 
+                    className="profile-description-input" 
+                    placeholder="Your professional headline (e.g. Full Stack Developer)" 
+                    value={headline}
+                    onChange={(e) => setHeadline(e.target.value)}
+                    style={{ background: 'transparent', border: 'none', borderBottom: '1px solid rgba(0,0,0,0.1)', width: '100%', padding: '4px 0', fontSize: '16px', fontWeight: 500 }}
+                  />
                 </div>
-            </div>
-        </div>
+              </div>
+            </section>
 
-        <div className="profile-form-section">
-            
-            <div className="form-group">
-                <label className="form-label">Full name</label>
-                <input type="text" className="form-input-disabled" placeholder="specified name during onboarding" disabled />
-            </div>
+            <div className="profile-form-section reveal-item delay-2">
+              <h3 className="section-title" style={{ marginBottom: '24px' }}>Professional Bio</h3>
+              <textarea 
+                className="form-input" 
+                placeholder="Tell us about yourself..." 
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                style={{ width: '100%', minHeight: '100px', borderRadius: '12px', padding: '16px', marginBottom: '40px' }}
+              />
 
-            <div className="grid-2-col">
+              <h3 className="section-title" style={{ marginBottom: '24px' }}>Professional Links</h3>
+              <div className="grid-3-col" style={{ marginBottom: '40px' }}>
                 <div className="form-group">
-                    <label className="form-label">Current focus</label>
-                    <div className="checkbox-group">
-                        <label className="cb-item"><input type="checkbox" name="earn" checked={currentFocus.earn} onChange={handleFocusChange} /> Earn</label>
-                        <label className="cb-item"><input type="checkbox" name="gainExperience" checked={currentFocus.gainExperience} onChange={handleFocusChange} /> Gain experience</label>
-                        <label className="cb-item"><input type="checkbox" name="explore" checked={currentFocus.explore} onChange={handleFocusChange} /> Explore</label>
-                    </div>
+                  <label className="form-label">LinkedIn URL</label>
+                  <input type="text" className="form-input" value={links.linkedin} onChange={(e) => setLinks({...links, linkedin: e.target.value})} placeholder="linkedin.com/in/..." />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">GitHub URL</label>
+                  <input type="text" className="form-input" value={links.github} onChange={(e) => setLinks({...links, github: e.target.value})} placeholder="github.com/..." />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Portfolio URL</label>
+                  <input type="text" className="form-input" value={links.portfolio} onChange={(e) => setLinks({...links, portfolio: e.target.value})} placeholder="yourportfolio.com" />
+                </div>
+              </div>
+
+              <div className="grid-2-col">
+                <div className="form-group">
+                  <label className="form-label">Current focus</label>
+                  <div className="tile-group">
+                    {['earn', 'gainExperience', 'explore'].map((f) => (
+                      <div key={f} className={`tile-item ${currentFocus[f as keyof typeof currentFocus] ? 'active' : ''}`} onClick={() => setCurrentFocus({...currentFocus, [f]: !currentFocus[f as keyof typeof currentFocus]})}>
+                        <input type="checkbox" checked={currentFocus[f as keyof typeof currentFocus]} readOnly />
+                        <span className="tile-text">{f === 'gainExperience' ? "Gain Experience" : f.charAt(0).toUpperCase() + f.slice(1)}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="form-group">
-                    <label className="form-label">Interested Domains</label>
-                    
-                    {/* --- UPDATED: CLICKABLE DOMAINS --- */}
-                    <div className="pills-cloud">
-                        {allDomains.map((domain) => (
-                          <span 
-                            key={domain} 
-                            className={`domain-pill ${selectedDomains.includes(domain) ? 'active' : ''}`}
-                            onClick={() => toggleDomain(domain)}
-                          >
-                            {domain}
-                          </span>
-                        ))}
-                    </div>
-
-                    <input type="text" className="form-input-disabled" placeholder="Specified domain during onboarding" disabled />
+                  <label className="form-label">Interested Domains</label>
+                  <div className="pills-cloud">
+                    {allDomains.map((d) => (
+                      <span key={d} className={`domain-pill ${selectedDomains.includes(d) ? 'active' : ''}`} onClick={() => setSelectedDomains(selectedDomains.includes(d) ? selectedDomains.filter(x => x !== d) : [...selectedDomains, d])}>
+                        {d}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-            </div>
-            
-            <div className="grid-2-col">
+              </div>
+
+              <div className="grid-2-col" style={{ marginTop: '40px' }}>
                 <div className="form-group">
-                    <label className="form-label">What describes you the best</label>
-                    <div className="radio-group">
-                        <label className="radio-item"><input type="radio" name="descBest" value="student" checked={descBest === "student"} onChange={(e) => setDescBest(e.target.value)} /> Student</label>
-                        <label className="radio-item"><input type="radio" name="descBest" value="recentGraduate" checked={descBest === "recentGraduate"} onChange={(e) => setDescBest(e.target.value)} /> Recent graduate</label>
-                        <label className="radio-item"><input type="radio" name="descBest" value="professional" checked={descBest === "professional"} onChange={(e) => setDescBest(e.target.value)} /> Working professional</label>
-                        <label className="radio-item"><input type="radio" name="descBest" value="other" checked={descBest === "other"} onChange={(e) => setDescBest(e.target.value)} /> Other</label>
-                    </div>
-                </div>
-
-                 <div className="form-group">
-                    <label className="form-label">Highest qualification completed</label>
-                    <div className="grid-2-col" style={{gap: '12px'}}>
-                        <div className="radio-group">
-                            <label className="radio-item"><input type="radio" name="qual" value="highSchool" checked={qualification === "highSchool"} onChange={(e) => setQualification(e.target.value)} /> High School</label>
-                            <label className="radio-item"><input type="radio" name="qual" value="diploma" checked={qualification === "diploma"} onChange={(e) => setQualification(e.target.value)} /> Diploma</label>
-                            <label className="radio-item"><input type="radio" name="qual" value="bachelors" checked={qualification === "bachelors"} onChange={(e) => setQualification(e.target.value)} /> Bachelor's</label>
-                        </div>
-                         <div className="radio-group">
-                            <label className="radio-item"><input type="radio" name="qual" value="masters" checked={qualification === "masters"} onChange={(e) => setQualification(e.target.value)} /> Master's</label>
-                            <label className="radio-item"><input type="radio" name="qual" value="phd" checked={qualification === "phd"} onChange={(e) => setQualification(e.target.value)} /> PhD</label>
-                            <label className="radio-item"><input type="radio" name="qual" value="other" checked={qualification === "other"} onChange={(e) => setQualification(e.target.value)} /> Other</label>
-                        </div>
-                    </div>
-                    <input type="text" className="form-input-disabled" style={{marginTop: '12px'}} placeholder="Specialization specified during onboarding" disabled />
-                </div>
-            </div>
-
-            <div className="grid-2-col">
-                 <div className="form-group">
-                    <label className="form-label">Preferred work style</label>
-                    <div className="checkbox-group">
-                        <label className="cb-item">
-                            <input type="checkbox" name="collaborative" checked={workStyle.collaborative} onChange={handleWorkStyleChange} />
-                            <div>
-                                Collaborative
-                                <span className="cb-desc">Regular check-ins, feedback loops, and shared ownership.</span>
-                            </div>
-                        </label>
-                        <label className="cb-item">
-                            <input type="checkbox" name="independent" checked={workStyle.independent} onChange={handleWorkStyleChange} />
-                            <div>
-                                Independent
-                                <span className="cb-desc">Clear scope, then I deliver with minimal back-and-forth.</span>
-                            </div>
-                        </label>
-                         <label className="cb-item">
-                            <input type="checkbox" name="guided" checked={workStyle.guided} onChange={handleWorkStyleChange} />
-                            <div>
-                                Guided
-                                <span className="cb-desc">I do best with structure, examples, and a point of contact.</span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <label className="form-label">Total year of experience</label>
-                     <input type="text" className="form-input-disabled" placeholder="e.g. 2 years 3 months" disabled />
-                </div>
-            </div>
-
-            <div className="grid-3-col">
-                <div className="form-group">
-                    <label className="form-label">City</label>
-                     <input type="text" className="form-input-disabled" placeholder="Specified city during onboarding" disabled />
+                  <label className="form-label">Specialization</label>
+                  <input type="text" className="form-input" value={specialization} onChange={(e) => setSpecialization(e.target.value)} placeholder="e.g. Computer Science" />
                 </div>
                 <div className="form-group">
-                    <label className="form-label">Country</label>
-                     <input type="text" className="form-input-disabled" placeholder="Specified country during onboarding" disabled />
+                  <label className="form-label">Experience (Years)</label>
+                  <input type="number" className="form-input" value={experienceYears} onChange={(e) => setExperienceYears(parseInt(e.target.value) || 0)} />
+                </div>
+              </div>
+
+              <div className="grid-2-col" style={{ marginTop: '40px' }}>
+                <div className="form-group">
+                  <label className="form-label">Age Range</label>
+                  <div className="tile-group">
+                    {['18–25', '26–34', '35+'].map((range) => (
+                      <div key={range} className={`tile-item ${ageRange === range ? 'active' : ''}`} onClick={() => setAgeRange(range)}>
+                        <input type="radio" checked={ageRange === range} readOnly />
+                        <span className="tile-text">{range}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
                 <div className="form-group">
-                    <label className="form-label">Time zone</label>
-                     <input type="text" className="form-input-disabled" placeholder="Specified time zone during onboarding" disabled 
-                      style={{backgroundImage: 'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%239CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\')', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center'}}/>
+                  <label className="form-label">Start Timeline</label>
+                  <div className="tile-group">
+                    {['Immediately', 'Within a month', 'After 3 months'].map((time) => (
+                      <div key={time} className={`tile-item ${startTimeline === time ? 'active' : ''}`} onClick={() => setStartTimeline(time)}>
+                        <input type="radio" checked={startTimeline === time} readOnly />
+                        <span className="tile-text">{time}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              </div>
+
+              <div className="form-actions" style={{ marginTop: '60px' }}>
+                <button className="btn-revert" onClick={() => window.location.reload()}>Discard Changes</button>
+                <button className="btn-save" onClick={handleSave} disabled={saving}>
+                  {saving ? "Saving..." : "Save Profile Changes"}
+                </button>
+              </div>
             </div>
+          </div>
+        </main>
+      </div>
 
-             <div className="grid-2-col">
-                 <div className="form-group">
-                    <label className="form-label">Weekly time commitment</label>
-                    <div className="grid-2-col" style={{gap: '12px'}}>
-                        <div className="radio-group">
-                             <label className="radio-item"><input type="radio" name="time" value="2-4" checked={timeCommitment === "2-4"} onChange={(e) => setTimeCommitment(e.target.value)} /> 2-4 hrs</label>
-                             <label className="radio-item"><input type="radio" name="time" value="5-10" checked={timeCommitment === "5-10"} onChange={(e) => setTimeCommitment(e.target.value)} /> 5-10 hrs</label>
-                             <label className="radio-item"><input type="radio" name="time" value="10-15" checked={timeCommitment === "10-15"} onChange={(e) => setTimeCommitment(e.target.value)} /> 10-15 hrs</label>
-                        </div>
-                         <div className="radio-group">
-                             <label className="radio-item"><input type="radio" name="time" value="20+" checked={timeCommitment === "20+"} onChange={(e) => setTimeCommitment(e.target.value)} /> 20+ hrs</label>
-                             <label className="radio-item"><input type="radio" name="time" value="40" checked={timeCommitment === "40"} onChange={(e) => setTimeCommitment(e.target.value)} /> 40 hrs</label>
-                        </div>
-                    </div>
-                </div>
-
-                 <div className="form-group">
-                    <label className="form-label">Opportunities you are open to exploring</label>
-                    <div className="grid-2-col" style={{gap: '12px'}}>
-                        <div className="checkbox-group">
-                             <label className="cb-item"><input type="checkbox" name="projects" checked={opportunities.projects} onChange={handleOppChange} /> Projects</label>
-                             <label className="cb-item"><input type="checkbox" name="internship" checked={opportunities.internship} onChange={handleOppChange} /> Internship</label>
-                             <label className="cb-item"><input type="checkbox" name="research" checked={opportunities.research} onChange={handleOppChange} /> Research</label>
-                        </div>
-                         <div className="checkbox-group">
-                             <label className="cb-item"><input type="checkbox" name="contract" checked={opportunities.contract} onChange={handleOppChange} /> Contract roles</label>
-                             <label className="cb-item"><input type="checkbox" name="partTime" checked={opportunities.partTime} onChange={handleOppChange} /> Part-time roles</label>
-                             <label className="cb-item"><input type="checkbox" name="fullTime" checked={opportunities.fullTime} onChange={handleOppChange} /> Full-time roles</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="form-actions">
-                <button className="btn-revert">Revert Changes</button>
-                <button className="btn-save">Save Changes</button>
-            </div>
-
-        </div>
-      </main>
-    </div>
+      <AddProfilePhotoModal isOpen={isPhotoModalOpen} onClose={() => setIsPhotoModalOpen(false)} />
+    </>
   );
 };
 
-export default OrgProfilePage;
+export default TalentProfilePage;

@@ -9,7 +9,6 @@ import Signup from "./pages/Signup";
 import SelectRole from "./pages/SelectRole";
 import TalentDashboard from "./pages/TalentDashboard";
 import Home from "./pages/Home";
-import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import TalentOnboarding from "./pages/TalentOnboarding";
 import TalentOnboardingStep2 from "./pages/TalentOnboardingStep2";
@@ -27,6 +26,7 @@ import OpportunitiesPage from "./pages/OpportunitiesPage";
 import OrgWorkScope from "./pages/OrgWorkScope";
 import OrgReviewOpportunity from "./pages/OrgReviewOpportunity";
 import TalentPoolPage from "./pages/TalentPoolPage";
+import TalentProfilePage from "./pages/talentprofilepage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmail from "./pages/ConfirmEmail";
@@ -139,6 +139,14 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/talent-profile"
+          element={
+            <ProtectedRoute>
+              <TalentProfilePage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* -------- Organization -------- */}
 
@@ -224,14 +232,6 @@ function AnimatedRoutes() {
         />
 
         {/* -------- Shared -------- */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="/settings"
           element={

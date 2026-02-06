@@ -215,7 +215,7 @@ const TalentDashboardV2: React.FC = () => {
 
             <div className="mobile-nav-divider"></div>
 
-            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/talent-profile'); closeMobileMenu(); }}>
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -314,7 +314,7 @@ const TalentDashboardV2: React.FC = () => {
         </nav>
 
         <div className="sidebar-footer"onClick={showVerificationToast}>
-          <div className="nav-item">
+          <div className="nav-item" onClick={() => navigate('/talent-profile')}>
             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
@@ -409,7 +409,7 @@ const TalentDashboardV2: React.FC = () => {
                   <h4>Update Profile</h4>
                   <p>Add details like skills and availability to get better matches</p>
                 </div>
-                <button className="btn-action-grey"onClick={showVerificationToast}>View Profile</button>
+                <button className="btn-action-grey" onClick={() => navigate('/talent-profile')}>View Profile</button>
               </div>
 
               <div className="action-card">
