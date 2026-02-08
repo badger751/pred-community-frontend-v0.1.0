@@ -194,7 +194,7 @@ const TalentDashboardV2: React.FC = () => {
               Outreach
             </div>
 
-            <div className="nav-item mobile-nav-item" onClick={() => { showVerificationToast(); closeMobileMenu(); }}>
+            <div className="nav-item mobile-nav-item" onClick={() => { navigate('/talent-portfolio'); closeMobileMenu(); }}>
               <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                 <line x1="3" y1="9" x2="21" y2="9"></line>
@@ -294,7 +294,7 @@ const TalentDashboardV2: React.FC = () => {
             </svg>
             Outreach
           </div>
-          <div className="nav-item"onClick={showVerificationToast}>
+          <div className="nav-item" onClick={() => navigate('/talent-portfolio')}>
             <svg className="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
               <line x1="3" y1="9" x2="21" y2="9"></line>
@@ -401,7 +401,7 @@ const TalentDashboardV2: React.FC = () => {
                   <h4>Create Portfolio</h4>
                   <p>Showcase projects to build credibility through proof-of-work</p>
                 </div>
-                <button className="btn-action-green" onClick={showVerificationToast}>Create Portfolio</button>
+                <button className="btn-action-green" onClick={() => navigate('/talent-portfolio')}>Create Portfolio</button>
               </div>
 
               <div className="action-card">

@@ -27,6 +27,7 @@ import OrgWorkScope from "./pages/OrgWorkScope";
 import OrgReviewOpportunity from "./pages/OrgReviewOpportunity";
 import TalentPoolPage from "./pages/TalentPoolPage";
 import TalentProfilePage from "./pages/talentprofilepage";
+import TalentPortfolioPage from "./pages/TalentPortfolioPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmail from "./pages/ConfirmEmail";
@@ -144,6 +145,14 @@ function AnimatedRoutes() {
           element={
             <ProtectedRoute>
               <TalentProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/talent-portfolio"
+          element={
+            <ProtectedRoute>
+              <TalentPortfolioPage />
             </ProtectedRoute>
           }
         />

@@ -265,6 +265,7 @@ const TalentProfilePage: React.FC = () => {
           <nav className="mobile-nav-dropdown" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-nav-header"><button className="mobile-close-btn" onClick={closeMobileMenu}><CloseIcon /></button></div>
             <div className="nav-item mobile-nav-item" onClick={() => navigate('/talent-dashboard-v2')}>Overview</div>
+            <div className="nav-item mobile-nav-item" onClick={() => navigate('/talent-portfolio')}>Portfolio</div>
             <div className="nav-item mobile-nav-item active">Profile</div>
             <div className="nav-item mobile-nav-item" onClick={async () => { await logout(); navigate("/login"); }}>Log Out</div>
           </nav>
@@ -276,6 +277,7 @@ const TalentProfilePage: React.FC = () => {
           <div className="logo-section"><img src="/Logo.svg" alt="Predulive" style={{ width: "120px" }} /></div>
           <nav className="nav-menu">
             <div className="nav-item" onClick={() => navigate('/talent-dashboard-v2')}>Overview</div>
+            <div className="nav-item" onClick={() => navigate('/talent-portfolio')}>Portfolio</div>
           </nav>
           <div className="sidebar-footer">
             <div className="nav-item active">Profile</div>
