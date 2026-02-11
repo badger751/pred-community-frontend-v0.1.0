@@ -5,6 +5,9 @@ import "../dashboard.css";
 import "../portfolio.css";
 import { useAuthStore } from "../stores/authStore";
 import toast from 'react-hot-toast';
+import AddProjectModal from "../components/AddProjectModal";
+import { getMyPortfolio } from "../lib/portfolioService";
+import type { PortfolioItem } from "../lib/portfolioService";
 
 // --- Icons for Mobile Navigation ---
 const HamburgerIcon = () => (
@@ -27,6 +30,8 @@ const TalentPortfolioPage: React.FC = () => {
     const { logout } = useAuthStore();
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     // --- Mobile Menu State & Logic ---
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -57,13 +62,31 @@ const TalentPortfolioPage: React.FC = () => {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session?.user?.id) return;
 
+                // Fetch full_name from profiles table
+                const { data: profileBase } = await supabase
+                    .from("profiles")
+                    .select("full_name")
+                    .eq("id", session.user.id)
+                    .single();
+
+                // Fetch other data from talent_profiles table
                 const { data } = await supabase
                     .from("talent_profiles")
                     .select("*")
                     .eq("id", session.user.id)
                     .single();
 
-                if (data) setProfile(data);
+                // Merge the full_name from profiles with talent_profiles data
+                if (data || profileBase) {
+                    setProfile({
+                        ...data,
+                        full_name: profileBase?.full_name || data?.full_name
+                    });
+                }
+
+                // Fetch portfolio items
+                const items = await getMyPortfolio();
+                setPortfolioItems(items || []);
             } catch (err) {
                 console.error("Error:", err);
             } finally {
@@ -365,30 +388,89 @@ const TalentPortfolioPage: React.FC = () => {
 
                         {/* FEATURED WORK */}
                         <section className="work-section" style={{ marginTop: '48px' }}>
-                            <h3 className="section-heading">Featured Work</h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                                <h3 className="section-heading" style={{ marginBottom: 0 }}>Featured Work</h3>
+                                <button 
+                                    className="btn-edit-portfolio"
+                                    onClick={() => setIsAddModalOpen(true)}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                    Add Project
+                                </button>
+                            </div>
                             <div className="work-grid">
-                                {[1, 2, 3].map((i) => (
-                                    <article className="work-card" key={i}>
-                                        <div className="work-media">
-                                            <div className="play-button">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                                            </div>
-                                        </div>
-                                        <div className="work-info">
-                                            <div className="work-tags">
-                                                <span className="work-tag tag-blue">Content / Project Type</span>
-                                                <span className="work-tag tag-orange">Showreel</span>
-                                            </div>
-                                            <h4 className="work-title">Project Title</h4>
-                                        </div>
-                                    </article>
-                                ))}
+                                {portfolioItems.length === 0 ? (
+                                    <div style={{ 
+                                        gridColumn: '1 / -1', 
+                                        textAlign: 'center', 
+                                        padding: '60px 20px',
+                                        background: 'white',
+                                        borderRadius: '20px',
+                                        border: '2px dashed #e2e8f0'
+                                    }}>
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '16px' }}>
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                            <circle cx="9" cy="9" r="2"></circle>
+                                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                        </svg>
+                                        <p style={{ color: '#64748b', fontSize: '16px', marginBottom: '8px' }}>No projects yet</p>
+                                        <p style={{ color: '#94a3b8', fontSize: '14px' }}>Click "Add Project" to showcase your work.</p>
+                                    </div>
+                                ) : (
+                                    portfolioItems.map((item) => {
+                                        const firstMedia = item.portfolio_media?.[0];
+                                        return (
+                                            <article className="work-card" key={item.id}>
+                                                <div className="work-media" style={firstMedia?.url ? { backgroundImage: `url(${firstMedia.url})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
+                                                    {firstMedia?.media_type === 'video' || item.video_url ? (
+                                                        <div className="play-button">
+                                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                                        </div>
+                                                    ) : !firstMedia?.url && (
+                                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5">
+                                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                            <circle cx="9" cy="9" r="2"></circle>
+                                                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                                <div className="work-info">
+                                                    <div className="work-tags">
+                                                        {item.role && <span className="work-tag tag-blue">{item.role}</span>}
+                                                        {item.company_name && <span className="work-tag tag-orange">{item.company_name}</span>}
+                                                    </div>
+                                                    <h4 className="work-title">{item.title}</h4>
+                                                    {item.description && (
+                                                        <p style={{ color: '#64748b', fontSize: '14px', marginTop: '8px', lineHeight: '1.5' }}>
+                                                            {item.description.length > 100 ? `${item.description.substring(0, 100)}...` : item.description}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </article>
+                                        );
+                                    })
+                                )}
                             </div>
                         </section>
 
                     </div>
                 </main>
             </div>
+
+            {/* Add Project Modal */}
+            <AddProjectModal 
+                isOpen={isAddModalOpen} 
+                onClose={() => setIsAddModalOpen(false)}
+                onSuccess={async () => {
+                    // Refresh portfolio items after adding
+                    const items = await getMyPortfolio();
+                    setPortfolioItems(items || []);
+                }}
+            />
         </>
     );
 };
